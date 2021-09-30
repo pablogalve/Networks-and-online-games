@@ -11,6 +11,8 @@ public class objectManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        cooldownTimer -= Time.deltaTime;
+        
         if(Input.GetKeyDown("space")){
             if(cooldownTimer <= 0.0f){
                 Object.Instantiate(cube);

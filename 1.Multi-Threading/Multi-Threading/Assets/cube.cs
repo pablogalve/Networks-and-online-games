@@ -16,7 +16,7 @@ public class cube : MonoBehaviour
     void Update()
     {        
         Move();
-        if(timer <= 0.0f){
+        if(timer <= 0.0f){            
             Destroy(this.gameObject);
         }
         timer -= Time.deltaTime;
