@@ -9,11 +9,11 @@ public class ThreadQueuer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("Start() -- Started.");
+        //Debug.Log("Start() -- Started.");
         functionsToRunInMainThread = new List<Action>();
         
-        StartThreadedFunction( () => { SlowFunctionThatDoesAUnityThing(Vector3.zero); } );
-        Debug.Log("Start() -- Done.");
+        //StartThreadedFunction( () => { SlowFunctionThatDoesAUnityThing(Vector3.zero); } );
+        //Debug.Log("Start() -- Done.");
     }
 
     void Update(){
@@ -38,13 +38,14 @@ public class ThreadQueuer : MonoBehaviour
         functionsToRunInMainThread.Add(someFunctionWithNoParams);
     }
 
+    //This is an example, but this could be on any script
     void SlowFunctionThatDoesAUnityThing(Vector3 vec){
         //First we do a really slow thing
         Thread.Sleep(2000); //Sleep for 2 seconds
 
         //Now we need to modify a Unity gameobject
         Action aFunction = () => {
-            Debug.Log("The results of the child thread are being applied to a Unity GameObject safely.");
+            //Debug.Log("The results of the child thread are being applied to a Unity GameObject safely.");
             this.transform.position = new Vector3(1,1,1);
         };
         
