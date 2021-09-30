@@ -1,17 +1,16 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using UnityEngine;
 
-public class TCPClient : MonoBehaviour
+public class TCPServer : MonoBehaviour
 {
     private Socket socket;
     private Socket client;
     IPEndPoint ipep;
 
-    // Start is called before the first frame update
     void Start()
     {
         socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -22,12 +21,6 @@ public class TCPClient : MonoBehaviour
         socket.Listen(10);
         client = socket.Accept();
         socket.Connect(ipep);
-    }
-
-
-    private void connectToServer()
-    {
-
     }
 
     void StopDataTransfer()

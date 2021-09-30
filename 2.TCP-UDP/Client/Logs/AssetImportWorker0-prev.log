@@ -1,0 +1,315 @@
+Using pre-set license
+Built from '2020.3/staging' branch; Version is '2020.3.19f1 (68f137dc9bbe) revision 6877495'; Using compiler version '192528614'; Build Type 'Release'
+OS: 'Windows 10 Home; OS build 19042.1237; Version 2009; 64bit' Language: 'ca' Physical Memory: 16309 MB
+BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1, IsPro: 0
+
+COMMAND LINE ARGUMENTS:
+C:\Program Files\Unity\Hub\Editor\2020.3.19f1\Editor\Unity.exe
+-adb2
+-batchMode
+-noUpm
+-name
+AssetImportWorker0
+-projectPath
+C:/Users/Marc/Documents/GitHub/Networks-and-online-games/2.TCP-UDP/Client
+-logFile
+Logs/AssetImportWorker0.log
+-srvPort
+56396
+Successfully changed project path to: C:/Users/Marc/Documents/GitHub/Networks-and-online-games/2.TCP-UDP/Client
+C:/Users/Marc/Documents/GitHub/Networks-and-online-games/2.TCP-UDP/Client
+Using Asset Import Pipeline V2.
+Refreshing native plugins compatible for Editor in 24.06 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Initialize engine version: 2020.3.19f1 (68f137dc9bbe)
+[Subsystems] Discovering subsystems at path C:/Program Files/Unity/Hub/Editor/2020.3.19f1/Editor/Data/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path C:/Users/Marc/Documents/GitHub/Networks-and-online-games/2.TCP-UDP/Client/Assets
+GfxDevice: creating device client; threaded=0
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: NVIDIA GeForce GTX 1660 SUPER (ID=0x21c4)
+    Vendor:   
+    VRAM:     5991 MB
+    Driver:   30.0.14.7212
+Initialize mono
+Mono path[0] = 'C:/Program Files/Unity/Hub/Editor/2020.3.19f1/Editor/Data/Managed'
+Mono path[1] = 'C:/Program Files/Unity/Hub/Editor/2020.3.19f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit'
+Mono config path = 'C:/Program Files/Unity/Hub/Editor/2020.3.19f1/Editor/Data/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56572
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: C:/Program Files/Unity/Hub/Editor/2020.3.19f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
+Registered in 0.002681 seconds.
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 24.31 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  0.794 seconds
+Domain Reload Profiling:
+	ReloadAssembly (795ms)
+		BeginReloadAssembly (44ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (0ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (1ms)
+		EndReloadAssembly (337ms)
+			LoadAssemblies (42ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (129ms)
+			ReleaseScriptCaches (0ms)
+			RebuildScriptCaches (25ms)
+			SetupLoadedEditorAssemblies (127ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (4ms)
+				SetLoadedEditorAssemblies (0ms)
+				RefreshPlugins (24ms)
+				BeforeProcessingInitializeOnLoad (13ms)
+				ProcessInitializeOnLoadAttributes (62ms)
+				ProcessInitializeOnLoadMethodAttributes (24ms)
+				AfterProcessingInitializeOnLoad (0ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (0ms)
+Platform modules already initialized, skipping
+Registering precompiled user dll's ...
+Registered in 0.002247 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 0.30 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  0.801 seconds
+Domain Reload Profiling:
+	ReloadAssembly (802ms)
+		BeginReloadAssembly (119ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (4ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (15ms)
+		EndReloadAssembly (629ms)
+			LoadAssemblies (67ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (213ms)
+			ReleaseScriptCaches (0ms)
+			RebuildScriptCaches (34ms)
+			SetupLoadedEditorAssemblies (239ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (4ms)
+				SetLoadedEditorAssemblies (0ms)
+				RefreshPlugins (0ms)
+				BeforeProcessingInitializeOnLoad (61ms)
+				ProcessInitializeOnLoadAttributes (165ms)
+				ProcessInitializeOnLoadMethodAttributes (3ms)
+				AfterProcessingInitializeOnLoad (5ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (5ms)
+Platform modules already initialized, skipping
+========================================================================
+Worker process is ready to serve import requests
+Launched and connected shader compiler UnityShaderCompiler.exe after 0.05 seconds
+Refreshing native plugins compatible for Editor in 0.30 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 1399 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 64.8 MB.
+System memory in use after: 64.9 MB.
+
+Unloading 16 unused Assets to reduce memory usage. Loaded Objects now: 1834.
+Total: 2.715000 ms (FindLiveObjects: 0.183100 ms CreateObjectMapping: 0.030100 ms MarkObjects: 2.439300 ms  DeleteObjects: 0.061300 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Import Request.
+  path: Assets/Scripts/TCPClient.cs
+  artifactKey: Guid(18d6db5666d39a24080ee7778ec679a7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/TCPClient.cs using Guid(18d6db5666d39a24080ee7778ec679a7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '02a29c233e3f88745885c71ffe192187') in 0.018358 seconds 
+  Import took 0.020549 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 3.245560 seconds.
+  path: Assets/Scripts/TCPClient.cs
+  artifactKey: Guid(18d6db5666d39a24080ee7778ec679a7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/TCPClient.cs using Guid(18d6db5666d39a24080ee7778ec679a7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '70aed58455b90a358974eb9a58881b33') in 0.003343 seconds 
+  Import took 0.005899 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 65.565901 seconds.
+  path: Assets/Scripts/TCPClient.cs
+  artifactKey: Guid(18d6db5666d39a24080ee7778ec679a7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/TCPClient.cs using Guid(18d6db5666d39a24080ee7778ec679a7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'cc87a10a9cf0fa433c92382166936c58') in 0.003705 seconds 
+  Import took 0.006184 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 11.355208 seconds.
+  path: Assets/Scripts/TCPClient.cs
+  artifactKey: Guid(18d6db5666d39a24080ee7778ec679a7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/TCPClient.cs using Guid(18d6db5666d39a24080ee7778ec679a7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '51ae05401004d85797c4f6fae4d8893e') in 0.003646 seconds 
+  Import took 0.005741 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 30.127585 seconds.
+  path: Assets/Scripts/TCPClient.cs
+  artifactKey: Guid(18d6db5666d39a24080ee7778ec679a7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/TCPClient.cs using Guid(18d6db5666d39a24080ee7778ec679a7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'fd0e2b1e9cd97be722c25559d295cc75') in 0.003391 seconds 
+  Import took 0.005604 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 103.883734 seconds.
+  path: Assets/Scripts/TCPClient.cs
+  artifactKey: Guid(18d6db5666d39a24080ee7778ec679a7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/TCPClient.cs using Guid(18d6db5666d39a24080ee7778ec679a7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '0fe7024ba40740cd84580c7345aea283') in 0.004120 seconds 
+  Import took 0.006405 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 17.420482 seconds.
+  path: Assets/Scripts/TCPClient.cs
+  artifactKey: Guid(18d6db5666d39a24080ee7778ec679a7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/TCPClient.cs using Guid(18d6db5666d39a24080ee7778ec679a7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '40fb11423a91877b68e9d8b47856b8d6') in 0.003513 seconds 
+  Import took 0.005881 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 23.011888 seconds.
+  path: Assets/Scripts/TCPClient.cs
+  artifactKey: Guid(18d6db5666d39a24080ee7778ec679a7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/TCPClient.cs using Guid(18d6db5666d39a24080ee7778ec679a7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'b7706102cf99f20e8d9d3bb85a182a33') in 0.004660 seconds 
+  Import took 0.007197 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 78.320834 seconds.
+  path: Assets/Scripts/TCPClient.cs
+  artifactKey: Guid(18d6db5666d39a24080ee7778ec679a7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/TCPClient.cs using Guid(18d6db5666d39a24080ee7778ec679a7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '6880187b5b6d1918a2e7a5d3bad7bce1') in 0.003636 seconds 
+  Import took 0.005626 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 4.380009 seconds.
+  path: Assets/Scripts/TCPClient.cs
+  artifactKey: Guid(18d6db5666d39a24080ee7778ec679a7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/TCPClient.cs using Guid(18d6db5666d39a24080ee7778ec679a7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'd708cd047cdce3e7b724792a1e03955c') in 0.003355 seconds 
+  Import took 0.005245 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 35.864234 seconds.
+  path: Assets/Scripts/TCPClient.cs
+  artifactKey: Guid(18d6db5666d39a24080ee7778ec679a7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/TCPClient.cs using Guid(18d6db5666d39a24080ee7778ec679a7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '88732be713824ed60ea841e042c9e18f') in 0.003558 seconds 
+  Import took 0.005585 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 46.651509 seconds.
+  path: Assets/Scripts/TCPClient.cs
+  artifactKey: Guid(18d6db5666d39a24080ee7778ec679a7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/TCPClient.cs using Guid(18d6db5666d39a24080ee7778ec679a7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'd984189bfed46f792f933b6a66d463d3') in 0.003258 seconds 
+  Import took 0.005123 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 44.046387 seconds.
+  path: Assets/Scripts/TCPClient.cs
+  artifactKey: Guid(18d6db5666d39a24080ee7778ec679a7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/TCPClient.cs using Guid(18d6db5666d39a24080ee7778ec679a7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '226f7ed3268050562b6681f186d1c762') in 0.004133 seconds 
+  Import took 0.006172 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 145.342174 seconds.
+  path: Assets/Scripts/TCPClient.cs
+  artifactKey: Guid(18d6db5666d39a24080ee7778ec679a7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/TCPClient.cs using Guid(18d6db5666d39a24080ee7778ec679a7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '5c5fe6216434ec39171bc0f3d6a75d67') in 0.006428 seconds 
+  Import took 0.008532 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 57.726042 seconds.
+  path: Assets/Scripts/TCPClient.cs
+  artifactKey: Guid(18d6db5666d39a24080ee7778ec679a7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/TCPClient.cs using Guid(18d6db5666d39a24080ee7778ec679a7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '59c15ceba25f6e5cf5efc4bc8da4119a') in 0.003372 seconds 
+  Import took 0.005375 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 18.855112 seconds.
+  path: Assets/Scripts/TCPClient.cs
+  artifactKey: Guid(18d6db5666d39a24080ee7778ec679a7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/TCPClient.cs using Guid(18d6db5666d39a24080ee7778ec679a7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '2d3e538dbc8b73935dbcb29a1f22e0e9') in 0.003334 seconds 
+  Import took 0.005371 seconds .
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.002382 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 0.30 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  0.780 seconds
+Domain Reload Profiling:
+	ReloadAssembly (781ms)
+		BeginReloadAssembly (88ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (4ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (26ms)
+		EndReloadAssembly (640ms)
+			LoadAssemblies (65ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (207ms)
+			ReleaseScriptCaches (1ms)
+			RebuildScriptCaches (30ms)
+			SetupLoadedEditorAssemblies (220ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (4ms)
+				SetLoadedEditorAssemblies (0ms)
+				RefreshPlugins (0ms)
+				BeforeProcessingInitializeOnLoad (56ms)
+				ProcessInitializeOnLoadAttributes (150ms)
+				ProcessInitializeOnLoadMethodAttributes (3ms)
+				AfterProcessingInitializeOnLoad (5ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (5ms)
+Platform modules already initialized, skipping
+Refreshing native plugins compatible for Editor in 0.26 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 1393 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 64.7 MB.
+System memory in use after: 64.8 MB.
+
+Unloading 11 unused Assets to reduce memory usage. Loaded Objects now: 1836.
+Total: 2.754200 ms (FindLiveObjects: 0.152000 ms CreateObjectMapping: 0.043800 ms MarkObjects: 2.538500 ms  DeleteObjects: 0.018900 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+AssetImportWorkerClient::OnTransportError - code=2 error=End of file
