@@ -15,12 +15,16 @@ public class objectManager : MonoBehaviour
         
         if(Input.GetKeyDown("space")){
             if(cooldownTimer <= 0.0f){
-                Object.Instantiate(cube);
+                //ThreadQueuer.StartThreadedFunction( CreateCube );   
+                CreateCube();             
                 cooldownTimer = cooldown;
             }else{
                 Debug.Log("You can only have 1 object at the same time");
-            }
-            
+            }            
         }
+    }
+
+    void CreateCube(){
+        Object.Instantiate(cube);
     }
 }
