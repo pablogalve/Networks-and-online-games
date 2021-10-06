@@ -14,7 +14,7 @@ public class TCPServer : MonoBehaviour
     void Start()
     {
         socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-        int port = 25;
+        int port = 7777;
         ipep = new IPEndPoint(IPAddress.Parse("95.17.95.173"), port);
         socket.Bind(ipep);
 
