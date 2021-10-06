@@ -36,12 +36,11 @@ public class ThreadedObjectSpawner : MonoBehaviour
         }
 
         //Exercise 1
-        /*
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             createNewThread(throwProjectile);
         }
-        */
+        
 
         //Exercise 2
         /*
@@ -60,10 +59,12 @@ public class ThreadedObjectSpawner : MonoBehaviour
         */
 
         //Exercise 4
+        /*
         if (Input.GetKeyDown(KeyCode.Mouse0) && activeThreads.Count < 5)
         {
             createNewThread(throwProjectile);
         }
+        */
     }
 
     void createNewThread(Action functionToExecute)
@@ -71,8 +72,6 @@ public class ThreadedObjectSpawner : MonoBehaviour
         Thread thread = new Thread(new ThreadStart(functionToExecute));
         activeThreads.Add(thread);
         thread.Start();
-
-        Debug.Log("New thread created");
     }
 
     void RemoveThread()
@@ -118,13 +117,15 @@ public class ThreadedObjectSpawner : MonoBehaviour
         QueueMainThreadFunction(createAction);
 
         //Exercise 1-3
-        //Thread.Sleep(5000);
+        Thread.Sleep(5000);
 
         //Exercise 4
+        /*
         for(passedTime = 0; passedTime < cooldownTime * 1000; passedTime += 1.0f / activeThreads.Count)
         {
             Thread.Sleep(1);
         }
+        */
 
         Action destroyAction = () =>
         {
