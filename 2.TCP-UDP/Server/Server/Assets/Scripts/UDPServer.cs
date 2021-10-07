@@ -7,24 +7,26 @@ using UnityEngine;
 public class UDPServer : MonoBehaviour
 {
     private Socket socket;
-    private Socket client;
-    IPEndPoint ipep;
-    EndPoint remote;
+    IPEndPoint sender;
+    EndPoint senderRemote;
+
+    readonly int port = 7777;
 
     Thread receiveThread;
 
     // Start is called before the first frame update
     void Start()
     {
-        socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-        int port = 7777;
+        IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), port);
 
-        ipep = new IPEndPoint(IPAddress.Any, port);
-        remote = (EndPoint)ipep;
+        socket = new Socket(endPoint.Address.AddressFamily, SocketType.Dgram, ProtocolType.Udp);
 
-        socket.Bind(ipep);
+        //sender = new IPEndPoint(IPAddress.Any, 0);
+        senderRemote = (EndPoint)endPoint;
 
-        receiveThread = new Thread(new ThreadStart(ReceivePing));
+        socket.Bind(endPoint);
+
+        receiveThread = new Thread(new ThreadStart(Receive));
         receiveThread.Start();
     }
 
@@ -34,38 +36,51 @@ public class UDPServer : MonoBehaviour
         //Debug.Log("AAAAAAAAAAA");
     }
 
-    void ReceivePing()
+    void Receive()
     {
-        Debug.Log("Receive 1");
         try
         {
-            Debug.Log("Receive 1.5");
+            Debug.Log("Trying to receive a message: ");
             byte[] msg = new byte[256];
-            var recv = socket.ReceiveFrom(msg, ref remote);
+            
+            Debug.Log(senderRemote.ToString());
 
-            Debug.Log("Recv: " + recv.ToString());
+            var recv = socket.ReceiveFrom(msg, ref senderRemote);
 
-            Debug.Log("Message received: " + msg.ToString());
+            string decodedMessage = System.Text.Encoding.ASCII.GetString(msg);
+
+            Debug.Log("Message " + decodedMessage + " received with " + recv.ToString() + ": bytes received");
+           
+            Close();
         }
         catch (System.Exception exception)
         {
-            Debug.Log("Not receiving ping: " + exception.ToString());
+            Debug.LogWarning("Exception caught: " + exception.ToString());
+            Close();
         }
-        Debug.Log("Receive 2");
+        Debug.Log("Stopped waiting to receive");
     }
 
     void SendPong()
     {
-        socket.SendTo(System.Text.Encoding.UTF8.GetBytes("Pong"), SocketFlags.None, remote);
+        socket.SendTo(System.Text.Encoding.UTF8.GetBytes("Pong"), SocketFlags.None, senderRemote);
     }
 
-    void StopDataTransfer()
+    void Shutdown()
     {
         socket.Shutdown(SocketShutdown.Both);
+        Debug.Log("Socket shut down");
+    }
+
+    void Close()
+    {
+        socket.Close();
+        Debug.Log("Socket closed");
     }
 
     private void OnDestroy()
     {
         socket.Close();
+        receiveThread.Abort();
     }
 }
