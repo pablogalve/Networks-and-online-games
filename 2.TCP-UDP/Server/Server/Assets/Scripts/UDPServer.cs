@@ -14,6 +14,8 @@ public class UDPServer : MonoBehaviour
 
     Thread receiveThread;
 
+    bool startNewThread = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -33,37 +35,50 @@ public class UDPServer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Debug.Log("AAAAAAAAAAA");
+        if (startNewThread)
+        {
+            startNewThread = false;
+            receiveThread = new Thread(new ThreadStart(Receive));
+            receiveThread.Start();
+        }
     }
 
     void Receive()
     {
         try
         {
-            Debug.Log("Trying to receive a message: ");
+            //Debug.Log("Trying to receive a message: ");
             byte[] msg = new byte[256];
-            
-            Debug.Log(senderRemote.ToString());
+
+            //Debug.Log(senderRemote.ToString());
 
             var recv = socket.ReceiveFrom(msg, ref senderRemote);
 
             string decodedMessage = System.Text.Encoding.ASCII.GetString(msg);
 
-            Debug.Log("Message " + decodedMessage + " received with " + recv.ToString() + ": bytes received");
-           
-            Close();
+            Debug.Log(decodedMessage);
+
+            Thread.Sleep(500);
+
+            Send();
+
+            startNewThread = true;
+            //Close();
         }
         catch (System.Exception exception)
         {
             Debug.LogWarning("Exception caught: " + exception.ToString());
             Close();
         }
-        Debug.Log("Stopped waiting to receive");
     }
 
-    void SendPong()
+    void Send()
     {
-        socket.SendTo(System.Text.Encoding.UTF8.GetBytes("Pong"), SocketFlags.None, senderRemote);
+        byte[] bytes = System.Text.Encoding.ASCII.GetBytes("Pong");
+
+        int bytesSent = socket.SendTo(bytes, bytes.Length, SocketFlags.None, senderRemote);
+
+        //Debug.Log(bytesSent.ToString() + " : of " + bytes.Length + " bytes sent");
     }
 
     void Shutdown()
