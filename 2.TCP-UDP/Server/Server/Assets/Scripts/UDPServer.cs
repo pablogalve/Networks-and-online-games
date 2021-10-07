@@ -20,10 +20,7 @@ public class UDPServer : MonoBehaviour
     void Start()
     {
         IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), port);
-
         socket = new Socket(endPoint.Address.AddressFamily, SocketType.Dgram, ProtocolType.Udp);
-
-        //sender = new IPEndPoint(IPAddress.Any, 0);
         senderRemote = (EndPoint)endPoint;
 
         socket.Bind(endPoint);

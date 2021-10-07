@@ -8,35 +8,90 @@ using UnityEngine;
 public class TCPClient : MonoBehaviour
 {
     private Socket socket;
-    private Socket client;
-    IPEndPoint ipep;
+    IPEndPoint endPoint;
+    EndPoint Remote;
 
-    // Start is called before the first frame update
+    Thread sendThread;
+
+    int port = 7777; //0 means take the first free port you get
+
+    bool startNewThread = false;
+
     void Start()
     {
-        socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-        int port = 25;
-        ipep = new IPEndPoint(IPAddress.Parse("95.17.95.173"), port);
-        socket.Bind(ipep);
+        endPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), port);
+        Remote = (EndPoint)endPoint;
 
-        socket.Listen(10);
-        client = socket.Accept();
-        socket.Connect(ipep);
+        socket = new Socket(endPoint.Address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+
+        Debug.Log("Remote: " + endPoint.Address.ToString());
+
+        socket.Connect(Remote);
+
+        sendThread = new Thread(new ThreadStart(SendPing));
+        sendThread.Start();
     }
 
-
-    private void connectToServer()
+    void Update()
     {
+        if (startNewThread)
+        {
+            startNewThread = false;
+            sendThread = new Thread(new ThreadStart(SendPing));
+            sendThread.Start();
+        }
+    }
+
+    void SendPing()
+    {
+        try
+        {
+            byte[] msg = System.Text.Encoding.ASCII.GetBytes("Ping");
+            int bytesCount = socket.Send(msg, msg.Length, SocketFlags.None);
+
+            //ReceivePong();
+
+            startNewThread = true;
+        }
+        catch (System.Exception exception)
+        {
+            Debug.Log("Error. Couldn't send message: " + exception.ToString());
+            Close();
+        }
 
     }
 
-    void StopDataTransfer()
+    void ReceivePong()
+    {
+        //Debug.Log("Trying to receive a message: ");
+        byte[] msg = new byte[256];
+
+        //Debug.Log(senderRemote.ToString());
+
+        var recv = socket.ReceiveFrom(msg, ref Remote);
+
+        string decodedMessage = System.Text.Encoding.ASCII.GetString(msg);
+
+        Debug.Log(decodedMessage);
+
+        Thread.Sleep(500);
+    }
+
+    void Shutdown()
     {
         socket.Shutdown(SocketShutdown.Both);
+        Debug.Log("Socket shut down");
+    }
+
+    void Close()
+    {
+        socket.Close();
+        Debug.Log("Socket closed");
     }
 
     private void OnDestroy()
     {
         socket.Close();
+        sendThread.Abort();
     }
 }
