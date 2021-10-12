@@ -16,9 +16,14 @@ public class TCPServer : MonoBehaviour
 
     readonly int port = 7777;
 
-    private bool startNewThread = false;
+    private bool startNewListenThread = false;
+    private bool startNewReceiveThread = false;
+    private Thread listenThread;
     private Thread receiveThread;
 
+    //Versions
+    bool versionA = false;
+    bool versionB = true;
 
     // Start is called before the first frame update
     void Start()
@@ -29,59 +34,86 @@ public class TCPServer : MonoBehaviour
 
         socket.Bind(endPoint);
 
-        receiveThread = new Thread(new ThreadStart(Receive));
-        receiveThread.Start();
+        listenThread = new Thread(new ThreadStart(Listen));
+        listenThread.Start();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (startNewThread)
+        if (startNewListenThread)
         {
-            startNewThread = false;
+            startNewListenThread = false;
+            listenThread = new Thread(new ThreadStart(Listen));
+            listenThread.Start();
+        }
+
+        if (startNewReceiveThread)
+        {
+            startNewReceiveThread = false;
             receiveThread = new Thread(new ThreadStart(Receive));
             receiveThread.Start();
         }
+    }
+
+    void Listen()
+    {
+        //Listen for a single client
+        Debug.Log("Listening for clients");
+        socket.Listen(1);
+
+        client = socket.Accept();
+        Debug.Log("Client accepted");
+
+        receiveThread = new Thread(new ThreadStart(Receive));
+        receiveThread.Start();
     }
 
     void Receive()
     {
         try
         {
-            //Listen for a single client
-            Debug.Log("Listening for clients");
-            socket.Listen(1);
-
-            client = socket.Accept();
-            Debug.Log("Client accepted");
-
             //Debug.Log("Trying to receive a message: ");
             byte[] msg = new byte[256];
 
             int recv = client.Receive(msg);
             string decodedMessage = System.Text.Encoding.ASCII.GetString(msg);
-            Debug.Log(decodedMessage);
+            Debug.Log("Message: " + decodedMessage);
 
             Thread.Sleep(500);
 
-            //Send();
+            Send();
 
-            startNewThread = true;
+            startNewReceiveThread = true;
             //Close();
         }
         catch (System.Exception exception)
         {
-            Debug.LogWarning("Exception caught: " + exception.ToString());
-            Close();
+            Debug.Log("Exception caught: " + exception.ToString());
+            if (versionB)
+            {
+                startNewListenThread = true;
+            }
+            else
+            {
+                Close();
+            }
         }
     }
 
     void Send()
     {
-        byte[] bytes = System.Text.Encoding.ASCII.GetBytes("Pong");
-
-        int bytesSent = socket.SendTo(bytes, bytes.Length, SocketFlags.None, senderRemote);
-        //Debug.Log(bytesSent.ToString() + " : of " + bytes.Length + " bytes sent");
+        try
+        {
+            //Debug.Log("Sending Pong");
+            byte[] msg = System.Text.Encoding.ASCII.GetBytes("Pong");
+            int bytesSent = client.Send(msg, msg.Length, SocketFlags.None);
+        }
+        catch (System.Exception exception)
+        {
+            Debug.Log("Error. Couldn't send message: " + exception.ToString());
+            Close();
+        }
     }
 
     void Shutdown()
@@ -99,6 +131,7 @@ public class TCPServer : MonoBehaviour
     private void OnDestroy()
     {
         socket.Close();
+        listenThread.Abort();
         receiveThread.Abort();
     }
 }

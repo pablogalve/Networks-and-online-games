@@ -16,6 +16,7 @@ public class TCPClient : MonoBehaviour
     int port = 7777; //0 means take the first free port you get
 
     bool startNewThread = false;
+    int pongsReceived = 0;
 
     void Start()
     {
@@ -49,9 +50,17 @@ public class TCPClient : MonoBehaviour
             byte[] msg = System.Text.Encoding.ASCII.GetBytes("Ping");
             int bytesCount = socket.Send(msg, msg.Length, SocketFlags.None);
 
-            //ReceivePong();
+            ReceivePong();
 
-            startNewThread = true;
+            if(pongsReceived < 5)
+            {
+                startNewThread = true;
+            }
+            else
+            {
+                Debug.Log("Enough ping pong for today, disconnecting");
+                Close();
+            }
         }
         catch (System.Exception exception)
         {
@@ -65,14 +74,12 @@ public class TCPClient : MonoBehaviour
     {
         //Debug.Log("Trying to receive a message: ");
         byte[] msg = new byte[256];
-
-        //Debug.Log(senderRemote.ToString());
-
-        var recv = socket.ReceiveFrom(msg, ref Remote);
-
+        var recv = socket.Receive(msg);
         string decodedMessage = System.Text.Encoding.ASCII.GetString(msg);
 
         Debug.Log(decodedMessage);
+
+        pongsReceived++;
 
         Thread.Sleep(500);
     }
