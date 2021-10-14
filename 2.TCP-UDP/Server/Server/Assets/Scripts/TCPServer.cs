@@ -45,8 +45,7 @@ public class TCPServer : MonoBehaviour
 
         socket.Bind(endPoint);
 
-        listenThread = new Thread(new ThreadStart(Listen));
-        listenThread.Start();
+        ThreadPool.QueueUserWorkItem(Listen);
     }
 
     // Update is called once per frame
@@ -57,16 +56,13 @@ public class TCPServer : MonoBehaviour
             startNewListenThread = false;
             //WaitToAccept();
 
-            listenThread = new Thread(new ThreadStart(Listen));
-            listenThread.Start();
-
+            ThreadPool.QueueUserWorkItem(Listen);
         }
 
         if (startNewReceiveThread)
         {
             startNewReceiveThread = false;
-            receiveThread = new Thread(new ThreadStart(Receive));
-            receiveThread.Start();
+            ThreadPool.QueueUserWorkItem(Receive);
         }
 
         if (wantsToShout)
@@ -80,7 +76,7 @@ public class TCPServer : MonoBehaviour
         }
     }
 
-    void Listen()
+    private void Listen(object state)
     {
         //Listen for a single client
         try
@@ -93,26 +89,24 @@ public class TCPServer : MonoBehaviour
             client = socket.Accept();
             Debug.Log("Client accepted");
 
-            receiveThread = new Thread(new ThreadStart(Receive));
-            receiveThread.Start();
+            ThreadPool.QueueUserWorkItem(Receive);
         }
         catch (System.Exception exception)
         {
             Debug.LogWarning(exception.ToString());
             Close();
         }
-    }
+    }    
 
     void WaitToAccept()
     {
         client = socket.Accept();
         Debug.Log("Client accepted");
-
-        receiveThread = new Thread(new ThreadStart(Receive));
-        receiveThread.Start();
+        
+        ThreadPool.QueueUserWorkItem(Receive);
     }
 
-    void Receive()
+    private void Receive(object state)
     {
         try
         {
