@@ -1,0 +1,387 @@
+Using pre-set license
+Built from '2020.3/staging' branch; Version is '2020.3.19f1 (68f137dc9bbe) revision 6877495'; Using compiler version '192528614'; Build Type 'Release'
+OS: 'Windows 10 Home; OS build 19042.1237; Version 2009; 64bit' Language: 'ca' Physical Memory: 16309 MB
+BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1, IsPro: 0
+
+COMMAND LINE ARGUMENTS:
+C:\Program Files\Unity\Hub\Editor\2020.3.19f1\Editor\Unity.exe
+-adb2
+-batchMode
+-noUpm
+-name
+AssetImportWorker0
+-projectPath
+C:/Users/Marc/Documents/GitHub/Networks-and-online-games/2.TCP-UDP/Client
+-logFile
+Logs/AssetImportWorker0.log
+-srvPort
+56993
+Successfully changed project path to: C:/Users/Marc/Documents/GitHub/Networks-and-online-games/2.TCP-UDP/Client
+C:/Users/Marc/Documents/GitHub/Networks-and-online-games/2.TCP-UDP/Client
+Using Asset Import Pipeline V2.
+Refreshing native plugins compatible for Editor in 24.43 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Initialize engine version: 2020.3.19f1 (68f137dc9bbe)
+[Subsystems] Discovering subsystems at path C:/Program Files/Unity/Hub/Editor/2020.3.19f1/Editor/Data/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path C:/Users/Marc/Documents/GitHub/Networks-and-online-games/2.TCP-UDP/Client/Assets
+GfxDevice: creating device client; threaded=0
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: NVIDIA GeForce GTX 1660 SUPER (ID=0x21c4)
+    Vendor:   
+    VRAM:     5991 MB
+    Driver:   30.0.14.9613
+Initialize mono
+Mono path[0] = 'C:/Program Files/Unity/Hub/Editor/2020.3.19f1/Editor/Data/Managed'
+Mono path[1] = 'C:/Program Files/Unity/Hub/Editor/2020.3.19f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit'
+Mono config path = 'C:/Program Files/Unity/Hub/Editor/2020.3.19f1/Editor/Data/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56644
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: C:/Program Files/Unity/Hub/Editor/2020.3.19f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
+Registered in 0.001658 seconds.
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 24.21 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  0.865 seconds
+Domain Reload Profiling:
+	ReloadAssembly (865ms)
+		BeginReloadAssembly (44ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (0ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (1ms)
+		EndReloadAssembly (328ms)
+			LoadAssemblies (42ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (122ms)
+			ReleaseScriptCaches (0ms)
+			RebuildScriptCaches (24ms)
+			SetupLoadedEditorAssemblies (126ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (3ms)
+				SetLoadedEditorAssemblies (0ms)
+				RefreshPlugins (24ms)
+				BeforeProcessingInitializeOnLoad (14ms)
+				ProcessInitializeOnLoadAttributes (63ms)
+				ProcessInitializeOnLoadMethodAttributes (22ms)
+				AfterProcessingInitializeOnLoad (0ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (0ms)
+Platform modules already initialized, skipping
+Registering precompiled user dll's ...
+Registered in 0.002236 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 0.30 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  0.796 seconds
+Domain Reload Profiling:
+	ReloadAssembly (796ms)
+		BeginReloadAssembly (118ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (4ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (15ms)
+		EndReloadAssembly (626ms)
+			LoadAssemblies (67ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (213ms)
+			ReleaseScriptCaches (0ms)
+			RebuildScriptCaches (33ms)
+			SetupLoadedEditorAssemblies (237ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (4ms)
+				SetLoadedEditorAssemblies (0ms)
+				RefreshPlugins (0ms)
+				BeforeProcessingInitializeOnLoad (62ms)
+				ProcessInitializeOnLoadAttributes (161ms)
+				ProcessInitializeOnLoadMethodAttributes (4ms)
+				AfterProcessingInitializeOnLoad (5ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (5ms)
+Platform modules already initialized, skipping
+========================================================================
+Worker process is ready to serve import requests
+Launched and connected shader compiler UnityShaderCompiler.exe after 0.05 seconds
+Refreshing native plugins compatible for Editor in 0.28 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 1399 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 64.8 MB.
+System memory in use after: 64.9 MB.
+
+Unloading 16 unused Assets to reduce memory usage. Loaded Objects now: 1834.
+Total: 2.781600 ms (FindLiveObjects: 0.204400 ms CreateObjectMapping: 0.039100 ms MarkObjects: 2.473900 ms  DeleteObjects: 0.062000 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Import Request.
+  path: Assets/Characters
+  artifactKey: Guid(7ad25e8e57b4a594aa23109cb11ace5a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Characters using Guid(7ad25e8e57b4a594aa23109cb11ace5a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '79008d286337e216fcd4be6e7e1e5735') in 0.009065 seconds 
+  Import took 0.011800 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 2.030003 seconds.
+  path: Assets/Characters/Kaya
+  artifactKey: Guid(9410aa6c8ef740f458b5c49cc364f45e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Characters/Kaya using Guid(9410aa6c8ef740f458b5c49cc364f45e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'f19fad097338ea6ad329a6dbfeebf2a1') in 0.008179 seconds 
+  Import took 0.010796 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 6.834225 seconds.
+  path: Assets/Characters/Kaya/kaya.fbx
+  artifactKey: Guid(e1c1637cf13b65d40b26553c742da56a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Characters/Kaya/kaya.fbx using Guid(e1c1637cf13b65d40b26553c742da56a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '96dee157c4a26fff772b250b0026b050') in 0.702350 seconds 
+  Import took 0.705250 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 4.722000 seconds.
+  path: Assets/Characters/Kaya/Dwarf Idle.fbx
+  artifactKey: Guid(2bc10495a87598f4187957560094a084) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Characters/Kaya/Dwarf Idle.fbx using Guid(2bc10495a87598f4187957560094a084) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '0fa37f531c40aee7dd3c1807fdd8fd74') in 0.010719 seconds 
+  Import took 0.013309 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 2.517471 seconds.
+  path: Assets/Characters/Kaya/Quick Formal Bow.fbx
+  artifactKey: Guid(e130c993aaef82e43b16a0fe58507794) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Characters/Kaya/Quick Formal Bow.fbx using Guid(e130c993aaef82e43b16a0fe58507794) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'bb23c9f95da95e743f40cb437b4d619d') in 0.010743 seconds 
+  Import took 0.013461 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 7.191123 seconds.
+  path: Assets/Characters/Kaya/Bow.fbx
+  artifactKey: Guid(e130c993aaef82e43b16a0fe58507794) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Characters/Kaya/Bow.fbx using Guid(e130c993aaef82e43b16a0fe58507794) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'c84fb36fad1dd4aaab61c0bdba70efbf') in 0.011364 seconds 
+  Import took 0.013991 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 12.462157 seconds.
+  path: Assets/Characters/Kaya/Bow.fbx
+  artifactKey: Guid(e130c993aaef82e43b16a0fe58507794) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Characters/Kaya/Bow.fbx using Guid(e130c993aaef82e43b16a0fe58507794) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '695a12dd08d876ddde82ce3d80340833') in 0.007180 seconds 
+  Import took 0.010039 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 5.527382 seconds.
+  path: Assets/Characters/Kaya/Idle.fbx
+  artifactKey: Guid(2bc10495a87598f4187957560094a084) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Characters/Kaya/Idle.fbx using Guid(2bc10495a87598f4187957560094a084) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '859da6267ed4779cf27033e28eec1778') in 0.010719 seconds 
+  Import took 0.013450 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 8.626835 seconds.
+  path: Assets/Characters/Kaya/Idle.fbx
+  artifactKey: Guid(2bc10495a87598f4187957560094a084) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Characters/Kaya/Idle.fbx using Guid(2bc10495a87598f4187957560094a084) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '8f0db6e5945df3a90570e180ec60e18f') in 0.005960 seconds 
+  Import took 0.008786 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 12.367349 seconds.
+  path: Assets/Characters/Kaya/AC_Kaya.controller
+  artifactKey: Guid(819a0b0f670ff87458cd8f817e774912) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Characters/Kaya/AC_Kaya.controller using Guid(819a0b0f670ff87458cd8f817e774912) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '23a13665170fb20539f887179c411fb9') in 0.010570 seconds 
+  Import took 0.013113 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 36.158092 seconds.
+  path: Assets/Characters/Kaya/Materials
+  artifactKey: Guid(f4786638db8fd834798f96542c496035) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Characters/Kaya/Materials using Guid(f4786638db8fd834798f96542c496035) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '8c96e5817e02d914a3b65d7474da4a16') in 0.006539 seconds 
+  Import took 0.008896 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 6.031299 seconds.
+  path: Assets/Characters/Kaya/Textures
+  artifactKey: Guid(1ac763b4859e05648b21eddddd9d8aca) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Characters/Kaya/Textures using Guid(1ac763b4859e05648b21eddddd9d8aca) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'ca2a2296e00de458bb5d693b34e75e5b') in 0.006402 seconds 
+  Import took 0.008816 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 9.382792 seconds.
+  path: Assets/Characters/Kaya/kaya.fbx
+  artifactKey: Guid(e1c1637cf13b65d40b26553c742da56a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Characters/Kaya/kaya.fbx using Guid(e1c1637cf13b65d40b26553c742da56a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '1bb2d5bdcb3ee7505c79d804876f1006') in 0.133625 seconds 
+  Import took 0.136731 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 6.894109 seconds.
+  path: Assets/Characters/Kaya/kaya.fbx
+  artifactKey: Guid(e1c1637cf13b65d40b26553c742da56a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Characters/Kaya/kaya.fbx using Guid(e1c1637cf13b65d40b26553c742da56a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '237a365d11832433a54b488997ebb5f6') in 0.121694 seconds 
+  Import took 0.124305 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 72.952310 seconds.
+  path: Assets/Characters/Kaya/Materials/Character_Rasta_boy_body.mat
+  artifactKey: Guid(c3c9851224850274a98eb1da608f30da) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Characters/Kaya/Materials/Character_Rasta_boy_body.mat using Guid(c3c9851224850274a98eb1da608f30da) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '3222a395dbf4b0e8ad6a549d30448701') in 0.017287 seconds 
+  Import took 0.019740 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000157 seconds.
+  path: Assets/Characters/Kaya/Materials/Rasta_Mouth_MAT1.mat
+  artifactKey: Guid(60ebbafc81e76254ba58c5289688a60f) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Characters/Kaya/Materials/Rasta_Mouth_MAT1.mat using Guid(60ebbafc81e76254ba58c5289688a60f) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'aa61d2711e65dcfea9f74b4b0e531b93') in 0.014787 seconds 
+  Import took 0.016915 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000137 seconds.
+  path: Assets/Characters/Kaya/Materials/Rasta_Eyes_MAT1.mat
+  artifactKey: Guid(3810a65ed85449e4797e338fb7fd6f4e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Characters/Kaya/Materials/Rasta_Eyes_MAT1.mat using Guid(3810a65ed85449e4797e338fb7fd6f4e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '827a41744babfafcff34d9373f235b89') in 0.013107 seconds 
+  Import took 0.015299 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000198 seconds.
+  path: Assets/Characters/Kaya/Materials/Rasta_Brows_MAT1.mat
+  artifactKey: Guid(94ad77fb9727f394d9be3d8ccb50edf0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Characters/Kaya/Materials/Rasta_Brows_MAT1.mat using Guid(94ad77fb9727f394d9be3d8ccb50edf0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'cbddeb7e086897ba3f54e3d3488b5c12') in 0.012849 seconds 
+  Import took 0.015031 seconds .
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.002348 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 0.29 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  0.753 seconds
+Domain Reload Profiling:
+	ReloadAssembly (753ms)
+		BeginReloadAssembly (97ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (3ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (26ms)
+		EndReloadAssembly (604ms)
+			LoadAssemblies (66ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (210ms)
+			ReleaseScriptCaches (1ms)
+			RebuildScriptCaches (30ms)
+			SetupLoadedEditorAssemblies (218ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (4ms)
+				SetLoadedEditorAssemblies (0ms)
+				RefreshPlugins (0ms)
+				BeforeProcessingInitializeOnLoad (57ms)
+				ProcessInitializeOnLoadAttributes (148ms)
+				ProcessInitializeOnLoadMethodAttributes (3ms)
+				AfterProcessingInitializeOnLoad (5ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (6ms)
+Platform modules already initialized, skipping
+Refreshing native plugins compatible for Editor in 0.29 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 1393 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 81.8 MB.
+System memory in use after: 81.9 MB.
+
+Unloading 11 unused Assets to reduce memory usage. Loaded Objects now: 1880.
+Total: 2.332100 ms (FindLiveObjects: 0.132300 ms CreateObjectMapping: 0.034900 ms MarkObjects: 2.152600 ms  DeleteObjects: 0.011200 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.002632 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 0.32 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  0.833 seconds
+Domain Reload Profiling:
+	ReloadAssembly (833ms)
+		BeginReloadAssembly (90ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (4ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (27ms)
+		EndReloadAssembly (689ms)
+			LoadAssemblies (68ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (227ms)
+			ReleaseScriptCaches (1ms)
+			RebuildScriptCaches (32ms)
+			SetupLoadedEditorAssemblies (237ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (4ms)
+				SetLoadedEditorAssemblies (0ms)
+				RefreshPlugins (0ms)
+				BeforeProcessingInitializeOnLoad (61ms)
+				ProcessInitializeOnLoadAttributes (162ms)
+				ProcessInitializeOnLoadMethodAttributes (3ms)
+				AfterProcessingInitializeOnLoad (5ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (5ms)
+Platform modules already initialized, skipping
+Refreshing native plugins compatible for Editor in 0.34 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 1393 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 81.9 MB.
+System memory in use after: 82.0 MB.
+
+Unloading 11 unused Assets to reduce memory usage. Loaded Objects now: 1882.
+Total: 2.412600 ms (FindLiveObjects: 0.143100 ms CreateObjectMapping: 0.030200 ms MarkObjects: 2.224700 ms  DeleteObjects: 0.013600 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+AssetImportWorkerClient::OnTransportError - code=2 error=End of file

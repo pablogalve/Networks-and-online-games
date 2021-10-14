@@ -21,13 +21,20 @@ public class TCPServer : MonoBehaviour
     private Thread listenThread;
     private Thread receiveThread;
 
+    int maxListeningClients = 5;
+
     //Versions
     bool versionA = false;
     bool versionB = true;
 
+    Animator animator;
+    bool wantsToShout = false;
+
     // Start is called before the first frame update
     void Start()
     {
+        animator = GetComponent<Animator>();
+
         endPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), port);
         socket = new Socket(endPoint.Address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
         senderRemote = (EndPoint)endPoint;
@@ -44,8 +51,11 @@ public class TCPServer : MonoBehaviour
         if (startNewListenThread)
         {
             startNewListenThread = false;
+            //WaitToAccept();
+
             listenThread = new Thread(new ThreadStart(Listen));
             listenThread.Start();
+
         }
 
         if (startNewReceiveThread)
@@ -54,14 +64,31 @@ public class TCPServer : MonoBehaviour
             receiveThread = new Thread(new ThreadStart(Receive));
             receiveThread.Start();
         }
+
+        if (wantsToShout)
+        {
+            wantsToShout = false;
+            animator.SetTrigger("Shout");
+        }
     }
 
     void Listen()
     {
         //Listen for a single client
         Debug.Log("Listening for clients");
-        socket.Listen(1);
+        socket.Listen(maxListeningClients);
 
+        //WaitToAccept();
+
+        client = socket.Accept();
+        Debug.Log("Client accepted");
+
+        receiveThread = new Thread(new ThreadStart(Receive));
+        receiveThread.Start();
+    }
+
+    void WaitToAccept()
+    {
         client = socket.Accept();
         Debug.Log("Client accepted");
 
@@ -108,6 +135,7 @@ public class TCPServer : MonoBehaviour
             //Debug.Log("Sending Pong");
             byte[] msg = System.Text.Encoding.ASCII.GetBytes("Pong");
             int bytesSent = client.Send(msg, msg.Length, SocketFlags.None);
+            wantsToShout = true;
         }
         catch (System.Exception exception)
         {
@@ -132,6 +160,9 @@ public class TCPServer : MonoBehaviour
     {
         socket.Close();
         listenThread.Abort();
-        receiveThread.Abort();
+        if (receiveThread != null)
+        {
+            receiveThread.Abort();
+        }
     }
 }
