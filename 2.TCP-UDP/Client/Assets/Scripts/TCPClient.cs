@@ -18,8 +18,19 @@ public class TCPClient : MonoBehaviour
     bool startNewThread = false;
     int pongsReceived = 0;
 
+    Animator animator;
+
+    public string messageToSend = "Ping";
+    public int millisecondsBetweenMessages = 500;
+
+    bool bow = false;
+
+    public Dialog dialog;
+
     void Start()
     {
+        animator = GetComponent<Animator>();
+
         endPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), port);
         Remote = (EndPoint)endPoint;
 
@@ -41,14 +52,25 @@ public class TCPClient : MonoBehaviour
             sendThread = new Thread(new ThreadStart(SendPing));
             sendThread.Start();
         }
+
+        if(bow)
+        {
+            bow = false;
+            animator.SetTrigger("Bow");
+            if (dialog != null)
+            {
+                dialog.SetMessage(messageToSend);
+            }
+        }
     }
 
     void SendPing()
     {
         try
         {
-            byte[] msg = System.Text.Encoding.ASCII.GetBytes("Ping");
+            byte[] msg = System.Text.Encoding.ASCII.GetBytes(messageToSend);
             int bytesCount = socket.Send(msg, msg.Length, SocketFlags.None);
+            bow = true;
 
             ReceivePong();
 
@@ -67,7 +89,6 @@ public class TCPClient : MonoBehaviour
             Debug.Log("Error. Couldn't send message: " + exception.ToString());
             Close();
         }
-
     }
 
     void ReceivePong()
@@ -81,7 +102,7 @@ public class TCPClient : MonoBehaviour
 
         pongsReceived++;
 
-        Thread.Sleep(500);
+        Thread.Sleep(millisecondsBetweenMessages);
     }
 
     void Shutdown()

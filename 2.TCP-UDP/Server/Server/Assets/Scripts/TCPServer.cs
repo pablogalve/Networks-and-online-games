@@ -23,12 +23,16 @@ public class TCPServer : MonoBehaviour
 
     int maxListeningClients = 5;
 
+    public string messageToSend = "Pong";
+    public int millisecondsBetweenMessages = 500;
+
     //Versions
-    bool versionA = false;
     bool versionB = true;
 
     Animator animator;
     bool wantsToShout = false;
+
+    public Dialog dialog;
 
     // Start is called before the first frame update
     void Start()
@@ -69,22 +73,34 @@ public class TCPServer : MonoBehaviour
         {
             wantsToShout = false;
             animator.SetTrigger("Shout");
+            if(dialog != null)
+            {
+                dialog.SetMessage(messageToSend);
+            }
         }
     }
 
     void Listen()
     {
         //Listen for a single client
-        Debug.Log("Listening for clients");
-        socket.Listen(maxListeningClients);
+        try
+        {
+            Debug.Log("Listening for clients");
+            socket.Listen(maxListeningClients);
 
-        //WaitToAccept();
+            //WaitToAccept();
 
-        client = socket.Accept();
-        Debug.Log("Client accepted");
+            client = socket.Accept();
+            Debug.Log("Client accepted");
 
-        receiveThread = new Thread(new ThreadStart(Receive));
-        receiveThread.Start();
+            receiveThread = new Thread(new ThreadStart(Receive));
+            receiveThread.Start();
+        }
+        catch (System.Exception exception)
+        {
+            Debug.LogWarning(exception.ToString());
+            Close();
+        }
     }
 
     void WaitToAccept()
@@ -107,7 +123,7 @@ public class TCPServer : MonoBehaviour
             string decodedMessage = System.Text.Encoding.ASCII.GetString(msg);
             Debug.Log("Message: " + decodedMessage);
 
-            Thread.Sleep(500);
+            Thread.Sleep(millisecondsBetweenMessages);
 
             Send();
 
@@ -133,7 +149,7 @@ public class TCPServer : MonoBehaviour
         try
         {
             //Debug.Log("Sending Pong");
-            byte[] msg = System.Text.Encoding.ASCII.GetBytes("Pong");
+            byte[] msg = System.Text.Encoding.ASCII.GetBytes(messageToSend);
             int bytesSent = client.Send(msg, msg.Length, SocketFlags.None);
             wantsToShout = true;
         }
@@ -159,7 +175,10 @@ public class TCPServer : MonoBehaviour
     private void OnDestroy()
     {
         socket.Close();
-        listenThread.Abort();
+        if (listenThread != null)
+        {
+            listenThread.Abort();
+        }
         if (receiveThread != null)
         {
             receiveThread.Abort();
