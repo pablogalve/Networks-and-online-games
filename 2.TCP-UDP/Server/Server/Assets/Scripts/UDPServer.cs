@@ -16,9 +16,19 @@ public class UDPServer : MonoBehaviour
 
     bool startNewThread = false;
 
+    public string messageToSend = "Pong";
+    public int millisecondsBetweenMessages = 500;
+
+    Animator animator;
+    bool wantsToShout = false;
+
+    public Dialog dialog;
+
     // Start is called before the first frame update
     void Start()
     {
+        animator = GetComponent<Animator>();
+
         IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), port);
         socket = new Socket(endPoint.Address.AddressFamily, SocketType.Dgram, ProtocolType.Udp);
         senderRemote = (EndPoint)endPoint;
@@ -38,6 +48,16 @@ public class UDPServer : MonoBehaviour
             receiveThread = new Thread(new ThreadStart(Receive));
             receiveThread.Start();
         }
+
+        if (wantsToShout)
+        {
+            wantsToShout = false;
+            animator.SetTrigger("Shout");
+            if (dialog != null)
+            {
+                dialog.SetMessage(messageToSend);
+            }
+        }
     }
 
     void Receive()
@@ -55,7 +75,7 @@ public class UDPServer : MonoBehaviour
 
             Debug.Log(decodedMessage);
 
-            Thread.Sleep(500);
+            Thread.Sleep(millisecondsBetweenMessages);
 
             Send();
 
@@ -71,9 +91,10 @@ public class UDPServer : MonoBehaviour
 
     void Send()
     {
-        byte[] bytes = System.Text.Encoding.ASCII.GetBytes("Pong");
-
+        byte[] bytes = System.Text.Encoding.ASCII.GetBytes(messageToSend);
         int bytesSent = socket.SendTo(bytes, bytes.Length, SocketFlags.None, senderRemote);
+
+        wantsToShout = true;
 
         //Debug.Log(bytesSent.ToString() + " : of " + bytes.Length + " bytes sent");
     }

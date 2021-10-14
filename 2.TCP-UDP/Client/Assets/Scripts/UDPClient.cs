@@ -16,8 +16,19 @@ public class UDPClient : MonoBehaviour
 
     bool startNewThread = false;
 
+    Animator animator;
+
+    bool bow = false;
+
+    public string messageToSend = "Ping";
+    public int millisecondsBetweenMessages = 500;
+
+    public Dialog dialog;
+
     void Start()
     {
+        animator = GetComponent<Animator>();
+
         endPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), port);
         Remote = (EndPoint)endPoint;
 
@@ -36,14 +47,25 @@ public class UDPClient : MonoBehaviour
             sendThread = new Thread(new ThreadStart(SendPing));
             sendThread.Start();
         }
+
+        if (bow)
+        {
+            bow = false;
+            animator.SetTrigger("Bow");
+            if (dialog != null)
+            {
+                dialog.SetMessage(messageToSend);
+            }
+        }
     }
 
     void SendPing()
     {
         try
         {
-            byte[] bytes = System.Text.Encoding.ASCII.GetBytes("Ping");
+            byte[] bytes = System.Text.Encoding.ASCII.GetBytes(messageToSend);
             int bytesSent = socket.SendTo(bytes, bytes.Length, SocketFlags.None, endPoint);
+            bow = true;
 
             //Debug.Log(bytesSent.ToString() + " : of " + bytes.Length + " bytes sent");
 
@@ -72,7 +94,7 @@ public class UDPClient : MonoBehaviour
 
         Debug.Log(decodedMessage);
 
-        Thread.Sleep(500);
+        Thread.Sleep(millisecondsBetweenMessages);
     }
 
     void Shutdown()
