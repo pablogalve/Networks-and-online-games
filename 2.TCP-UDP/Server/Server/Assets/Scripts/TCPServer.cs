@@ -27,7 +27,7 @@ public class TCPServer : MonoBehaviour
     public int millisecondsBetweenMessages = 500;
 
     //Versions
-    bool versionB = true;
+    public bool versionA = true;
 
     Animator animator;
     bool wantsToShout = false;
@@ -127,13 +127,13 @@ public class TCPServer : MonoBehaviour
         catch (System.Exception exception)
         {
             Debug.Log("Exception caught: " + exception.ToString());
-            if (versionB)
+            if (versionA)
             {
-                startNewListenThread = true;
+                Close();
             }
             else
             {
-                Close();
+                startNewListenThread = true;
             }
         }
     }

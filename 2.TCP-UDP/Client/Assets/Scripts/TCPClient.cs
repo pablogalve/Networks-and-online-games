@@ -27,6 +27,8 @@ public class TCPClient : MonoBehaviour
 
     public Dialog dialog;
 
+    public bool versionA = true;
+
     void Start()
     {
         animator = GetComponent<Animator>();
@@ -74,11 +76,12 @@ public class TCPClient : MonoBehaviour
 
             ReceivePong();
 
-            if(pongsReceived < 5)
+            //Set version A to true to only exchange ping pong for 5 times and set it to false to exchange until the end of the program
+            if(pongsReceived < 5 || versionA == false)
             {
                 startNewThread = true;
             }
-            else
+            else if (versionA)
             {
                 Debug.Log("Enough ping pong for today, disconnecting");
                 Close();
@@ -93,7 +96,6 @@ public class TCPClient : MonoBehaviour
 
     void ReceivePong()
     {
-        //Debug.Log("Trying to receive a message: ");
         byte[] msg = new byte[256];
         var recv = socket.Receive(msg);
         string decodedMessage = System.Text.Encoding.ASCII.GetString(msg);
