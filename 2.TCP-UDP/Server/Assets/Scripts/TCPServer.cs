@@ -27,7 +27,7 @@ public class TCPServer : MonoBehaviour
     public int millisecondsBetweenMessages = 500;
 
     //Versions
-    public bool versionA = true;
+    public bool versionA = false;
 
     Animator animator;
     bool wantsToShout = false;
