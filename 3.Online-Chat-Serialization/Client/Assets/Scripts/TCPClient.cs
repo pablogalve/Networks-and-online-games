@@ -19,8 +19,6 @@ public class TCPClient : MonoBehaviour
 
     public string messageToSend = "Ping";
 
-    public bool versionA = true;
-
     void Start()
     {
         endPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), port);
@@ -32,7 +30,7 @@ public class TCPClient : MonoBehaviour
 
         socket.Connect(Remote);
 
-        sendThread = new Thread(new ThreadStart(SendPing));
+        sendThread = new Thread(new ThreadStart(Send));
         sendThread.Start();
     }
 
@@ -41,19 +39,24 @@ public class TCPClient : MonoBehaviour
         if (startNewThread)
         {
             startNewThread = false;
-            sendThread = new Thread(new ThreadStart(SendPing));
+            sendThread = new Thread(new ThreadStart(Send));
             sendThread.Start();
         }
     }
 
-    void SendPing()
+    void Send()
     {
         try
         {
-            byte[] msg = System.Text.Encoding.ASCII.GetBytes(messageToSend);
-            int bytesCount = socket.Send(msg, msg.Length, SocketFlags.None);
+            for(int i = 0; i < 5; ++i)
+            {
+                byte[] msg = System.Text.Encoding.ASCII.GetBytes(messageToSend);
+                int bytesCount = socket.Send(msg, msg.Length, SocketFlags.None);
 
-            Receive();            
+                Thread.Sleep(1000);
+
+                Receive();
+            }
         }
         catch (System.Exception exception)
         {

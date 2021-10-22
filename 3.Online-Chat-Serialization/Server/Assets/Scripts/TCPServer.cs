@@ -7,15 +7,15 @@ using UnityEngine;
 
 struct User
 {
-    public uint uid;
+    public int uid;
     public string username;
+    public Socket socket;
     public Thread receiveThread;
 }
 
 public class TCPServer : MonoBehaviour
 {
     private Socket socket;
-    private Socket client;
 
     private IPEndPoint sender;
     private IPEndPoint endPoint;
@@ -25,7 +25,7 @@ public class TCPServer : MonoBehaviour
 
     private bool startNewReceiveThread = false;
     private Thread listenThread;
-    private Dictionary<uint, User> users;
+    private Dictionary<int, User> users;
 
     int maxListeningClients = 5;
 
@@ -42,6 +42,8 @@ public class TCPServer : MonoBehaviour
 
         listenThread = new Thread(new ThreadStart(ListenForUsers));
         listenThread.Start();
+
+        users = new Dictionary<int, User>();
     }
 
     // Update is called once per frame
@@ -62,52 +64,63 @@ public class TCPServer : MonoBehaviour
             Debug.Log("Listening for users to connect");
             socket.Listen(maxListeningClients);
 
-            client = socket.Accept();
-            Debug.Log("Client accepted");
+            for (int i = 0; i < maxListeningClients; ++i)
+            {
+                User newUser = new User();
 
-            User newUser = new User();
-            //newUser.uid = Random.Next(); //TODO: Generate random
-            newUser.uid = 0; //TODO: Delete
-            newUser.receiveThread = new Thread(new ThreadStart(Receive));
-            users[newUser.uid] = newUser;
-            newUser.receiveThread.Start();
+                Socket clientSocket = socket.Accept();
+                Debug.Log("Client accepted");
+
+                newUser.uid = 0; 
+                newUser.socket = clientSocket;
+                users[newUser.uid] = newUser;
+
+                newUser.receiveThread = new Thread(new ParameterizedThreadStart(Chat));
+                newUser.receiveThread.Start(newUser);
+            }
         }
         catch (System.Exception exception)
         {
-            Debug.LogWarning(exception.ToString());
+            Debug.Log(exception.ToString());
             Close();
         }
     }
 
-    private void Receive()
-    {      
+    private void Chat(object objectUser)
+    {
         try
         {
-            //Debug.Log("Trying to receive a message: ");
-            byte[] msg = new byte[256];
+            User user = (User)objectUser;
+            for (int i = 0; i < 5; ++i)
+            {
+                //Debug.Log("Trying to receive a message: ");
+                byte[] msg = new byte[256];
 
-            int recv = client.Receive(msg);
-            string decodedMessage = System.Text.Encoding.ASCII.GetString(msg);
-            Debug.Log("Message: " + decodedMessage);
+                int recv = user.socket.Receive(msg);
 
-            Send();
+                string decodedMessage = System.Text.Encoding.ASCII.GetString(msg);
+                Debug.Log("Message: " + decodedMessage);
 
-            startNewReceiveThread = true;
-            //Close();
+                Thread.Sleep(1000);
+
+                Send(user);
+
+                //Close();
+            }
         }
         catch (System.Exception exception)
         {
-            Debug.Log("Exception caught: " + exception.ToString());            
+            Debug.Log("Exception caught: " + exception.ToString());
         }
     }
 
-    void Send()
+    void Send(User user)
     {
         try
         {
             //Debug.Log("Sending Pong");
             byte[] msg = System.Text.Encoding.ASCII.GetBytes(messageToSend);
-            int bytesSent = client.Send(msg, msg.Length, SocketFlags.None);
+            int bytesSent = user.socket.Send(msg, msg.Length, SocketFlags.None);
         }
         catch (System.Exception exception)
         {
