@@ -12,12 +12,12 @@ public class TCPClient : MonoBehaviour
     EndPoint Remote;
 
     Thread sendThread;
-
     int port = 7777; //0 means take the first free port you get
 
     bool startNewThread = false;
-
     public string messageToSend = "Ping";
+
+    public UserList userlist;
 
     void Start()
     {
@@ -30,7 +30,7 @@ public class TCPClient : MonoBehaviour
 
         socket.Connect(Remote);
 
-        sendThread = new Thread(new ThreadStart(Send));
+        sendThread = new Thread(new ThreadStart(Connect));
         sendThread.Start();
     }
 
@@ -39,19 +39,20 @@ public class TCPClient : MonoBehaviour
         if (startNewThread)
         {
             startNewThread = false;
-            sendThread = new Thread(new ThreadStart(Send));
+            sendThread = new Thread(new ThreadStart(Connect));
             sendThread.Start();
         }
     }
 
-    void Send()
+    void Connect()
     {
         try
         {
+            GetUsers();
+
             for(int i = 0; i < 5; ++i)
             {
-                byte[] msg = System.Text.Encoding.ASCII.GetBytes(messageToSend);
-                int bytesCount = socket.Send(msg, msg.Length, SocketFlags.None);
+                Send(messageToSend);
 
                 Thread.Sleep(1000);
 
@@ -65,6 +66,25 @@ public class TCPClient : MonoBehaviour
         }
     }
 
+    void GetUsers()
+    {
+        /*
+        var t = new testClass();
+        t.hp = 40;
+        t.pos = new List<int> { 10, 3, 12 };
+        string json = JsonUtility.ToJson(t);
+        stream = new MemoryStream();
+        BinaryWriter writer = new BinaryWriter(stream);
+        writer.Write(json);
+        */
+
+        Send("getUsers");
+
+        byte[] msg = new byte[256];
+        var recv = socket.Receive(msg);
+        string decodedMessage = System.Text.Encoding.ASCII.GetString(msg);
+    }
+
     void Receive()
     {
         byte[] msg = new byte[256];
@@ -72,6 +92,12 @@ public class TCPClient : MonoBehaviour
         string decodedMessage = System.Text.Encoding.ASCII.GetString(msg);
 
         Debug.Log(decodedMessage);
+    }
+
+    void Send(string message)
+    {
+        byte[] msg = System.Text.Encoding.ASCII.GetBytes(message);
+        int bytesCount = socket.Send(msg, msg.Length, SocketFlags.None);
     }
 
     void Shutdown()
