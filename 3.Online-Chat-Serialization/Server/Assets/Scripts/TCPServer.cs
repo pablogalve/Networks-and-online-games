@@ -17,17 +17,14 @@ public class TCPServer : MonoBehaviour
 {
     private Socket socket;
 
-    private IPEndPoint sender;
     private IPEndPoint endPoint;
-    private EndPoint senderRemote;
 
-    readonly int port = 7777;
+    private readonly int port = 7777;
 
-    private bool startNewReceiveThread = false;
     private Thread listenThread;
     private Dictionary<int, User> users;
 
-    int maxListeningClients = 5;
+    private int maxListeningClients = 5;
 
     public string messageToSend = "Pong";
 
@@ -36,7 +33,6 @@ public class TCPServer : MonoBehaviour
     {
         endPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), port);
         socket = new Socket(endPoint.Address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-        senderRemote = (EndPoint)endPoint;
 
         socket.Bind(endPoint);
 
@@ -49,11 +45,7 @@ public class TCPServer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (startNewReceiveThread)
-        {
-            startNewReceiveThread = false;
-            //ThreadPool.QueueUserWorkItem(Receive);
-        }
+        
     }
 
     void ListenForUsers()
@@ -71,7 +63,7 @@ public class TCPServer : MonoBehaviour
                 Socket clientSocket = socket.Accept();
                 Debug.Log("Client accepted");
 
-                newUser.uid = 0; 
+                newUser.uid = i; 
                 newUser.socket = clientSocket;
                 users[newUser.uid] = newUser;
 
@@ -91,7 +83,7 @@ public class TCPServer : MonoBehaviour
         try
         {
             User user = (User)objectUser;
-            for (int i = 0; i < 5; ++i)
+            for (int i = 0; i < maxListeningClients; ++i)
             {
                 //Debug.Log("Trying to receive a message: ");
                 byte[] msg = new byte[256];
@@ -99,6 +91,7 @@ public class TCPServer : MonoBehaviour
                 int recv = user.socket.Receive(msg);
 
                 string decodedMessage = System.Text.Encoding.ASCII.GetString(msg);
+                messageToSend = decodedMessage;
                 Debug.Log("Message: " + decodedMessage);
 
                 Thread.Sleep(1000);
@@ -128,13 +121,7 @@ public class TCPServer : MonoBehaviour
             Close();
         }
     }
-
-    void Shutdown()
-    {
-        socket.Shutdown(SocketShutdown.Both);
-        Debug.Log("Socket shut down");
-    }
-
+    
     void Close()
     {
         socket.Close();
@@ -143,19 +130,24 @@ public class TCPServer : MonoBehaviour
 
     private void OnDestroy()
     {
+        //Close server
         socket.Close();
         if (listenThread != null)
         {
             listenThread.Abort();
         }
-        //TODO: We need a dictionary iterator
-        /*for(uint i = 0; i < users.Count; ++i)
-        {        
-            if (users[i].receiveThread != null)
-            {
-                users[i].receiveThread.Abort();
-            }
+
+        // Close clients
+        foreach (KeyValuePair<int, User> user in users)
+        {
+            user.Value.receiveThread.Abort();
+            user.Value.socket.Close();
         }
-        users.Clear();*/
+        users.Clear();
+    }
+
+    private void SendMessage()
+    {
+
     }
 }

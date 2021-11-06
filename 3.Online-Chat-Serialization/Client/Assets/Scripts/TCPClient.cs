@@ -1,20 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using UnityEngine;
+using System;
 
 public class TCPClient : MonoBehaviour
 {
     private Socket socket;
-    IPEndPoint endPoint;
-    EndPoint Remote;
+    private IPEndPoint endPoint;
+    private EndPoint Remote;
 
-    Thread sendThread;
-    int port = 7777; //0 means take the first free port you get
+    private Thread sendThread;
+    private readonly int port = 7777; //0 means take the first free port you get
 
-    bool startNewThread = false;
+    private bool startNewThread = false;
     public string messageToSend = "Ping";
 
     public UserList userlist;
@@ -68,36 +67,42 @@ public class TCPClient : MonoBehaviour
 
     void GetUsers()
     {
-        /*
-        var t = new testClass();
-        t.hp = 40;
-        t.pos = new List<int> { 10, 3, 12 };
-        string json = JsonUtility.ToJson(t);
-        stream = new MemoryStream();
-        BinaryWriter writer = new BinaryWriter(stream);
-        writer.Write(json);
-        */
+        Send("/getUsers");
 
-        Send("getUsers");
-
-        byte[] msg = new byte[256];
+        byte[] msg = new byte[512];
         var recv = socket.Receive(msg);
         string decodedMessage = System.Text.Encoding.ASCII.GetString(msg);
     }
 
     void Receive()
     {
-        byte[] msg = new byte[256];
+        byte[] msg = new byte[512];
         var recv = socket.Receive(msg);
         string decodedMessage = System.Text.Encoding.ASCII.GetString(msg);
 
-        Debug.Log(decodedMessage);
+        Message message = Message.DeserializeJson(decodedMessage);
+        ProcessMessage(message);
+        //Debug.Log(message.json);
     }
 
     void Send(string message)
     {
-        byte[] msg = System.Text.Encoding.ASCII.GetBytes(message);
+        Message _message = new Message();
+        _message.SerializeJson(0, DateTime.Now, message);
+        byte[] msg = System.Text.Encoding.ASCII.GetBytes(_message.json);
         int bytesCount = socket.Send(msg, msg.Length, SocketFlags.None);
+    }
+
+    void ProcessMessage(Message message)
+    {
+        if(message._id == -1)
+        {
+            Debug.Log("Server message");
+        }
+        else
+        {
+            Debug.Log("User message");
+        }
     }
 
     void Shutdown()
