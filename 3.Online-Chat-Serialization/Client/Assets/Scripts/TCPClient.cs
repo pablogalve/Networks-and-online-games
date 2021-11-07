@@ -27,10 +27,12 @@ public class TCPClient : MonoBehaviour
 
         Debug.Log("Remote: " + endPoint.Address.ToString());
 
+        /*
         socket.Connect(Remote);
 
         sendThread = new Thread(new ThreadStart(Connect));
         sendThread.Start();
+        */
     }
 
     void Update()
@@ -49,7 +51,7 @@ public class TCPClient : MonoBehaviour
         {
             GetUsers();
 
-            for(int i = 0; i < 5; ++i)
+            for (int i = 0; i < 5; ++i)
             {
                 Send(messageToSend);
 
@@ -95,7 +97,7 @@ public class TCPClient : MonoBehaviour
 
     void ProcessMessage(Message message)
     {
-        if(message._id == -1)
+        if (message._id == -1)
         {
             Debug.Log("Server message");
         }
@@ -103,6 +105,11 @@ public class TCPClient : MonoBehaviour
         {
             Debug.Log("User message");
         }
+    }
+
+    public void OnSendMessage(String message)
+    {
+        Debug.Log(message);
     }
 
     void Shutdown()
@@ -120,6 +127,8 @@ public class TCPClient : MonoBehaviour
     private void OnDestroy()
     {
         socket.Close();
-        sendThread.Abort();
+        if (sendThread != null) {
+            sendThread.Abort();
+        }
     }
 }
