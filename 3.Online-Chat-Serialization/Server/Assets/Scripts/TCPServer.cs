@@ -15,41 +15,87 @@ struct User
 
 public class TCPServer : MonoBehaviour
 {
-    private Socket socket;
-
-    private IPEndPoint endPoint;
+    //private Socket socket;
+    //private IPEndPoint endPoint;
+   // private Dictionary<int, User> users;
 
     private readonly int port = 7777;
 
     private Thread listenThread;
-    private Dictionary<int, User> users;
 
-    private int maxListeningClients = 5;
+    private int maximumSockets = 1;
 
-    public string messageToSend = "Pong";
+    Socket[] listenSockets;
+    Socket[] acceptSockets;
+
+    ArrayList listenList;
+    ArrayList acceptList;
 
     // Start is called before the first frame update
     void Start()
     {
+        listenSockets = new Socket[maximumSockets];
+        listenList = new ArrayList();
+        for (int i = 0; i < listenSockets.Length; ++i)
+        {
+            listenList.Add(listenSockets[i]);
+        }
+
+        acceptSockets = new Socket[maximumSockets];
+        acceptList = new ArrayList();
+        for (int i = 0; i < acceptSockets.Length; ++i)
+        {
+            acceptList.Add(acceptSockets[i]);
+        }
+
+        /*
         endPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), port);
         socket = new Socket(endPoint.Address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-
         socket.Bind(endPoint);
+        users = new Dictionary<int, User>();
+        */
 
         listenThread = new Thread(new ThreadStart(ListenForUsers));
         listenThread.Start();
-
-        users = new Dictionary<int, User>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
+    
     void ListenForUsers()
     {
+        Debug.Log("Binding and listening...");
+        for (int i = 0; i < maximumSockets; i++)
+        {
+            listenList[i] = new Socket(AddressFamily.InterNetwork,
+                                       SocketType.Stream,
+                                       ProtocolType.Tcp);
+
+            ((Socket)listenList[i]).Bind(new IPEndPoint(IPAddress.Parse("127.0.0.1"), port + i));
+            ((Socket)listenList[i]).Listen(10);
+        }
+        Debug.Log("Binding and listening completed");
+        Debug.Log("Accepting");
+
+        Thread.Sleep(3000);
+
+        Socket.Select(listenList, null, null, 1000);
+
+        for (int i = 0; i < listenList.Count; i++)
+        {
+            acceptList[i] = ((Socket)listenList[i]).Accept();
+            Debug.Log("Accepted");
+        }
+
+        Debug.Log("Listen List: " + listenList.Count.ToString());
+        Debug.Log("Accept List: " + acceptList.Count.ToString());
+
+
+        /*
         //Listen for a single client
         try
         {
@@ -63,7 +109,7 @@ public class TCPServer : MonoBehaviour
                 Socket clientSocket = socket.Accept();
                 Debug.Log("Client accepted");
 
-                newUser.uid = i; 
+                newUser.uid = i;
                 newUser.socket = clientSocket;
                 users[newUser.uid] = newUser;
 
@@ -76,8 +122,10 @@ public class TCPServer : MonoBehaviour
             Debug.Log(exception.ToString());
             Close();
         }
+        */
     }
 
+    /*
     private void Chat(object objectUser)
     {
         try
@@ -121,33 +169,43 @@ public class TCPServer : MonoBehaviour
             Close();
         }
     }
-    
-    void Close()
-    {
-        socket.Close();
-        Debug.Log("Socket closed");
-    }
+    */
 
+    void Close(Socket socket)
+    {
+        if(socket != null)
+        {
+            socket.Close();
+            Debug.Log("Socket closed");
+        }
+    }
+    
     private void OnDestroy()
     {
         //Close server
-        socket.Close();
+        for(int i = 0; i < listenSockets.Length; ++i)
+        {
+            Close(listenSockets[i]);
+        }
+
+        for (int i = 0; i < acceptSockets.Length; ++i)
+        {
+            Close(acceptSockets[i]);
+        }
+
         if (listenThread != null)
         {
             listenThread.Abort();
         }
 
         // Close clients
+        /*
         foreach (KeyValuePair<int, User> user in users)
         {
             user.Value.receiveThread.Abort();
             user.Value.socket.Close();
         }
-        users.Clear();
-    }
-
-    private void SendMessage()
-    {
-
+        */
+        //users.Clear();
     }
 }

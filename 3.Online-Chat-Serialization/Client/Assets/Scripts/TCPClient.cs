@@ -8,7 +8,6 @@ public class TCPClient : MonoBehaviour
 {
     private Socket socket;
     private IPEndPoint endPoint;
-    private EndPoint Remote;
 
     private Thread sendThread;
     private readonly int port = 7777; //0 means take the first free port you get
@@ -21,18 +20,14 @@ public class TCPClient : MonoBehaviour
     void Start()
     {
         endPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), port);
-        Remote = (EndPoint)endPoint;
-
         socket = new Socket(endPoint.Address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
         Debug.Log("Remote: " + endPoint.Address.ToString());
 
-        /*
-        socket.Connect(Remote);
+        socket.Connect(endPoint);
 
         sendThread = new Thread(new ThreadStart(Connect));
         sendThread.Start();
-        */
     }
 
     void Update()

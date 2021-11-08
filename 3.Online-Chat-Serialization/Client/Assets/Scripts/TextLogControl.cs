@@ -19,7 +19,7 @@ public class TextLogControl : MonoBehaviour
 
     public void LogText(String newTextString)
     {
-        Debug.Log(newTextString);
+        //Debug.Log(newTextString);
 
         Color color = Color.white;
 
