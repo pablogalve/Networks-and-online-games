@@ -12,10 +12,10 @@ public class TCPClient : MonoBehaviour
     private Thread sendThread;
     private readonly int port = 7777; //0 means take the first free port you get
 
-    private bool startNewThread = false;
-    public string messageToSend = "Ping";
-
     public UserList userlist;
+
+    public TextLogControl logControl;
+    private string messageToSend = "Ping";
 
     void Start()
     {
@@ -30,35 +30,26 @@ public class TCPClient : MonoBehaviour
         sendThread.Start();
     }
 
-    void Update()
-    {
-        if (startNewThread)
-        {
-            startNewThread = false;
-            sendThread = new Thread(new ThreadStart(Connect));
-            sendThread.Start();
-        }
-    }
-
     void Connect()
     {
-        try
+        for (int i = 0; i < 5; ++i)
         {
-            GetUsers();
-
-            for (int i = 0; i < 5; ++i)
+            try
             {
-                Send(messageToSend);
-
-                Thread.Sleep(1000);
+                if (messageToSend != null)
+                {
+                    Debug.Log("Wants to send:" + messageToSend);
+                    Send(messageToSend);
+                    //messageToSend = null;
+                }
 
                 Receive();
             }
-        }
-        catch (System.Exception exception)
-        {
-            Debug.Log("Error. Couldn't send message: " + exception.ToString());
-            Close();
+            catch (System.Exception exception)
+            {
+                Debug.Log("Error. Couldn't connect: " + exception.ToString());
+                Close();
+            }
         }
     }
 
@@ -73,9 +64,11 @@ public class TCPClient : MonoBehaviour
 
     void Receive()
     {
+        Debug.Log("Waiting to receive");
         byte[] msg = new byte[512];
         var recv = socket.Receive(msg);
         string decodedMessage = System.Text.Encoding.ASCII.GetString(msg);
+        Debug.Log("Decoded message: " + decodedMessage);
 
         Message message = Message.DeserializeJson(decodedMessage);
         ProcessMessage(message);
@@ -88,23 +81,30 @@ public class TCPClient : MonoBehaviour
         _message.SerializeJson(0, DateTime.Now, message);
         byte[] msg = System.Text.Encoding.ASCII.GetBytes(_message.json);
         int bytesCount = socket.Send(msg, msg.Length, SocketFlags.None);
+        //Debug.Log("Message sent with: " + bytesCount + "bytes");
     }
 
     void ProcessMessage(Message message)
     {
         if (message._id == -1)
         {
-            Debug.Log("Server message");
+            Debug.Log("Server message" + message._message);
         }
         else
         {
-            Debug.Log("User message");
+            Debug.Log("User message: " + message._message);
+        }
+
+        if (logControl != null)
+        {
+            logControl.LogText("marcpages2020", message._message);
         }
     }
 
-    public void OnSendMessage(String message)
+    public void OnSendMessage(string message)
     {
-        Debug.Log(message);
+        //Debug.Log(message);
+        messageToSend = message;
     }
 
     void Shutdown()
@@ -115,14 +115,18 @@ public class TCPClient : MonoBehaviour
 
     void Close()
     {
-        socket.Close();
-        Debug.Log("Socket closed");
+        if (socket != null)
+        {
+            socket.Close();
+            Debug.Log("Socket closed");
+        }
     }
 
     private void OnDestroy()
     {
-        socket.Close();
-        if (sendThread != null) {
+        Close();
+        if (sendThread != null)
+        {
             sendThread.Abort();
         }
     }

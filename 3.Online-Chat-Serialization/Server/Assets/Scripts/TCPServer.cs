@@ -15,57 +15,34 @@ struct User
 
 public class TCPServer : MonoBehaviour
 {
-    //private Socket socket;
-    //private IPEndPoint endPoint;
-   // private Dictionary<int, User> users;
+    // private Dictionary<int, User> users;
+    public int acceptWaitTime = 5;
 
     private readonly int port = 7777;
-
-    private Thread listenThread;
-
     private int maximumSockets = 1;
 
-    Socket[] listenSockets;
-    Socket[] acceptSockets;
+    private Socket[] listenSockets;
+    private Socket[] acceptSockets;
+    private Socket[] receiveSockets;
 
-    ArrayList listenList;
-    ArrayList acceptList;
+    private ArrayList listenList;
+    private ArrayList acceptList;
+
+    private Thread listenThread;
 
     // Start is called before the first frame update
     void Start()
     {
         listenSockets = new Socket[maximumSockets];
-        listenList = new ArrayList();
-        for (int i = 0; i < listenSockets.Length; ++i)
-        {
-            listenList.Add(listenSockets[i]);
-        }
+        listenList = GenerateSocketsArrayList(listenSockets);
 
         acceptSockets = new Socket[maximumSockets];
-        acceptList = new ArrayList();
-        for (int i = 0; i < acceptSockets.Length; ++i)
-        {
-            acceptList.Add(acceptSockets[i]);
-        }
-
-        /*
-        endPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), port);
-        socket = new Socket(endPoint.Address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-        socket.Bind(endPoint);
-        users = new Dictionary<int, User>();
-        */
+        acceptList = GenerateSocketsArrayList(acceptSockets);
 
         listenThread = new Thread(new ThreadStart(ListenForUsers));
         listenThread.Start();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
-    
     void ListenForUsers()
     {
         Debug.Log("Binding and listening...");
@@ -81,7 +58,7 @@ public class TCPServer : MonoBehaviour
         Debug.Log("Binding and listening completed");
         Debug.Log("Accepting");
 
-        Thread.Sleep(3000);
+        Thread.Sleep(acceptWaitTime * 1000);
 
         Socket.Select(listenList, null, null, 1000);
 
@@ -91,107 +68,123 @@ public class TCPServer : MonoBehaviour
             Debug.Log("Accepted");
         }
 
-        Debug.Log("Listen List: " + listenList.Count.ToString());
-        Debug.Log("Accept List: " + acceptList.Count.ToString());
+        //Debug.Log("Listen List: " + listenList.Count.ToString());
+        //Debug.Log("Accept List: " + acceptList.Count.ToString());
 
-
-        /*
-        //Listen for a single client
-        try
-        {
-            Debug.Log("Listening for users to connect");
-            socket.Listen(maxListeningClients);
-
-            for (int i = 0; i < maxListeningClients; ++i)
-            {
-                User newUser = new User();
-
-                Socket clientSocket = socket.Accept();
-                Debug.Log("Client accepted");
-
-                newUser.uid = i;
-                newUser.socket = clientSocket;
-                users[newUser.uid] = newUser;
-
-                newUser.receiveThread = new Thread(new ParameterizedThreadStart(Chat));
-                newUser.receiveThread.Start(newUser);
-            }
-        }
-        catch (System.Exception exception)
-        {
-            Debug.Log(exception.ToString());
-            Close();
-        }
-        */
+        StartChat();
     }
 
-    /*
-    private void Chat(object objectUser)
+    private void StartChat()
+    {
+        for (int j = 0; j < 5; ++j)
+        {
+            Debug.Log("Checking for messages");
+
+            //Copy sockets
+            receiveSockets = new Socket[acceptList.Count];
+            for (int i = 0; i < acceptList.Count; ++i)
+            {
+                receiveSockets[i] = (Socket)acceptList[i];
+            }
+
+            //Generate a new list to receive messages
+            ArrayList receiveList = GenerateSocketsArrayList(receiveSockets);
+            receiveList = Select(receiveList);
+            for (int i = 0; i < receiveList.Count; ++i)
+            {
+                Socket socket = (Socket)receiveList[i];
+                string receivedMessage = ReceiveMessage(socket);
+
+                //Add difference between commands and messages
+                Send(socket, receivedMessage);
+            }
+
+            Thread.Sleep(500);
+        }
+    }
+
+    string ReceiveMessage(Socket socket)
     {
         try
         {
-            User user = (User)objectUser;
-            for (int i = 0; i < maxListeningClients; ++i)
-            {
-                //Debug.Log("Trying to receive a message: ");
-                byte[] msg = new byte[256];
+            //Debug.Log("Trying to receive a message: ");
+            byte[] msg = new byte[256];
+            int recv = socket.Receive(msg);
+            string decodedMessage = System.Text.Encoding.ASCII.GetString(msg);
 
-                int recv = user.socket.Receive(msg);
+            Debug.Log("Message: " + decodedMessage);
 
-                string decodedMessage = System.Text.Encoding.ASCII.GetString(msg);
-                messageToSend = decodedMessage;
-                Debug.Log("Message: " + decodedMessage);
-
-                Thread.Sleep(1000);
-
-                Send(user);
-
-                //Close();
-            }
+            return decodedMessage;
         }
         catch (System.Exception exception)
         {
-            Debug.Log("Exception caught: " + exception.ToString());
+            Debug.LogWarning("Exception caught: " + exception.ToString());
+            Close(socket);
+            return "Error receiving message";
         }
     }
 
-    void Send(User user)
+    void Send(Socket socket, string message)
     {
         try
         {
             //Debug.Log("Sending Pong");
-            byte[] msg = System.Text.Encoding.ASCII.GetBytes(messageToSend);
-            int bytesSent = user.socket.Send(msg, msg.Length, SocketFlags.None);
+            byte[] msg = System.Text.Encoding.ASCII.GetBytes(message);
+            int bytesSent = socket.Send(msg, msg.Length, SocketFlags.None);
+
+            if (bytesSent > 0)
+            {
+                Debug.Log("Bytes sent: " + bytesSent.ToString());
+            }
         }
         catch (System.Exception exception)
         {
-            Debug.Log("Error. Couldn't send message: " + exception.ToString());
-            Close();
+            Debug.LogWarning("Error. Couldn't send message: " + exception.ToString());
+            Close(socket);
         }
     }
-    */
+
+    ArrayList GenerateSocketsArrayList(Socket[] sockets)
+    {
+        ArrayList arrayList = new ArrayList();
+        for (int i = 0; i < sockets.Length; ++i)
+        {
+            arrayList.Add(sockets[i]);
+        }
+
+        return arrayList;
+    }
+
+    ArrayList Select(ArrayList arrayToBeSelected)
+    {
+        Socket.Select(arrayToBeSelected, null, null, 1000);
+        return arrayToBeSelected;
+    }
 
     void Close(Socket socket)
     {
-        if(socket != null)
+        if (socket != null)
         {
             socket.Close();
             Debug.Log("Socket closed");
         }
     }
-    
+
+    private void CloseSockets(Socket[] sockets)
+    {
+        for (int i = 0; i < sockets.Length; ++i)
+        {
+            Close(sockets[i]);
+        }
+    }
+
     private void OnDestroy()
     {
         //Close server
-        for(int i = 0; i < listenSockets.Length; ++i)
-        {
-            Close(listenSockets[i]);
-        }
+        CloseSockets(listenSockets);
+        CloseSockets(acceptSockets);
+        CloseSockets(receiveSockets);
 
-        for (int i = 0; i < acceptSockets.Length; ++i)
-        {
-            Close(acceptSockets[i]);
-        }
 
         if (listenThread != null)
         {

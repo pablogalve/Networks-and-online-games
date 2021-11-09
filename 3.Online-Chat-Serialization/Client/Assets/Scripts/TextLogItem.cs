@@ -5,13 +5,29 @@ using UnityEngine.UI;
 
 public class TextLogItem : MonoBehaviour
 {
-    private Text _text;
+    public Text _username;
 
-    public void SetText(string text, Color color)
+    public Text _message;
+
+    void SetUsername(string username)
     {
-        _text = gameObject.GetComponent<Text>();
+        _username.text = username;
+    }
 
-        _text.text = text;
-        _text.color = color;
+    public void SetText(string username, string text, Color color)
+    {
+        _message = gameObject.GetComponent<Text>();
+
+        if (_message != null)
+        {
+            _message.text = text;
+            _message.color = Color.white;
+        }
+
+        if (_username != null)
+        {
+            _username.text = username;
+            _username.color = color;
+        }
     }
 }

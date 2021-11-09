@@ -17,11 +17,11 @@ public class TextLogControl : MonoBehaviour
         textItems = new List<GameObject>();
     }
 
-    public void LogText(String newTextString)
+    public void LogText(string username, string newTextString)
     {
         //Debug.Log(newTextString);
 
-        Color color = Color.white;
+        Color color = Color.green;
 
         //If we have too many messages, delete the first one received
         if(textItems.Count > maxTextItems)
@@ -37,7 +37,7 @@ public class TextLogControl : MonoBehaviour
 
         TextLogItem textLogItem = newText.GetComponent<TextLogItem>();
 
-        textLogItem.SetText(newTextString, color);
+        textLogItem.SetText(username, newTextString, color);
         newText.transform.SetParent(textTemplate.transform.parent, false);
 
         textItems.Add(newText.gameObject);
