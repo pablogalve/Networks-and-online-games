@@ -19,6 +19,8 @@ public class TCPClient : MonoBehaviour
     public TextLogControl logControl;
     private string messageToSend = "";
 
+    float timeBetweenMessageChecks = 0.5f;
+
     void Start()
     {
         endPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), port);
@@ -36,40 +38,19 @@ public class TCPClient : MonoBehaviour
     {
         //Receive();
 
+        Thread.Sleep(5000);
+
+        Send("/setUsername marcpages2020");
+
+        Thread.Sleep(500);
+
         for (int i = 0; i < 5; ++i)
         {
-            try
-            {
-                if (messageToSend != null)
-                {
-                    //Debug.Log("Wants to send:" + messageToSend);
-                    if(i == 0)
-                    {
-                        Send("/setUsername marcpages2020");
-                    }
-                    else
-                    {
-                        Send("Ping");
-                    }
-                    //messageToSend = null;
-                }
-            }
-            catch (System.Exception exception)
-            {
-                Debug.Log("Error in send: " + exception.ToString());
-                Close();
-            }
+            Send("Ping");
 
-            try
-            {
-                Receive();
-            }
-            catch (System.Exception exception)
-            {
-                Debug.Log("Error in receive: " + exception.ToString());
-                Close();
-            }
- 
+            Receive();
+
+            Thread.Sleep((int)(timeBetweenMessageChecks * 1000.0f));
         }
     }
 
@@ -84,24 +65,40 @@ public class TCPClient : MonoBehaviour
 
     void Receive()
     {
-        Debug.Log("Waiting to receive");
-        byte[] msg = new byte[512];
-        var recv = socket.Receive(msg);
-        string decodedMessage = System.Text.Encoding.ASCII.GetString(msg);
-        Debug.Log("Decoded message: " + decodedMessage);
+        try
+        {
+            Debug.Log("Waiting to receive");
+            byte[] msg = new byte[512];
+            var recv = socket.Receive(msg);
+            string decodedMessage = System.Text.Encoding.ASCII.GetString(msg);
+            Debug.Log("Decoded message: " + decodedMessage);
 
-        Message message = Message.DeserializeJson(decodedMessage);
-        ProcessMessage(message);
-        //Debug.Log(message.json);
+            Message message = Message.DeserializeJson(decodedMessage);
+            ProcessMessage(message);
+            //Debug.Log(message.json);
+        }
+        catch (System.Exception exception)
+        {
+            Debug.Log("Error in receive: " + exception.ToString());
+            Close();
+        }
     }
 
     void Send(string message)
     {
-        Message _message = new Message();
-        _message.SerializeJson(0, DateTime.Now, message);
-        byte[] msg = System.Text.Encoding.ASCII.GetBytes(_message.json);
-        int bytesCount = socket.Send(msg, msg.Length, SocketFlags.None);
-        //Debug.Log("Message sent with: " + bytesCount + "bytes");
+        try
+        {
+            Message _message = new Message();
+            _message.SerializeJson(id, DateTime.Now, message);
+            byte[] msg = System.Text.Encoding.ASCII.GetBytes(_message.json);
+            int bytesCount = socket.Send(msg, msg.Length, SocketFlags.None);
+            Debug.Log("Message sent with: " + bytesCount + "bytes");
+        }
+        catch (System.Exception exception)
+        {
+            Debug.Log("Error in send: " + exception.ToString());
+            Close();
+        }
     }
 
     void ProcessMessage(Message message)

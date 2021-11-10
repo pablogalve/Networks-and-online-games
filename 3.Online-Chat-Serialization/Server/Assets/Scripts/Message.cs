@@ -14,13 +14,15 @@ public class Message
     private MemoryStream stream;
 
     public int _id;
+    public string _username;
     public DateTime _timestamp;
     public string _message;
     public MessageType _type;
 
-    public void SerializeJson(int id, DateTime timestamp, string message)
+    public void SerializeJson(User user,DateTime timestamp, string message)
     {
-        _id = id;
+        _id = user.uid;
+        _username = user.username;
         _timestamp = timestamp;
         _message = message;
 

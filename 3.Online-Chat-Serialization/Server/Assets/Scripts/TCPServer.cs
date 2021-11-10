@@ -6,7 +6,7 @@ using System.Net.Sockets;
 using System.Threading;
 using UnityEngine;
 
-class User
+public class User
 {
     public User(int _uid, Socket _socket)
     {
@@ -14,14 +14,14 @@ class User
         socket = _socket;
     }
 
-    public int uid;
+    public int uid = -1;
     public string username = "No username";
-    public Socket socket;
+    public Socket socket = null;
 }
 
 public class TCPServer : MonoBehaviour
 {
-    private Dictionary<int, User> users;
+    private List<User> users;
     public int acceptWaitTime = 5;
 
     private readonly int port = 7777;
@@ -35,6 +35,9 @@ public class TCPServer : MonoBehaviour
     private ArrayList acceptList;
 
     private Thread listenThread;
+    private List<int> availableIds;
+
+    bool serverOpen = false;
 
     // Start is called before the first frame update
     void Start()
@@ -48,7 +51,13 @@ public class TCPServer : MonoBehaviour
         listenThread = new Thread(new ThreadStart(ListenForUsers));
         listenThread.Start();
 
-        users = new Dictionary<int, User>();
+        users = new List<User>();
+
+        availableIds = new List<int>();
+        for (int i = 0; i < maximumSockets; ++i)
+        {
+            availableIds.Add(UnityEngine.Random.Range(0, int.MaxValue));
+        }
     }
 
     void ListenForUsers()
@@ -75,26 +84,29 @@ public class TCPServer : MonoBehaviour
             Socket socket = (Socket)listenList[i];
             acceptList[i] = socket.Accept();
             Debug.Log("Accepted");
-            //SendServerMessage(socket, "/id " + i);
-            //int id = Random.Range(0, 1000);
-            users[i] = new User(i, socket);
+
+            //Create user with a random Id
+            users.Add(new User(availableIds[0], socket));
+            availableIds.RemoveAt(0);
         }
 
         //Debug.Log("Listen List: " + listenList.Count.ToString());
         //Debug.Log("Accept List: " + acceptList.Count.ToString());
+
+        serverOpen = true;
 
         StartChat();
     }
 
     private void StartChat()
     {
-        for (int j = 0; j < 5; ++j)
+        while (serverOpen)
         {
-            Debug.Log("Checking for messages");
+            //Debug.Log("Checking for messages");
 
             if (acceptList.Count <= 0)
             {
-                return;
+                break;
             }
 
             //Copy sockets
@@ -106,17 +118,31 @@ public class TCPServer : MonoBehaviour
 
             //Generate a new list to receive messages
             ArrayList receiveList = GenerateSocketsArrayList(receiveSockets);
+
+            //Select the ones that have pending messages
             receiveList = Select(receiveList);
+
+            if (receiveList.Count > 0)
+            {
+                Debug.Log("Receive list size: " + receiveList.Count);
+            }
+
             for (int i = 0; i < receiveList.Count; ++i)
             {
                 Socket socket = (Socket)receiveList[i];
                 Message receivedMessage = ReceiveMessage(socket);
 
-                ProcessMessage(receivedMessage, socket);
+                if(receivedMessage != null)
+                {
+                    ProcessMessage(receivedMessage, users[i]);
+                }
+                Debug.Log(receivedMessage.json);
             }
 
             Thread.Sleep(250);
         }
+
+        Debug.Log("Exiting the chat loop");
     }
 
     Message ReceiveMessage(Socket socket)
@@ -127,9 +153,9 @@ public class TCPServer : MonoBehaviour
             byte[] msg = new byte[256];
             int recv = socket.Receive(msg);
             string encodedMessage = System.Text.Encoding.ASCII.GetString(msg);
+            //Debug.Log("Encoded message: " + encodedMessage);
             Message message = Message.DeserializeJson(encodedMessage);
-
-            Debug.Log("Message: " + encodedMessage);
+            //Debug.Log("Decoded message: " + encodedMessage);
 
             return message;
         }
@@ -141,9 +167,9 @@ public class TCPServer : MonoBehaviour
         }
     }
 
-    void ProcessMessage(Message message, Socket socket)
+    void ProcessMessage(Message message, User originUser)
     {
-        if(message._type == MessageType.COMMAND)
+        if (message._type == MessageType.COMMAND)
         {
             int index = message._message.IndexOf(" ");
             string command = message._message.Substring(0, index);
@@ -154,6 +180,7 @@ public class TCPServer : MonoBehaviour
                 case "/setUsername":
                     string username = message._message.Substring(index, message._message.Length - index);
                     Debug.Log("Username: " + username);
+                    originUser.username = username;
                     break;
 
                 default:
@@ -167,13 +194,19 @@ public class TCPServer : MonoBehaviour
         }
     }
 
-    void Send(Socket socket, string message)
+    void Send(User user, string message)
     {
+        if(message.Length <= 0)
+        {
+            Debug.LogWarning("Error sending message, length <= 0");
+            return;
+        }
+
         try
         {
             //Debug.Log("Sending Pong");
             byte[] msg = System.Text.Encoding.ASCII.GetBytes(message);
-            int bytesSent = socket.Send(msg, msg.Length, SocketFlags.None);
+            int bytesSent = user.socket.Send(msg, msg.Length, SocketFlags.None);
 
             if (bytesSent > 0)
             {
@@ -183,27 +216,18 @@ public class TCPServer : MonoBehaviour
         catch (System.Exception exception)
         {
             Debug.LogWarning("Error. Couldn't send message: " + exception.ToString());
-            Close(socket);
-            acceptList.Remove(socket);
+            Close(user.socket);
+            acceptList.Remove(user.socket);
+            users.Remove(user);
         }
     }
 
     void SendToEveryone(Message messageToSend)
     {
-        foreach (KeyValuePair<int, User> user in users)
+        for (int i = 0; i < users.Count; ++i)
         {
-            Send(user.Value.socket, messageToSend.json);
+            Send(users[i], messageToSend.json);
         }
-    }
-
-    void SendServerMessage(Socket socket, string message)
-    {
-        Message _message = new Message();
-        _message.SerializeJson(-1, DateTime.Now, message);
-        byte[] msg = System.Text.Encoding.ASCII.GetBytes(_message.json);
-        Debug.Log("Want to send message");
-        int bytesCount = socket.Send(msg, msg.Length, SocketFlags.None);
-        Debug.Log("Message sent with: " + bytesCount.ToString());
     }
 
     ArrayList GenerateSocketsArrayList(Socket[] sockets)
@@ -254,13 +278,6 @@ public class TCPServer : MonoBehaviour
         }
 
         // Close clients
-        /*
-        foreach (KeyValuePair<int, User> user in users)
-        {
-            user.Value.receiveThread.Abort();
-            user.Value.socket.Close();
-        }
-        */
-        //users.Clear();
+        users.Clear();
     }
 }
