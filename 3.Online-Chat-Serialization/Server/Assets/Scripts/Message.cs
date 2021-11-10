@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using UnityEngine;
 
-enum MessageType
+public enum MessageType
 {
     COMMAND,
     MESSAGE
