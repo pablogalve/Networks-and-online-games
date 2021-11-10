@@ -190,7 +190,10 @@ public class TCPServer : MonoBehaviour
 
     void SendToEveryone(Message messageToSend)
     {
-        //add functionality
+        foreach (KeyValuePair<int, User> user in users)
+        {
+            Send(user.Value.socket, messageToSend.json);
+        }
     }
 
     void SendServerMessage(Socket socket, string message)
