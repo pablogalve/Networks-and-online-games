@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
@@ -5,17 +6,22 @@ using System.Net.Sockets;
 using System.Threading;
 using UnityEngine;
 
-struct User
+class User
 {
+    public User(int _uid, Socket _socket)
+    {
+        uid = _uid;
+        socket = _socket;
+    }
+
     public int uid;
-    public string username;
+    public string username = "No username";
     public Socket socket;
-    public Thread receiveThread;
 }
 
 public class TCPServer : MonoBehaviour
 {
-    // private Dictionary<int, User> users;
+    private Dictionary<int, User> users;
     public int acceptWaitTime = 5;
 
     private readonly int port = 7777;
@@ -41,6 +47,8 @@ public class TCPServer : MonoBehaviour
 
         listenThread = new Thread(new ThreadStart(ListenForUsers));
         listenThread.Start();
+
+        users = new Dictionary<int, User>();
     }
 
     void ListenForUsers()
@@ -64,8 +72,12 @@ public class TCPServer : MonoBehaviour
 
         for (int i = 0; i < listenList.Count; i++)
         {
-            acceptList[i] = ((Socket)listenList[i]).Accept();
+            Socket socket = (Socket)listenList[i];
+            acceptList[i] = socket.Accept();
             Debug.Log("Accepted");
+            //SendServerMessage(socket, "/id " + i);
+            //int id = Random.Range(0, 1000);
+            users[i] = new User(i, socket);
         }
 
         //Debug.Log("Listen List: " + listenList.Count.ToString());
@@ -80,6 +92,11 @@ public class TCPServer : MonoBehaviour
         {
             Debug.Log("Checking for messages");
 
+            if (acceptList.Count <= 0)
+            {
+                return;
+            }
+
             //Copy sockets
             receiveSockets = new Socket[acceptList.Count];
             for (int i = 0; i < acceptList.Count; ++i)
@@ -93,34 +110,60 @@ public class TCPServer : MonoBehaviour
             for (int i = 0; i < receiveList.Count; ++i)
             {
                 Socket socket = (Socket)receiveList[i];
-                string receivedMessage = ReceiveMessage(socket);
+                Message receivedMessage = ReceiveMessage(socket);
 
-                //Add difference between commands and messages
-                Send(socket, receivedMessage);
+                ProcessMessage(receivedMessage, socket);
             }
 
-            Thread.Sleep(500);
+            Thread.Sleep(250);
         }
     }
 
-    string ReceiveMessage(Socket socket)
+    Message ReceiveMessage(Socket socket)
     {
         try
         {
             //Debug.Log("Trying to receive a message: ");
             byte[] msg = new byte[256];
             int recv = socket.Receive(msg);
-            string decodedMessage = System.Text.Encoding.ASCII.GetString(msg);
+            string encodedMessage = System.Text.Encoding.ASCII.GetString(msg);
+            Message message = Message.DeserializeJson(encodedMessage);
 
-            Debug.Log("Message: " + decodedMessage);
+            Debug.Log("Message: " + encodedMessage);
 
-            return decodedMessage;
+            return message;
         }
         catch (System.Exception exception)
         {
             Debug.LogWarning("Exception caught: " + exception.ToString());
             Close(socket);
-            return "Error receiving message";
+            return null;
+        }
+    }
+
+    void ProcessMessage(Message message, Socket socket)
+    {
+        if(message._type == MessageType.COMMAND)
+        {
+            int index = message._message.IndexOf(" ");
+            string command = message._message.Substring(0, index);
+            Debug.Log("Command: " + command);
+
+            switch (command)
+            {
+                case "/setUsername":
+                    string username = message._message.Substring(index, message._message.Length - index);
+                    Debug.Log("Username: " + username);
+                    break;
+
+                default:
+                    break;
+            }
+        }
+        else
+        {
+            //Add difference between commands and messages
+            SendToEveryone(message);
         }
     }
 
@@ -141,7 +184,23 @@ public class TCPServer : MonoBehaviour
         {
             Debug.LogWarning("Error. Couldn't send message: " + exception.ToString());
             Close(socket);
+            acceptList.Remove(socket);
         }
+    }
+
+    void SendToEveryone(Message messageToSend)
+    {
+        //add functionality
+    }
+
+    void SendServerMessage(Socket socket, string message)
+    {
+        Message _message = new Message();
+        _message.SerializeJson(-1, DateTime.Now, message);
+        byte[] msg = System.Text.Encoding.ASCII.GetBytes(_message.json);
+        Debug.Log("Want to send message");
+        int bytesCount = socket.Send(msg, msg.Length, SocketFlags.None);
+        Debug.Log("Message sent with: " + bytesCount.ToString());
     }
 
     ArrayList GenerateSocketsArrayList(Socket[] sockets)

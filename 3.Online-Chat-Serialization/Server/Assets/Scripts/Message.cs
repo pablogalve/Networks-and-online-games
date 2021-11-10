@@ -16,7 +16,7 @@ public class Message
     public int _id;
     public DateTime _timestamp;
     public string _message;
-    MessageType _type;
+    public MessageType _type;
 
     public void SerializeJson(int id, DateTime timestamp, string message)
     {

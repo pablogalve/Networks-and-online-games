@@ -6,6 +6,8 @@ using System;
 
 public class TCPClient : MonoBehaviour
 {
+    private int id = 0;
+
     private Socket socket;
     private IPEndPoint endPoint;
 
@@ -15,7 +17,7 @@ public class TCPClient : MonoBehaviour
     public UserList userlist;
 
     public TextLogControl logControl;
-    private string messageToSend = "Ping";
+    private string messageToSend = "";
 
     void Start()
     {
@@ -26,30 +28,48 @@ public class TCPClient : MonoBehaviour
 
         socket.Connect(endPoint);
 
-        sendThread = new Thread(new ThreadStart(Connect));
+        sendThread = new Thread(new ThreadStart(Chat));
         sendThread.Start();
     }
 
-    void Connect()
+    void Chat()
     {
+        //Receive();
+
         for (int i = 0; i < 5; ++i)
         {
             try
             {
                 if (messageToSend != null)
                 {
-                    Debug.Log("Wants to send:" + messageToSend);
-                    Send(messageToSend);
+                    //Debug.Log("Wants to send:" + messageToSend);
+                    if(i == 0)
+                    {
+                        Send("/setUsername marcpages2020");
+                    }
+                    else
+                    {
+                        Send("Ping");
+                    }
                     //messageToSend = null;
                 }
+            }
+            catch (System.Exception exception)
+            {
+                Debug.Log("Error in send: " + exception.ToString());
+                Close();
+            }
 
+            try
+            {
                 Receive();
             }
             catch (System.Exception exception)
             {
-                Debug.Log("Error. Couldn't connect: " + exception.ToString());
+                Debug.Log("Error in receive: " + exception.ToString());
                 Close();
             }
+ 
         }
     }
 
@@ -89,6 +109,21 @@ public class TCPClient : MonoBehaviour
         if (message._id == -1)
         {
             Debug.Log("Server message" + message._message);
+
+            int index = message._message.IndexOf(" ");
+            string command = message._message.Substring(0, index);
+
+            switch (command)
+            {
+                case "/id":
+                    string idString = message._message.Substring(index + 1, message._message.Length);
+                    id = Int32.Parse(idString);
+                    Debug.Log("Id: " + id.ToString());
+                    break;
+
+                default:
+                    break;
+            }
         }
         else
         {
