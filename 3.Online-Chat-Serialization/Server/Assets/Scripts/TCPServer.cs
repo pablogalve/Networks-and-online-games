@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
@@ -10,11 +10,11 @@ public class User
 {
     public User(int _uid, Socket _socket)
     {
-        uid = _uid;
+        id = _uid;
         socket = _socket;
     }
 
-    public int uid = -1;
+    public int id = -1;
     public string username = "No username";
     public Socket socket = null;
 }
@@ -42,12 +42,6 @@ public class TCPServer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        listenSockets = new Socket[maximumSockets];
-        listenList = GenerateSocketsArrayList(listenSockets);
-
-        acceptSockets = new Socket[maximumSockets];
-        acceptList = GenerateSocketsArrayList(acceptSockets);
-
         listenThread = new Thread(new ThreadStart(ListenForUsers));
         listenThread.Start();
 
@@ -56,13 +50,21 @@ public class TCPServer : MonoBehaviour
         availableIds = new List<int>();
         for (int i = 0; i < maximumSockets; ++i)
         {
-            availableIds.Add(UnityEngine.Random.Range(0, int.MaxValue));
+            availableIds.Add(UnityEngine.Random.Range(1, int.MaxValue));
         }
     }
 
     void ListenForUsers()
     {
         Debug.Log("Binding and listening...");
+
+        //Generate Sockets
+        listenSockets = new Socket[maximumSockets];
+        listenList = GenerateSocketsArrayList(listenSockets);
+
+        acceptSockets = new Socket[maximumSockets];
+        acceptList = GenerateSocketsArrayList(acceptSockets);
+
         for (int i = 0; i < maximumSockets; i++)
         {
             listenList[i] = new Socket(AddressFamily.InterNetwork,
@@ -79,6 +81,8 @@ public class TCPServer : MonoBehaviour
 
         Socket.Select(listenList, null, null, 1000);
 
+
+        // TODO: Change to users
         for (int i = 0; i < listenList.Count; i++)
         {
             Socket socket = (Socket)listenList[i];
@@ -86,7 +90,7 @@ public class TCPServer : MonoBehaviour
             Debug.Log("Accepted");
 
             //Create user with a random Id
-            users.Add(new User(availableIds[0], socket));
+            users.Add(new User(availableIds[0], (Socket)acceptList[i]));
             availableIds.RemoveAt(0);
         }
 
@@ -109,18 +113,8 @@ public class TCPServer : MonoBehaviour
                 break;
             }
 
-            //Copy sockets
-            receiveSockets = new Socket[acceptList.Count];
-            for (int i = 0; i < acceptList.Count; ++i)
-            {
-                receiveSockets[i] = (Socket)acceptList[i];
-            }
-
-            //Generate a new list to receive messages
-            ArrayList receiveList = GenerateSocketsArrayList(receiveSockets);
-
             //Select the ones that have pending messages
-            receiveList = Select(receiveList);
+            List<User> receiveList = SelectUsers();
 
             if (receiveList.Count > 0)
             {
@@ -129,12 +123,11 @@ public class TCPServer : MonoBehaviour
 
             for (int i = 0; i < receiveList.Count; ++i)
             {
-                Socket socket = (Socket)receiveList[i];
-                Message receivedMessage = ReceiveMessage(socket);
+                Message receivedMessage = ReceiveMessage(receiveList[i].socket);
 
-                if(receivedMessage != null)
+                if (receivedMessage != null)
                 {
-                    ProcessMessage(receivedMessage, users[i]);
+                    ProcessMessage(receivedMessage, receiveList[i]);
                 }
                 Debug.Log(receivedMessage.json);
             }
@@ -169,6 +162,8 @@ public class TCPServer : MonoBehaviour
 
     void ProcessMessage(Message message, User originUser)
     {
+        message._userId = originUser.id;
+
         if (message._type == MessageType.COMMAND)
         {
             int index = message._message.IndexOf(" ");
@@ -178,9 +173,38 @@ public class TCPServer : MonoBehaviour
             switch (command)
             {
                 case "/setUsername":
+                    //Iterate all usersto check if it is available
                     string username = message._message.Substring(index, message._message.Length - index);
                     Debug.Log("Username: " + username);
-                    originUser.username = username;
+
+                    bool usernameFound = false;
+
+                    //OK
+                    message._userId = -1;
+                    message._returnCode = 200;
+                    //message._message = "Username accepted";
+
+                    for (int i = 0; i < users.Count; ++i)
+                    {
+                        if (users[i].username == username)
+                        {
+                            Debug.Log("Username already taken");
+
+                            //Bad request, username already taken
+                            message._returnCode = 400;
+                            message._message = "Username not available";
+                            usernameFound = true;
+                            break;
+                        }
+                    }
+
+                    if (!usernameFound)
+                    {
+                        originUser.username = username;
+                    }
+                    message.Serialize();
+                    Send(originUser, message);
+
                     break;
 
                 default:
@@ -194,9 +218,9 @@ public class TCPServer : MonoBehaviour
         }
     }
 
-    void Send(User user, string message)
+    void Send(User user, Message message)
     {
-        if(message.Length <= 0)
+        if (message._message.Length <= 0)
         {
             Debug.LogWarning("Error sending message, length <= 0");
             return;
@@ -205,7 +229,7 @@ public class TCPServer : MonoBehaviour
         try
         {
             //Debug.Log("Sending Pong");
-            byte[] msg = System.Text.Encoding.ASCII.GetBytes(message);
+            byte[] msg = System.Text.Encoding.ASCII.GetBytes(message.json);
             int bytesSent = user.socket.Send(msg, msg.Length, SocketFlags.None);
 
             if (bytesSent > 0)
@@ -226,7 +250,7 @@ public class TCPServer : MonoBehaviour
     {
         for (int i = 0; i < users.Count; ++i)
         {
-            Send(users[i], messageToSend.json);
+            Send(users[i], messageToSend);
         }
     }
 
@@ -245,6 +269,39 @@ public class TCPServer : MonoBehaviour
     {
         Socket.Select(arrayToBeSelected, null, null, 1000);
         return arrayToBeSelected;
+    }
+
+    List<User> SelectUsers()
+    {
+        List<User> selectedUsers = new List<User>();
+
+        //Copy sockets
+        receiveSockets = new Socket[users.Count];
+        for (int i = 0; i < users.Count; ++i)
+        {
+            receiveSockets[i] = users[i].socket;
+        }
+
+        //Generate a new list to receive messages
+        ArrayList receiveList = GenerateSocketsArrayList(receiveSockets);
+        //Debug.Log("Receive list amount 1: " + receiveList.Count);
+
+        //Select the ones that have pending messages
+        receiveList = Select(receiveList);
+        //Debug.Log("Receive list amount 2: " + receiveList.Count);
+
+        for (int i = 0; i < receiveList.Count; ++i)
+        {
+            for (int j = 0; j < users.Count; ++j)
+            {
+                if (receiveList[i] == users[j].socket)
+                {
+                    selectedUsers.Add(users[j]);
+                }
+            }
+        }
+
+        return selectedUsers;
     }
 
     void Close(Socket socket)

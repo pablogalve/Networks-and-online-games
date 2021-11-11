@@ -1,4 +1,4 @@
-using System.Net;
+﻿using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using UnityEngine;
@@ -20,15 +20,16 @@ public class TCPClient : MonoBehaviour
     private string messageToSend = "";
 
     float timeBetweenMessageChecks = 0.5f;
+    string username = "marcpages2020";
 
     void Start()
     {
         endPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), port);
         socket = new Socket(endPoint.Address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
-        Debug.Log("Remote: " + endPoint.Address.ToString());
-
         socket.Connect(endPoint);
+
+        Debug.Log("Remote: " + endPoint.Address.ToString());
 
         sendThread = new Thread(new ThreadStart(Chat));
         sendThread.Start();
@@ -40,10 +41,12 @@ public class TCPClient : MonoBehaviour
 
         Thread.Sleep(5000);
 
-        Send("/setUsername marcpages2020");
+        Send("/setUsername " + username);
+        Receive();
 
         Thread.Sleep(500);
 
+        /*
         for (int i = 0; i < 5; ++i)
         {
             Send("Ping");
@@ -52,6 +55,7 @@ public class TCPClient : MonoBehaviour
 
             Thread.Sleep((int)(timeBetweenMessageChecks * 1000.0f));
         }
+        */
     }
 
     void GetUsers()
@@ -63,8 +67,10 @@ public class TCPClient : MonoBehaviour
         string decodedMessage = System.Text.Encoding.ASCII.GetString(msg);
     }
 
-    void Receive()
+    Message Receive()
     {
+        Message message = new Message();
+
         try
         {
             Debug.Log("Waiting to receive");
@@ -73,14 +79,16 @@ public class TCPClient : MonoBehaviour
             string decodedMessage = System.Text.Encoding.ASCII.GetString(msg);
             Debug.Log("Decoded message: " + decodedMessage);
 
-            Message message = Message.DeserializeJson(decodedMessage);
+            message = Message.DeserializeJson(decodedMessage);
             ProcessMessage(message);
+            return message;
             //Debug.Log(message.json);
         }
         catch (System.Exception exception)
         {
             Debug.Log("Error in receive: " + exception.ToString());
             Close();
+            return message;
         }
     }
 
@@ -89,7 +97,7 @@ public class TCPClient : MonoBehaviour
         try
         {
             Message _message = new Message();
-            _message.SerializeJson(id, DateTime.Now, message);
+            _message.SerializeJson(id, username, DateTime.Now, message);
             byte[] msg = System.Text.Encoding.ASCII.GetBytes(_message.json);
             int bytesCount = socket.Send(msg, msg.Length, SocketFlags.None);
             Debug.Log("Message sent with: " + bytesCount + "bytes");
@@ -103,7 +111,7 @@ public class TCPClient : MonoBehaviour
 
     void ProcessMessage(Message message)
     {
-        if (message._id == -1)
+        if (message._userId == -1)
         {
             Debug.Log("Server message" + message._message);
 
@@ -118,6 +126,19 @@ public class TCPClient : MonoBehaviour
                     Debug.Log("Id: " + id.ToString());
                     break;
 
+                case "/setUsername":
+                    //Iterate all usersto check if it is available
+                    string messageUsername = message._message.Substring(index, message._message.Length - index);
+                    Debug.Log("Username: " + username);
+
+                    //OK
+                    if(message._returnCode == 200)
+                    {
+                        username = messageUsername;
+                        Debug.Log("Username set to: " + username);
+                    }
+
+                    break;
                 default:
                     break;
             }

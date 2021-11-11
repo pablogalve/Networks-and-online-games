@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using UnityEngine;
 
-enum MessageType
+public enum MessageType
 {
     COMMAND,
     MESSAGE
@@ -13,14 +13,25 @@ public class Message
     string jsonMsg;
     private MemoryStream stream;
 
-    public int _id;
+    public int _userId;
+    public string _username;
     public DateTime _timestamp;
     public string _message;
-    MessageType _type;
+    public MessageType _type;
+    public int _returnCode = 0;
 
-    public void SerializeJson(int id, DateTime timestamp, string message)
+    public void Serialize()
     {
-        _id = id;
+        jsonMsg = JsonUtility.ToJson(this);
+        stream = new MemoryStream();
+        BinaryWriter writer = new BinaryWriter(stream);
+        writer.Write(jsonMsg);
+    }
+
+    public void SerializeJson(int id, string username, DateTime timestamp, string message)
+    {
+        _userId = id;
+        _username = username;
         _timestamp = timestamp;
         _message = message;
 
@@ -33,10 +44,7 @@ public class Message
             _type = MessageType.MESSAGE;
         }
 
-        jsonMsg = JsonUtility.ToJson(this);
-        stream = new MemoryStream();
-        BinaryWriter writer = new BinaryWriter(stream);
-        writer.Write(jsonMsg);
+        Serialize();
     }
 
     public static Message DeserializeJson(string json)
