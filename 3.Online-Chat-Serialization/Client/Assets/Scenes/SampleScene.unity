@@ -537,12 +537,12 @@ GameObject:
   - component: {fileID: 333914116}
   - component: {fileID: 333914117}
   m_Layer: 5
-  m_Name: Text
+  m_Name: Message
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &333914114
 RectTransform:
   m_ObjectHideFlags: 0
@@ -559,9 +559,9 @@ RectTransform:
   m_Father: {fileID: 344352322}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 81, y: -26}
   m_SizeDelta: {x: 160, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &333914116
@@ -584,8 +584,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9cc7eecbcac5264459b0def42c18fbb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _username: {fileID: 1191710554}
-  _message: {fileID: 1207749097}
+  _usernameObject: {fileID: 1191710553}
+  _messageObject: {fileID: 1207749096}
 --- !u!1 &344352321
 GameObject:
   m_ObjectHideFlags: 0

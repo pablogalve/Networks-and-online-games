@@ -1,8 +1,9 @@
-using System.Net;
+﻿using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using UnityEngine;
 using System;
+using System.Collections;
 
 public class TCPClient : MonoBehaviour
 {
@@ -12,58 +13,69 @@ public class TCPClient : MonoBehaviour
     private IPEndPoint endPoint;
 
     private Thread sendThread;
+    private Thread receiveThread;
     private readonly int port = 7777; //0 means take the first free port you get
 
     public UserList userlist;
 
     public TextLogControl logControl;
-    private string messageToSend = "";
+    private string messageToSend = null;
 
     float timeBetweenMessageChecks = 0.5f;
+    string username = null;
+
+    bool chatOpen = false;
 
     void Start()
     {
         endPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), port);
         socket = new Socket(endPoint.Address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
-        Debug.Log("Remote: " + endPoint.Address.ToString());
-
         socket.Connect(endPoint);
 
-        sendThread = new Thread(new ThreadStart(Chat));
+        Debug.Log("Remote: " + endPoint.Address.ToString());
+
+        chatOpen = true;
+
+        sendThread = new Thread(new ThreadStart(StartSending));
         sendThread.Start();
+
+        receiveThread = new Thread(new ThreadStart(StartReceiving));
+        receiveThread.Start();
     }
 
-    void Chat()
+    void StartSending()
     {
         //Receive();
+        logControl.LogText("Server", "Please write a username");
 
-        Thread.Sleep(5000);
+        Thread.Sleep(2500);
 
-        Send("/setUsername marcpages2020");
-
-        Thread.Sleep(500);
-
-        for (int i = 0; i < 5; ++i)
+        while (chatOpen)
         {
-            Send("Ping");
-
-            Receive();
+            if (messageToSend != null)
+            {
+                Send(messageToSend);
+                messageToSend = null;
+            }
 
             Thread.Sleep((int)(timeBetweenMessageChecks * 1000.0f));
         }
     }
 
-    void GetUsers()
+    void StartReceiving()
     {
-        Send("/getUsers");
+        Thread.Sleep(2500);
 
-        byte[] msg = new byte[512];
-        var recv = socket.Receive(msg);
-        string decodedMessage = System.Text.Encoding.ASCII.GetString(msg);
+        while (chatOpen)
+        {
+            Receive();
+        }
+
+        Thread.Sleep((int)(timeBetweenMessageChecks * 1000.0f));
     }
 
-    void Receive()
+    Message Receive()
     {
         try
         {
@@ -75,12 +87,15 @@ public class TCPClient : MonoBehaviour
 
             Message message = Message.DeserializeJson(decodedMessage);
             ProcessMessage(message);
+            return message;
             //Debug.Log(message.json);
         }
         catch (System.Exception exception)
         {
             Debug.Log("Error in receive: " + exception.ToString());
             Close();
+            chatOpen = false;
+            return null;
         }
     }
 
@@ -89,54 +104,87 @@ public class TCPClient : MonoBehaviour
         try
         {
             Message _message = new Message();
-            _message.SerializeJson(id, DateTime.Now, message);
+            _message.SerializeJson(id, username == null ? "" : username, DateTime.Now, message);
+
             byte[] msg = System.Text.Encoding.ASCII.GetBytes(_message.json);
             int bytesCount = socket.Send(msg, msg.Length, SocketFlags.None);
+
             Debug.Log("Message sent with: " + bytesCount + "bytes");
         }
         catch (System.Exception exception)
         {
-            Debug.Log("Error in send: " + exception.ToString());
+            Debug.Log("Error sending message: " + exception.ToString());
             Close();
         }
     }
 
     void ProcessMessage(Message message)
     {
-        if (message._id == -1)
+        if (message._userId == -1)
         {
-            Debug.Log("Server message" + message._message);
+            Debug.Log("Server message: " + message._message);
 
             int index = message._message.IndexOf(" ");
             string command = message._message.Substring(0, index);
 
+            string serverMessage = "a";
+
             switch (command)
             {
                 case "/id":
-                    string idString = message._message.Substring(index + 1, message._message.Length);
+                    string idString = message._message.Substring(index, message._message.Length);
                     id = Int32.Parse(idString);
                     Debug.Log("Id: " + id.ToString());
+                    break;
+
+                case "/setUsername":
+
+                    //OK
+                    if (message._returnCode == 200)
+                    {
+                        string messageUsername = message._message.Substring(index, message._message.Length - index);
+                        username = messageUsername;
+
+                        serverMessage = "Username set to: " + username;
+                    }
+                    else
+                    {
+                        serverMessage = "Username could not be set";
+                    }
+                    Debug.Log(serverMessage);
                     break;
 
                 default:
                     break;
             }
+
+            if (logControl != null)
+            {
+                logControl.LogText("Server", serverMessage);
+            }
         }
         else
         {
             Debug.Log("User message: " + message._message);
-        }
 
-        if (logControl != null)
-        {
-            logControl.LogText("marcpages2020", message._message);
+            if (logControl != null)
+            {
+                logControl.LogText(message._username, message._message);
+            }
         }
     }
 
     public void OnSendMessage(string message)
     {
         //Debug.Log(message);
-        messageToSend = message;
+        if (username == null)
+        {
+            messageToSend = "/setUsername " + message;
+        }
+        else
+        {
+            messageToSend = message;
+        }
     }
 
     void Shutdown()

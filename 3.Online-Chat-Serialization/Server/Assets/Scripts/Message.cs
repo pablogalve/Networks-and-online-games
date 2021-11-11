@@ -13,16 +13,25 @@ public class Message
     string jsonMsg;
     private MemoryStream stream;
 
-    public int _id;
+    public int _userId;
     public string _username;
     public DateTime _timestamp;
     public string _message;
     public MessageType _type;
+    public int _returnCode = 0;
 
-    public void SerializeJson(User user,DateTime timestamp, string message)
+    public void Serialize()
     {
-        _id = user.uid;
-        _username = user.username;
+        jsonMsg = JsonUtility.ToJson(this);
+        stream = new MemoryStream();
+        BinaryWriter writer = new BinaryWriter(stream);
+        writer.Write(jsonMsg);
+    }
+
+    public void SerializeJson(int id, string username, DateTime timestamp, string message)
+    {
+        _userId = id;
+        _username = username;
         _timestamp = timestamp;
         _message = message;
 
@@ -35,10 +44,7 @@ public class Message
             _type = MessageType.MESSAGE;
         }
 
-        jsonMsg = JsonUtility.ToJson(this);
-        stream = new MemoryStream();
-        BinaryWriter writer = new BinaryWriter(stream);
-        writer.Write(jsonMsg);
+        Serialize();
     }
 
     public static Message DeserializeJson(string json)
@@ -50,9 +56,16 @@ public class Message
         //stream.Seek(0, SeekOrigin.Begin);
 
         //string jsonMsg = reader.ReadString();
+
+        if(json == null)
+        {
+            return null;
+        }
+
         Message message = new Message();
+
         message = JsonUtility.FromJson<Message>(json);
-        Debug.Log("deserialize message: " + message._message);
+        Debug.Log("deserialized message: " + message._message);
         return message;
     }
 
