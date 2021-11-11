@@ -200,7 +200,16 @@ public class TCPServer : MonoBehaviour
                     Send(originUser, message);
 
                     break;
-
+                case "/listUsers":
+                    message._userId = -1;
+                    message._message = "List of users: ";
+                    for (int i = 0; i < users.Count; ++i)
+                    {
+                        message._message += users[i].username + " ";
+                    }
+                    message.Serialize();
+                    SendToEveryone(message);
+                    break;
                 default:
                     break;
             }

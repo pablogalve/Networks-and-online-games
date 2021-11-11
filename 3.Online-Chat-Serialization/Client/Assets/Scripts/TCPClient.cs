@@ -127,7 +127,7 @@ public class TCPClient : MonoBehaviour
             int index = message._message.IndexOf(" ");
             string command = message._message.Substring(0, index);
 
-            string serverMessage = "a";
+            string serverMessage = message._message;
 
             switch (command)
             {
@@ -154,6 +154,9 @@ public class TCPClient : MonoBehaviour
                     Debug.Log(serverMessage);
                     break;
 
+                case "/listUsers":
+                    serverMessage = message._message;
+                        break;
                 default:
                     break;
             }
