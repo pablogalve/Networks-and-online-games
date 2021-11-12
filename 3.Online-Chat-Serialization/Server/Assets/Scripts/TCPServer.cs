@@ -21,7 +21,9 @@ public class User
 
 public class TCPServer : MonoBehaviour
 {
-    private List<User> users;
+    [HideInInspector]
+    public List<User> users;
+
     public int acceptWaitTime = 5;
 
     private readonly int port = 7777;
@@ -38,9 +40,13 @@ public class TCPServer : MonoBehaviour
 
     bool serverOpen = false;
 
+    public Dictionary<string, Command> commands;
+
     // Start is called before the first frame update
     void Start()
     {
+        commands = new Dictionary<string, Command>();
+
         listenThread = new Thread(new ThreadStart(ListenForUsers));
         listenThread.Start();
 
@@ -50,6 +56,19 @@ public class TCPServer : MonoBehaviour
         for (int i = 0; i < maximumSockets; ++i)
         {
             availableIds.Add(UnityEngine.Random.Range(0, int.MaxValue));
+        }
+
+        //Create a command for each type
+        foreach(var assemblies in AppDomain.CurrentDomain.GetAssemblies())
+        {
+            foreach(var type in assemblies.GetTypes())
+            {
+                if (type.IsSubclassOf(typeof(Command)))
+                {
+                    Command cmd = (Command)Activator.CreateInstance(type);
+                    commands[cmd.name] = cmd;
+                }
+            }
         }
     }
 
@@ -155,51 +174,23 @@ public class TCPServer : MonoBehaviour
 
         if (message._type == MessageType.COMMAND)
         {
-            message._username = "Server";
-
             int index = message._message.IndexOf(" ");
-            string command = message._message.Substring(0, index);
-            string content = message._message.Substring(index, message._message.Length - index);
+            //We start at 1 to avoid "/"
+            string commandName = message._message.Substring(1, index);
 
-            Debug.Log("Command: " + command);
+            if (commands.ContainsKey(commandName))
+            {
+                message._username = "Server";
+                commands[commandName].Execute(this, originUser, message);
 
-            switch (command)
+                Debug.Log("Command: " + commandName);
+            }
+
+            switch (commandName)
             {
                 case "/setUsername":
-                    bool usernameFound = false;
-
-                    //Debug.Log("Username: " + username);
-
-                    //OK
-                    message._userId = -1;
-                    message._returnCode = 200;
-                    string username = content;
-                    
-                    //Iterate all users to check if it is available
-                    for (int i = 0; i < users.Count; ++i)
-                    {
-                        if (users[i].username == username)
-                        {
-                            Debug.Log("Username already taken");
-
-                            //Bad request, username already taken
-                            message._returnCode = 400;
-                            message._message = "Username not available";
-                            usernameFound = true;
-                            break;
-                        }
-                    }
-
-                    if (!usernameFound)
-                    {
-                        originUser.username = username;
-                        Debug.Log("Username: " + username + " accepted");
-                    }
-                    
-                    message.Serialize();
-                    Send(originUser, message);
-
                     break;
+
                 case "/listUsers":
                     message._userId = -1;
                     message._message = "List of users: ";
@@ -210,6 +201,7 @@ public class TCPServer : MonoBehaviour
                     message.Serialize();
                     SendToEveryone(message);
                     break;
+
                 default:
                     break;
             }
@@ -220,7 +212,7 @@ public class TCPServer : MonoBehaviour
         }
     }
 
-    void Send(User user, Message message)
+    public void Send(User user, Message message)
     {
         if (message._message.Length <= 0)
         {

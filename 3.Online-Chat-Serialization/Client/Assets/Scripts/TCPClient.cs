@@ -137,7 +137,7 @@ public class TCPClient : MonoBehaviour
                     Debug.Log("Id: " + id.ToString());
                     break;
 
-                case "/setUsername":
+                case "/changeName":
 
                     //OK
                     if (message._returnCode == 200)
@@ -182,7 +182,7 @@ public class TCPClient : MonoBehaviour
         //Debug.Log(message);
         if (username == null)
         {
-            messageToSend = "/setUsername " + message;
+            messageToSend = "/changeName " + message;
         }
         else
         {
