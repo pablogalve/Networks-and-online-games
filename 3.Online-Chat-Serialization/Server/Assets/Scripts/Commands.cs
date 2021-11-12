@@ -54,7 +54,8 @@ public class ChangeName : Command
         //Debug.Log("Username: " + username);
 
         //OK
-        originalMessage._userId = -1;
+        originalMessage._userId = originUser.id;
+        originalMessage._type = MessageType.COMMAND;
         originalMessage._returnCode = 200;
         string username = content;
 
@@ -68,6 +69,7 @@ public class ChangeName : Command
                 //Bad request, username already taken
                 originalMessage._returnCode = 400;
                 originalMessage._message = "Username not available";
+                originalMessage._type = MessageType.COMMAND;
                 usernameFound = true;
                 break;
             }

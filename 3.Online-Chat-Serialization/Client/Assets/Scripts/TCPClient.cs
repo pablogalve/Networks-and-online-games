@@ -3,11 +3,11 @@ using System.Net.Sockets;
 using System.Threading;
 using UnityEngine;
 using System;
-using System.Collections;
+using System.Collections.Generic;
 
 public class TCPClient : MonoBehaviour
 {
-    private int id = 0;
+    public int id = 0;
 
     private Socket socket;
     private IPEndPoint endPoint;
@@ -22,18 +22,35 @@ public class TCPClient : MonoBehaviour
     private string messageToSend = null;
 
     float timeBetweenMessageChecks = 0.5f;
-    string username = null;
+    public string username = null;
 
     bool chatOpen = false;
+    public Dictionary<string, Command> commands;
 
     void Start()
     {
+        username = null;
         endPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), port);
         socket = new Socket(endPoint.Address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
         socket.Connect(endPoint);
+        logControl.LogText("Server", "Connected");
 
-        Debug.Log("Remote: " + endPoint.Address.ToString());
+        Debug.Log("Connected to: " + endPoint.Address.ToString());
+
+        //Create a command for each type
+        commands = new Dictionary<string, Command>();
+        foreach (var assemblies in AppDomain.CurrentDomain.GetAssemblies())
+        {
+            foreach (var type in assemblies.GetTypes())
+            {
+                if (type.IsSubclassOf(typeof(Command)))
+                {
+                    Command cmd = (Command)Activator.CreateInstance(type);
+                    commands[cmd.name] = cmd;
+                }
+            }
+        }
 
         chatOpen = true;
 
@@ -104,7 +121,7 @@ public class TCPClient : MonoBehaviour
         try
         {
             Message _message = new Message();
-            _message.SerializeJson(id, username == null ? "" : username, DateTime.Now, message);
+            _message.SerializeJson(id, username == null ? "None" : username, DateTime.Now, message);
 
             byte[] msg = System.Text.Encoding.ASCII.GetBytes(_message.json);
             int bytesCount = socket.Send(msg, msg.Length, SocketFlags.None);
@@ -120,50 +137,20 @@ public class TCPClient : MonoBehaviour
 
     void ProcessMessage(Message message)
     {
-        if (message._userId == -1)
+        if (message._type == MessageType.COMMAND)
         {
-            Debug.Log("Server message: " + message._message);
+            Debug.Log("Command: " + message._message);
 
             int index = message._message.IndexOf(" ");
-            string command = message._message.Substring(0, index);
+            //We start at 1 to avoid "/"
+            string commandName = message._message.Substring(1, index - 1);
 
-            string serverMessage = message._message;
-
-            switch (command)
+            if (commands.ContainsKey(commandName))
             {
-                case "/id":
-                    string idString = message._message.Substring(index, message._message.Length);
-                    id = Int32.Parse(idString);
-                    Debug.Log("Id: " + id.ToString());
-                    break;
+                message._username = "Server";
+                commands[commandName].Execute(this, message);
 
-                case "/changeName":
-
-                    //OK
-                    if (message._returnCode == 200)
-                    {
-                        string messageUsername = message._message.Substring(index, message._message.Length - index);
-                        username = messageUsername;
-
-                        serverMessage = "Username set to: " + username;
-                    }
-                    else
-                    {
-                        serverMessage = "Username could not be set";
-                    }
-                    Debug.Log(serverMessage);
-                    break;
-
-                case "/listUsers":
-                    serverMessage = message._message;
-                        break;
-                default:
-                    break;
-            }
-
-            if (logControl != null)
-            {
-                logControl.LogText("Server", serverMessage);
+                Debug.Log("Command: " + commandName + " executed");
             }
         }
         else

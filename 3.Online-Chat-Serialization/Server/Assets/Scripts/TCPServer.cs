@@ -104,7 +104,7 @@ public class TCPServer : MonoBehaviour
 
         while (serverOpen)
         {
-            Debug.Log("Listening");
+            //Debug.Log("Listening");
             for (int i = 0; i < listenSockets.Count; i++)
             {
                 listenSockets[i].Listen(10);
@@ -119,7 +119,7 @@ public class TCPServer : MonoBehaviour
             //Accept new clients
             for (int i = 0; i < listenList.Count; i++)
             {
-                Socket socket = (Socket)listenList[i].Accept();
+                Socket socket = listenList[i].Accept();
                 // = acceptList[i];
                 Debug.Log("Accepted");
 
@@ -155,7 +155,7 @@ public class TCPServer : MonoBehaviour
         {
             //Debug.Log("Checking for messages");
 
-            if (acceptList.Count <= 0)
+            if (users.Count <= 0)
             {
                 //serverOpen = false;
             }
@@ -169,7 +169,7 @@ public class TCPServer : MonoBehaviour
                     if (receivedMessage != null)
                     {
                         ProcessMessage(receivedMessage, receiveList[i]);
-                        //Debug.Log(receivedMessage.json);
+                        Debug.Log(receivedMessage.json);
                     }
                     else
                     {

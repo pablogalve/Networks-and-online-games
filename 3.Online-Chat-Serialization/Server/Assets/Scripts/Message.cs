@@ -18,7 +18,7 @@ public class Message
     public DateTime _timestamp;
     public string _message;
     public MessageType _type;
-    public int _returnCode = 0;
+    public int _returnCode = 200;
 
     public void Serialize()
     {

@@ -3,28 +3,42 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+struct TextLog
+{
+    public TextLog(string myUsername, string myMessage)
+    {
+        username = myUsername;
+        message = myMessage;
+    }
+
+    public string username;
+    public string message;
+}
+
+
 public class TextLogControl : MonoBehaviour
 {
     [SerializeField]
     private GameObject textTemplate;
 
     private List<GameObject> textItems;
+    private List<TextLog> textLogs;
 
     public int maxTextItems = 200;
-
-    string _username;
-    string _newText;
-
-    bool createNewLog = false;
 
     private void Start()
     {
         textItems = new List<GameObject>();
+        
+        if(textLogs == null)
+        {
+            textLogs = new List<TextLog>();
+        }
     }
 
     private void Update()
     {
-        if (createNewLog)
+        while (textLogs.Count > 0)
         {
             //If we have too many messages, delete the first one received
             if (textItems != null && textItems.Count > maxTextItems)
@@ -40,23 +54,25 @@ public class TextLogControl : MonoBehaviour
             GameObject newText = Instantiate(textTemplate);
             newText.SetActive(true);
 
+            //Set all its parameters
             TextLogItem textLogItem = newText.GetComponent<TextLogItem>();
-
-            textLogItem.SetText(_username, _newText, color);
+            textLogItem.SetText(textLogs[0].username, textLogs[0].message, color);
             newText.transform.SetParent(textTemplate.transform.parent, false);
 
+            //Add it to the items create and remove it from the list to be created
             textItems.Add(newText);
-
-            createNewLog = false;
+            textLogs.RemoveAt(0);
         }
     }
 
-    public void LogText(string username, string newTextString)
+    public void LogText(string username, string message)
     {
-        //Debug.Log(newTextString);
-        _username = username;
-        _newText = newTextString;
+        if (textLogs == null)
+        {
+            textLogs = new List<TextLog>();
+        }
 
-        createNewLog = true;
+        //Debug.Log(newTextString);
+        textLogs.Add(new TextLog(username, message));
     }
 }
