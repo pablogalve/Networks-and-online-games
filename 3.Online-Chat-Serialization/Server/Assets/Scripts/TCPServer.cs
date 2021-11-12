@@ -29,39 +29,42 @@ public class TCPServer : MonoBehaviour
     private readonly int port = 7777;
     private int maximumSockets = 1;
 
-    private Socket[] listenSockets;
-    private Socket[] acceptSockets;
+    List<int> availablePorts;
+    private List<Socket> listenSockets;
+    private List<Socket> acceptSockets;
 
-    private ArrayList listenList;
-    private ArrayList acceptList;
+    private List<Socket> listenList;
+    private List<Socket> acceptList;
 
     private Thread listenThread;
+    private Thread chatThread;
+
     private List<int> availableIds;
 
-    bool serverOpen = false;
+    bool serverOpen = true;
 
     public Dictionary<string, Command> commands;
 
     // Start is called before the first frame update
     void Start()
     {
-        commands = new Dictionary<string, Command>();
+        listenSockets = new List<Socket>();
+        listenList = new List<Socket>();    
 
-        listenThread = new Thread(new ThreadStart(ListenForUsers));
-        listenThread.Start();
+        acceptSockets = new List<Socket>();
+        acceptList = acceptSockets;
 
-        users = new List<User>();
-
-        availableIds = new List<int>();
-        for (int i = 0; i < maximumSockets; ++i)
+        availablePorts = new List<int>();
+        for(int i = 0; i < maximumSockets; ++i)
         {
-            availableIds.Add(UnityEngine.Random.Range(0, int.MaxValue));
+            availablePorts.Add(port + i);
         }
 
         //Create a command for each type
-        foreach(var assemblies in AppDomain.CurrentDomain.GetAssemblies())
+        commands = new Dictionary<string, Command>();
+        foreach (var assemblies in AppDomain.CurrentDomain.GetAssemblies())
         {
-            foreach(var type in assemblies.GetTypes())
+            foreach (var type in assemblies.GetTypes())
             {
                 if (type.IsSubclassOf(typeof(Command)))
                 {
@@ -70,51 +73,80 @@ public class TCPServer : MonoBehaviour
                 }
             }
         }
+
+        //Generate random ids to identificate users
+        availableIds = new List<int>();
+        for (int i = 0; i < maximumSockets; ++i)
+        {
+            availableIds.Add(UnityEngine.Random.Range(0, int.MaxValue));
+        }
+
+        users = new List<User>();
+        listenThread = new Thread(new ThreadStart(ListenForUsers));
+        listenThread.Start();
     }
 
     void ListenForUsers()
     {
-        Debug.Log("Binding and listening...");
-
-        listenSockets = new Socket[maximumSockets];
-        listenList = GenerateSocketsArrayList(listenSockets);
-
-        acceptSockets = new Socket[maximumSockets];
-        acceptList = GenerateSocketsArrayList(acceptSockets);
-
-        for (int i = 0; i < maximumSockets; i++)
+        Debug.Log("Binding...");
+        for (int i = 0; i < availablePorts.Count; i++)
         {
-            listenList[i] = new Socket(AddressFamily.InterNetwork,
+            listenSockets.Add(new Socket(AddressFamily.InterNetwork,
                                        SocketType.Stream,
-                                       ProtocolType.Tcp);
+                                       ProtocolType.Tcp));
 
-            ((Socket)listenList[i]).Bind(new IPEndPoint(IPAddress.Parse("127.0.0.1"), port + i));
-            ((Socket)listenList[i]).Listen(10);
+            ((Socket)listenSockets[i]).Bind(new IPEndPoint(IPAddress.Parse("127.0.0.1"), availablePorts[i]));
         }
-        Debug.Log("Binding and listening completed");
-        Debug.Log("Accepting");
 
-        Thread.Sleep(acceptWaitTime * 1000);
+        Debug.Log("Binding completed");
 
-        Socket.Select(listenList, null, null, 1000);
+        bool chatStarted = false;
 
-        for (int i = 0; i < listenList.Count; i++)
+        while (serverOpen)
         {
-            Socket socket = (Socket)listenList[i];
-            acceptList[i] = socket.Accept();
-            Debug.Log("Accepted");
+            Debug.Log("Listening");
+            for (int i = 0; i < listenSockets.Count; i++)
+            {
+                listenSockets[i].Listen(10);
+                listenList.Add(listenSockets[i]);
+            }
 
-            //Create user with a random Id
-            users.Add(new User(availableIds[0], (Socket)acceptList[i]));
-            availableIds.RemoveAt(0);
+            if(listenList.Count > 0)
+            {
+                Socket.Select(listenList, null, null, 1000);
+            }
+
+            //Accept new clients
+            for (int i = 0; i < listenList.Count; i++)
+            {
+                Socket socket = (Socket)listenList[i].Accept();
+                // = acceptList[i];
+                Debug.Log("Accepted");
+
+                //Create user with a random Id
+                users.Add(new User(availableIds[0], socket));
+                availableIds.RemoveAt(0);
+
+                //Remove the port from the available ones
+                IPEndPoint ipEndPoint = socket.LocalEndPoint as IPEndPoint;
+                availablePorts.Remove(ipEndPoint.Port);
+
+                //Remove also from listenning sockets to avoid being used again
+                listenSockets.Remove(listenList[i]);
+            }
+
+            listenList.Clear();
+
+            if(!chatStarted)
+            {
+                chatStarted = true;
+                chatThread = new Thread(new ThreadStart(StartChat));
+                chatThread.Start();
+            }
+
+            Thread.Sleep(acceptWaitTime * 1000);
         }
-
-        if (users.Count > 0)
-        {
-            serverOpen = true;
-        }
-
-        StartChat();
+        
     }
 
     private void StartChat()
@@ -125,19 +157,25 @@ public class TCPServer : MonoBehaviour
 
             if (acceptList.Count <= 0)
             {
-                serverOpen = false;
+                //serverOpen = false;
             }
-
-            List<User> receiveList = SelectUsers();
-            for (int i = 0; i < receiveList.Count; ++i)
+            else
             {
-                Message receivedMessage = ReceiveMessage(receiveList[i].socket);
-
-                if (receivedMessage != null)
+                List<User> receiveList = SelectUsers();
+                for (int i = 0; i < receiveList.Count; ++i)
                 {
-                    ProcessMessage(receivedMessage, receiveList[i]);
+                    Message receivedMessage = ReceiveMessage(receiveList[i].socket);
+
+                    if (receivedMessage != null)
+                    {
+                        ProcessMessage(receivedMessage, receiveList[i]);
+                        //Debug.Log(receivedMessage.json);
+                    }
+                    else
+                    {
+                        RemoveUser(receiveList[i]);
+                    }
                 }
-                Debug.Log(receivedMessage.json);
             }
 
             Thread.Sleep(250);
@@ -150,20 +188,19 @@ public class TCPServer : MonoBehaviour
     {
         try
         {
-            //Debug.Log("Trying to receive a message: ");
             byte[] msg = new byte[256];
             int recv = socket.Receive(msg);
             string encodedMessage = System.Text.Encoding.ASCII.GetString(msg);
-            //Debug.Log("Encoded message: " + encodedMessage);
             Message message = Message.DeserializeJson(encodedMessage);
-            Debug.Log("Decoded message: " + encodedMessage);
+            
+            Debug.Log("Encoded message: " + encodedMessage);
 
             return message;
         }
         catch (System.Exception exception)
         {
             Debug.LogWarning("Exception caught: " + exception.ToString());
-            Close(socket);
+            //CloseSocket(socket);
             return null;
         }
     }
@@ -176,21 +213,18 @@ public class TCPServer : MonoBehaviour
         {
             int index = message._message.IndexOf(" ");
             //We start at 1 to avoid "/"
-            string commandName = message._message.Substring(1, index);
+            string commandName = message._message.Substring(1, index - 1);
 
             if (commands.ContainsKey(commandName))
             {
                 message._username = "Server";
                 commands[commandName].Execute(this, originUser, message);
 
-                Debug.Log("Command: " + commandName);
+                Debug.Log("Command: " + commandName + " executed");
             }
 
             switch (commandName)
             {
-                case "/setUsername":
-                    break;
-
                 case "/listUsers":
                     message._userId = -1;
                     message._message = "List of users: ";
@@ -235,7 +269,7 @@ public class TCPServer : MonoBehaviour
         catch (System.Exception exception)
         {
             Debug.LogWarning("Error. Couldn't send message: " + exception.ToString());
-            Close(user.socket);
+            CloseSocket(user.socket);
             acceptList.Remove(user.socket);
             users.Remove(user);
         }
@@ -297,7 +331,15 @@ public class TCPServer : MonoBehaviour
         return selectedUsers;
     }
 
-    void Close(Socket socket)
+    void RemoveUser(User user)
+    {
+        CloseSocket(user.socket);
+        users.Remove(user);
+
+        Debug.Log("User: " + user.username + " kicked");
+    }
+
+    void CloseSocket(Socket socket)
     {
         if (socket != null)
         {
@@ -306,11 +348,11 @@ public class TCPServer : MonoBehaviour
         }
     }
 
-    private void CloseSockets(Socket[] sockets)
+    private void CloseSockets(List<Socket> sockets)
     {
-        for (int i = 0; i < sockets.Length; ++i)
+        for (int i = 0; i < sockets.Count; ++i)
         {
-            Close(sockets[i]);
+            CloseSocket(sockets[i]);
         }
     }
 
