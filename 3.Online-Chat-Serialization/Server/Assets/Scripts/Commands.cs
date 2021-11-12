@@ -32,7 +32,11 @@ public class HelpCommand : Command
             concatenatedCommands += ": " + command.Value.description + "\n";
         }
 
+        originalMessage.SerializeJson(-1, "Server", System.DateTime.Now, concatenatedCommands);
+        originalMessage._returnCode = 200;
+        originalMessage._type = MessageType.MESSAGE;
 
+        server.Send(originUser, originalMessage);
     }
 }
 

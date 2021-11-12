@@ -31,7 +31,6 @@ public class TCPServer : MonoBehaviour
 
     List<int> availablePorts;
     private List<Socket> listenSockets;
-    private List<Socket> acceptSockets;
 
     private List<Socket> listenList;
     private List<Socket> acceptList;
@@ -50,9 +49,6 @@ public class TCPServer : MonoBehaviour
     {
         listenSockets = new List<Socket>();
         listenList = new List<Socket>();    
-
-        acceptSockets = new List<Socket>();
-        acceptList = acceptSockets;
 
         availablePorts = new List<int>();
         for(int i = 0; i < maximumSockets; ++i)
@@ -155,13 +151,10 @@ public class TCPServer : MonoBehaviour
         {
             //Debug.Log("Checking for messages");
 
-            if (users.Count <= 0)
-            {
-                //serverOpen = false;
-            }
-            else
+            if(users.Count > 0)
             {
                 List<User> receiveList = SelectUsers();
+
                 for (int i = 0; i < receiveList.Count; ++i)
                 {
                     Message receivedMessage = ReceiveMessage(receiveList[i].socket);
@@ -169,7 +162,10 @@ public class TCPServer : MonoBehaviour
                     if (receivedMessage != null)
                     {
                         ProcessMessage(receivedMessage, receiveList[i]);
-                        Debug.Log(receivedMessage.json);
+                        if(receivedMessage != null)
+                        {
+                            Debug.Log(receivedMessage.json);
+                        }
                     }
                     else
                     {
@@ -188,7 +184,7 @@ public class TCPServer : MonoBehaviour
     {
         try
         {
-            byte[] msg = new byte[256];
+            byte[] msg = new byte[512];
             int recv = socket.Receive(msg);
             string encodedMessage = System.Text.Encoding.ASCII.GetString(msg);
             Message message = Message.DeserializeJson(encodedMessage);
@@ -213,7 +209,16 @@ public class TCPServer : MonoBehaviour
         {
             int index = message._message.IndexOf(" ");
             //We start at 1 to avoid "/"
-            string commandName = message._message.Substring(1, index - 1);
+            string commandName;
+
+            if (index != -1)
+            {
+                commandName = message._message.Substring(1, index - 1);
+            }
+            else
+            {
+                commandName = message._message.Substring(1);
+            }
 
             if (commands.ContainsKey(commandName))
             {
@@ -305,23 +310,20 @@ public class TCPServer : MonoBehaviour
         List<User> selectedUsers = new List<User>();
 
         //Copy sockets
-        Socket[] receiveSockets = new Socket[users.Count];
+        List<Socket> receiveSockets = new List<Socket>();
         for (int i = 0; i < users.Count; ++i)
         {
-            receiveSockets[i] = users[i].socket;
+            receiveSockets.Add(users[i].socket);
         }
 
-        //Generate a new list to receive messages
-        ArrayList receiveList = GenerateSocketsArrayList(receiveSockets);
-
         //Select the ones that have pending messages
-        receiveList = Select(receiveList);
+        Socket.Select(receiveSockets, null, null, 1000);
 
-        for (int i = 0; i < receiveList.Count; ++i)
+        for (int i = 0; i < receiveSockets.Count; ++i)
         {
             for (int j = 0; j < users.Count; ++j)
             {
-                if (receiveList[i] == users[j].socket)
+                if (receiveSockets[i] == users[j].socket)
                 {
                     selectedUsers.Add(users[j]);
                 }
@@ -360,7 +362,7 @@ public class TCPServer : MonoBehaviour
     {
         //Close server
         CloseSockets(listenSockets);
-        CloseSockets(acceptSockets);
+        //CloseSockets(acceptSockets);
 
         if (listenThread != null)
         {

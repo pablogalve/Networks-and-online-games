@@ -292,8 +292,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a87246c06022c3e4887d23fc7940f930, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  id: 0
   userlist: {fileID: 1932541984}
   logControl: {fileID: 1193459782}
+  username: 
 --- !u!1 &249844852
 GameObject:
   m_ObjectHideFlags: 0
@@ -1672,7 +1674,7 @@ MonoBehaviour:
   m_Content: {fileID: 344352322}
   m_Horizontal: 0
   m_Vertical: 1
-  m_MovementType: 2
+  m_MovementType: 1
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135

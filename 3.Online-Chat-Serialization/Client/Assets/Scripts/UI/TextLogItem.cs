@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class TextLogItem : MonoBehaviour
 {
+    RectTransform _rectTransform;
     public GameObject _usernameObject;
     private Text _username;
 
@@ -13,6 +14,11 @@ public class TextLogItem : MonoBehaviour
 
     private void Start()
     {
+        if(_rectTransform == null)
+        {
+            _rectTransform = GetComponent<RectTransform>();
+        }
+
         if (_username == null)
         {
             _username = _usernameObject.GetComponent<Text>();
@@ -24,14 +30,15 @@ public class TextLogItem : MonoBehaviour
         }
     }
 
-    void SetUsername(string username)
-    {
-        _username.text = username;
-    }
 
     public void SetText(string username, string text, Color color)
     {
-        if(_username == null)
+        if (_rectTransform == null)
+        {
+            _rectTransform = GetComponent<RectTransform>();
+        }
+
+        if (_username == null)
         {
             _username = _usernameObject.GetComponent<Text>();
         }
@@ -53,5 +60,8 @@ public class TextLogItem : MonoBehaviour
             _message.text = text;
             _message.color = Color.white;
         }
+
+        int entersAmount = text.Split('\n').Length - 1;
+        _rectTransform.sizeDelta = (_rectTransform.rect.size) + new Vector2(0.0f, entersAmount * 10.0f);
     }
 }
