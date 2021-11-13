@@ -5,14 +5,16 @@ using UnityEngine;
 
 struct TextLog
 {
-    public TextLog(string myUsername, string myMessage)
+    public TextLog(string myUsername, string myMessage, int myUserId)
     {
         username = myUsername;
         message = myMessage;
+        userId = myUserId;
     }
 
     public string username;
     public string message;
+    public int userId;
 }
 
 
@@ -21,14 +23,14 @@ public class TextLogControl : MonoBehaviour
     [SerializeField]
     private GameObject textTemplate;
 
-    private List<GameObject> textItems;
+    private List<TextLogItem> textItems;
     private List<TextLog> textLogs;
 
     public int maxTextItems = 200;
 
     private void Start()
     {
-        textItems = new List<GameObject>();
+        textItems = new List<TextLogItem>();
         
         if(textLogs == null)
         {
@@ -43,7 +45,7 @@ public class TextLogControl : MonoBehaviour
             //If we have too many messages, delete the first one received
             if (textItems != null && textItems.Count > maxTextItems)
             {
-                GameObject tempItem = textItems[0];
+                TextLogItem tempItem = textItems[0];
                 textItems.RemoveAt(0);
                 Destroy(tempItem.gameObject);
             }
@@ -56,16 +58,16 @@ public class TextLogControl : MonoBehaviour
 
             //Set all its parameters
             TextLogItem textLogItem = newText.GetComponent<TextLogItem>();
-            textLogItem.SetText(textLogs[0].username, textLogs[0].message, color);
+            textLogItem.SetText(textLogs[0].username, textLogs[0].message, color, textLogs[0].userId);
             newText.transform.SetParent(textTemplate.transform.parent, false);
 
             //Add it to the items create and remove it from the list to be created
-            textItems.Add(newText);
+            textItems.Add(textLogItem);
             textLogs.RemoveAt(0);
         }
     }
 
-    public void LogText(string username, string message)
+    public void LogText(string username, string message, int id)
     {
         if (textLogs == null)
         {
@@ -73,6 +75,17 @@ public class TextLogControl : MonoBehaviour
         }
 
         //Debug.Log(newTextString);
-        textLogs.Add(new TextLog(username, message));
+        textLogs.Add(new TextLog(username, message, id));
+    }
+
+    public void ChangeUsername(int id, string newUsername)
+    {
+        for (int i = 0; i < textLogs.Count; ++i)
+        {
+            if(textItems[i].userId == id)
+            {
+                textItems[i].ChangeUsername(newUsername);
+            }
+        }
     }
 }

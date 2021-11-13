@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Command 
+public class Command
 {
     public string name;
     public string description;
@@ -26,7 +26,7 @@ public class HelpCommand : Command
     {
         string concatenatedCommands = "";
 
-        foreach(KeyValuePair<string, Command> command in server.commands)
+        foreach (KeyValuePair<string, Command> command in server.commands)
         {
             concatenatedCommands += "/" + command.Key;
             concatenatedCommands += ": " + command.Value.description + "\n";
@@ -57,6 +57,8 @@ public class ChangeName : Command
 
         //Debug.Log("Username: " + username);
 
+        bool userHadUsernameSet = originalMessage._userId != 0;
+
         //OK
         originalMessage._userId = originUser.id;
         originalMessage._type = MessageType.COMMAND;
@@ -73,7 +75,7 @@ public class ChangeName : Command
                 //Bad request, username already taken
                 originalMessage._returnCode = 400;
                 originalMessage._message = "Username not available";
-                originalMessage._type = MessageType.COMMAND;
+                originalMessage._type = MessageType.MESSAGE;
                 usernameFound = true;
                 break;
             }
@@ -87,5 +89,17 @@ public class ChangeName : Command
 
         originalMessage.Serialize();
         server.Send(originUser, originalMessage);
+
+        if (!userHadUsernameSet) 
+        {
+            originalMessage.SerializeJson(-1, "Server", System.DateTime.Now, "User: " + username + " has joined the chat");
+            server.SendToEveryone(originalMessage, originUser);
+        }
+        else
+        {
+            originalMessage.SerializeJson(originUser.id, "Server", System.DateTime.Now, "/changeOtherUsername " + username);
+            server.SendToEveryone(originalMessage, originUser);
+        }
+
     }
 }

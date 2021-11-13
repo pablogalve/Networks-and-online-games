@@ -34,7 +34,7 @@ public class TCPClient : MonoBehaviour
         socket = new Socket(endPoint.Address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
         socket.Connect(endPoint);
-        logControl.LogText("Server", "Connected");
+        logControl.LogText("Server", "Connected", -1);
 
         Debug.Log("Connected to: " + endPoint.Address.ToString());
 
@@ -64,7 +64,7 @@ public class TCPClient : MonoBehaviour
     void StartSending()
     {
         //Receive();
-        logControl.LogText("Server", "Please write a username");
+        logControl.LogText("Server", "Please write a username", -1);
 
         Thread.Sleep(2500);
 
@@ -159,7 +159,7 @@ public class TCPClient : MonoBehaviour
 
             if (logControl != null)
             {
-                logControl.LogText(message._username, message._message);
+                logControl.LogText(message._username, message._message, message._userId);
             }
         }
     }

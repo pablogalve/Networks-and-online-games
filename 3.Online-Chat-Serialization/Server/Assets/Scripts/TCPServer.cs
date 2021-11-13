@@ -43,15 +43,17 @@ public class TCPServer : MonoBehaviour
     bool serverOpen = true;
 
     public Dictionary<string, Command> commands;
+    Message auxiliarMessage;
 
     // Start is called before the first frame update
     void Start()
     {
+        auxiliarMessage = new Message();
         listenSockets = new List<Socket>();
-        listenList = new List<Socket>();    
+        listenList = new List<Socket>();
 
         availablePorts = new List<int>();
-        for(int i = 0; i < maximumSockets; ++i)
+        for (int i = 0; i < maximumSockets; ++i)
         {
             availablePorts.Add(port + i);
         }
@@ -107,7 +109,7 @@ public class TCPServer : MonoBehaviour
                 listenList.Add(listenSockets[i]);
             }
 
-            if(listenList.Count > 0)
+            if (listenList.Count > 0)
             {
                 Socket.Select(listenList, null, null, 1000);
             }
@@ -133,7 +135,7 @@ public class TCPServer : MonoBehaviour
 
             listenList.Clear();
 
-            if(!chatStarted)
+            if (!chatStarted)
             {
                 chatStarted = true;
                 chatThread = new Thread(new ThreadStart(StartChat));
@@ -142,7 +144,7 @@ public class TCPServer : MonoBehaviour
 
             Thread.Sleep(acceptWaitTime * 1000);
         }
-        
+
     }
 
     private void StartChat()
@@ -151,7 +153,7 @@ public class TCPServer : MonoBehaviour
         {
             //Debug.Log("Checking for messages");
 
-            if(users.Count > 0)
+            if (users.Count > 0)
             {
                 List<User> receiveList = SelectUsers();
 
@@ -162,7 +164,7 @@ public class TCPServer : MonoBehaviour
                     if (receivedMessage != null)
                     {
                         ProcessMessage(receivedMessage, receiveList[i]);
-                        if(receivedMessage != null)
+                        if (receivedMessage != null)
                         {
                             Debug.Log(receivedMessage.json);
                         }
@@ -188,7 +190,7 @@ public class TCPServer : MonoBehaviour
             int recv = socket.Receive(msg);
             string encodedMessage = System.Text.Encoding.ASCII.GetString(msg);
             Message message = Message.DeserializeJson(encodedMessage);
-            
+
             Debug.Log("Encoded message: " + encodedMessage);
 
             return message;
@@ -227,6 +229,13 @@ public class TCPServer : MonoBehaviour
 
                 Debug.Log("Command: " + commandName + " executed");
             }
+            else
+            {
+                message.SerializeJson(-1, "Server", DateTime.Now, "Invalid command, please write one form the list. Type /help to see all commands");
+                message._returnCode = 404;
+
+                Send(originUser, message);
+            }
 
             switch (commandName)
             {
@@ -238,7 +247,7 @@ public class TCPServer : MonoBehaviour
                         message._message += users[i].username + " ";
                     }
                     message.Serialize();
-                    SendToEveryone(message);
+                    //SendToEveryone(message);
                     break;
 
                 default:
@@ -247,7 +256,7 @@ public class TCPServer : MonoBehaviour
         }
         else
         {
-            SendToEveryone(message);
+            SendToEveryone(message, null);
         }
     }
 
@@ -280,11 +289,14 @@ public class TCPServer : MonoBehaviour
         }
     }
 
-    void SendToEveryone(Message messageToSend)
+    public void SendToEveryone(Message messageToSend, User userToIgnore)
     {
         for (int i = 0; i < users.Count; ++i)
         {
-            Send(users[i], messageToSend);
+            if (users[i] == null || users[i] != userToIgnore)
+            {
+                Send(users[i], messageToSend);
+            }
         }
     }
 
@@ -337,6 +349,10 @@ public class TCPServer : MonoBehaviour
     {
         CloseSocket(user.socket);
         users.Remove(user);
+
+        auxiliarMessage.SerializeJson(-1, "Server", DateTime.Now, "User: " + user.username + " has left the room");
+
+        SendToEveryone(auxiliarMessage, null);
 
         Debug.Log("User: " + user.username + " kicked");
     }

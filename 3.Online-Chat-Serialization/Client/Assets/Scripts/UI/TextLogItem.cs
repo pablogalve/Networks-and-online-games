@@ -8,6 +8,7 @@ public class TextLogItem : MonoBehaviour
     RectTransform _rectTransform;
     public GameObject _usernameObject;
     private Text _username;
+    public int userId;
 
     public GameObject _messageObject;
     private Text _message;
@@ -30,8 +31,7 @@ public class TextLogItem : MonoBehaviour
         }
     }
 
-
-    public void SetText(string username, string text, Color color)
+    public void SetText(string username, string text, Color color, int id)
     {
         if (_rectTransform == null)
         {
@@ -63,5 +63,12 @@ public class TextLogItem : MonoBehaviour
 
         int entersAmount = text.Split('\n').Length - 1;
         _rectTransform.sizeDelta = (_rectTransform.rect.size) + new Vector2(0.0f, entersAmount * 10.0f);
+
+        userId = id;
+    }
+
+    public void ChangeUsername(string newUsername)
+    {
+        _username.text = newUsername;
     }
 }
