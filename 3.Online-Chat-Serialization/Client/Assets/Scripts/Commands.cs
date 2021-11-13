@@ -33,10 +33,11 @@ public class ChangeName : Command
         if(originalMessage._returnCode == 200)
         {
             client.username = content;
+            client.color = originalMessage._userColor;
             client.id = originalMessage._userId;
         }
 
-        client.logControl.LogText("Server", "Username set to: " + content, -1);
+        client.logControl.LogText("Server", "Username set to: " + content, -1, Color.magenta);
         Debug.Log("Username id is: " + client.id);
     }
 }
@@ -65,7 +66,7 @@ public class ListUsers : Command
 
     public override void Execute(TCPClient client, Message originalMessage)
     {
-        client.logControl.LogText(originalMessage._username, originalMessage._message, originalMessage._userId);
+        client.logControl.LogText(originalMessage._username, originalMessage._message, originalMessage._userId, originalMessage._userColor);
     }
 }
 
@@ -78,6 +79,6 @@ public class KickUser : Command
 
     public override void Execute(TCPClient client, Message originalMessage)
     {
-        client.logControl.LogText(originalMessage._username, originalMessage._message, originalMessage._userId);
+        client.logControl.LogText(originalMessage._username, originalMessage._message, originalMessage._userId,originalMessage._userColor);
     }
 }

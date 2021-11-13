@@ -18,7 +18,8 @@ public class Message
     public DateTime _timestamp;
     public string _message;
     public MessageType _type;
-    public int _returnCode = 0;
+    public int _returnCode = 200;
+    public Color _userColor;
 
     public void Serialize()
     {
@@ -28,13 +29,23 @@ public class Message
         writer.Write(jsonMsg);
     }
 
-    public void SerializeJson(int id, string username, DateTime timestamp, string message)
+    public void SerializeJson(int id, string username, DateTime timestamp, string message, Color userColor)
     {
         _userId = id;
         _username = username;
         _timestamp = timestamp;
         _message = message;
-        _type = message[0] == '/' ? MessageType.COMMAND : MessageType.MESSAGE;  
+
+        _userColor = userColor;
+
+        if (message[0] == '/')
+        {
+            _type = MessageType.COMMAND;
+        }
+        else
+        {
+            _type = MessageType.MESSAGE;
+        }
 
         Serialize();
     }
@@ -48,7 +59,14 @@ public class Message
         //stream.Seek(0, SeekOrigin.Begin);
 
         //string jsonMsg = reader.ReadString();
+
+        if (json == null)
+        {
+            return null;
+        }
+
         Message message = new Message();
+
         message = JsonUtility.FromJson<Message>(json);
         Debug.Log("deserialized message: " + message._message);
         return message;

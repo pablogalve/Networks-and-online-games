@@ -19,6 +19,7 @@ public class Message
     public string _message;
     public MessageType _type;
     public int _returnCode = 200;
+    public Color _userColor;
 
     public void Serialize()
     {
@@ -28,12 +29,20 @@ public class Message
         writer.Write(jsonMsg);
     }
 
-    public void SerializeJson(int id, string username, DateTime timestamp, string message)
+    public void SerializeJson(int id, string username, DateTime timestamp, string message, Color userColor)
     {
         _userId = id;
         _username = username;
         _timestamp = timestamp;
         _message = message;
+
+        _userColor = userColor;
+        _userColor[0] = userColor.r;
+        _userColor[1] = userColor.g;
+        _userColor[2] = userColor.b;
+        _userColor[3] = userColor.a;
+
+
 
         if (message[0] == '/')
         {

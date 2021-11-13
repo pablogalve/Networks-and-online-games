@@ -38,7 +38,7 @@ public class HelpCommand : Command
             concatenatedCommands += ": " + command.Value.description + "\n";
         }
 
-        originalMessage.SerializeJson(-1, "Server", System.DateTime.Now, concatenatedCommands);
+        originalMessage.SerializeJson(-1, "Server", System.DateTime.Now, concatenatedCommands, Color.white);
         originalMessage._returnCode = 200;
         originalMessage._type = MessageType.MESSAGE;
 
@@ -89,20 +89,26 @@ public class ChangeName : Command
         if (!usernameFound)
         {
             originUser.username = username;
+            originUser.color = server.availableColors[0];
+            originalMessage._userColor = originUser.color;
+            server.availableColors.RemoveAt(0);
+
             Debug.Log("Username: " + username + " accepted");
         }
 
+        //Send the user the command to change his name
         originalMessage.Serialize();
         server.Send(originUser, originalMessage);
 
+        //Tell everyone about the change
         if (!userHadUsernameSet) 
         {
-            originalMessage.SerializeJson(-1, "Server", System.DateTime.Now, "User: " + username + " has joined the chat");
+            originalMessage.SerializeJson(-1, "Server", System.DateTime.Now, "User: " + username + " has joined the chat", server.color);
             server.SendToEveryone(originalMessage, originUser);
         }
         else
         {
-            originalMessage.SerializeJson(originUser.id, "Server", System.DateTime.Now, "/changeOtherUsername " + username);
+            originalMessage.SerializeJson(originUser.id, "Server", System.DateTime.Now, "/changeOtherUsername " + username, originUser.color);
             server.SendToEveryone(originalMessage, originUser);
         }
 
@@ -124,7 +130,7 @@ public class ListUsers : Command
         {
             originalMessage._message += server.users[i].username + " ";
         }
-        originalMessage.SerializeJson(-1, "Server", System.DateTime.Now, originalMessage._message);
+        originalMessage.SerializeJson(-1, "Server", System.DateTime.Now, originalMessage._message, server.color);
         server.Send(originUser, originalMessage);
     }
 }
@@ -144,12 +150,12 @@ public class KickUser : Command
 
         if (server.RemoveUser(userToRemove))
         {
-            originalMessage.SerializeJson(-1, "Server", System.DateTime.Now, "User " + usernameToRemove + " kicked");
+            originalMessage.SerializeJson(-1, "Server", System.DateTime.Now, "User " + usernameToRemove + " kicked", server.color);
             server.SendToEveryone(originalMessage, null);
         }
         else
         {
-            originalMessage.SerializeJson(-1, "Server", System.DateTime.Now, "Error. User" + usernameToRemove + " wasn't kicked");
+            originalMessage.SerializeJson(-1, "Server", System.DateTime.Now, "Error. User" + usernameToRemove + " wasn't kicked", server.color);
             server.SendToEveryone(originalMessage, null);
         }        
     }

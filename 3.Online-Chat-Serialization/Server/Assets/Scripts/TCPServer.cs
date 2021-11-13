@@ -17,6 +17,7 @@ public class User
     public int id = -1;
     public string username = "No username";
     public Socket socket = null;
+    public Color color = Color.white;
 }
 
 public class TCPServer : MonoBehaviour
@@ -33,6 +34,7 @@ public class TCPServer : MonoBehaviour
     List<int> availablePorts;
     private List<Socket> listenSockets;
     private List<Socket> listenList;
+    public List<Color> availableColors;
 
     private Thread listenThread;
     private Thread chatThread;
@@ -43,6 +45,7 @@ public class TCPServer : MonoBehaviour
 
     public Dictionary<string, Command> commands;
     Message auxiliarMessage;
+    public Color color = Color.magenta;
 
     // Start is called before the first frame update
     void Start()
@@ -81,6 +84,14 @@ public class TCPServer : MonoBehaviour
         users = new List<User>();
         listenThread = new Thread(new ThreadStart(ListenForUsers));
         listenThread.Start();
+
+        Color[] colors = { Color.green, Color.yellow, Color.blue, Color.red, Color.magenta};
+        availableColors = new List<Color>();
+        availableColors.AddRange(colors);
+        for(int i = availableColors.Count; i < maximumUsers; ++i)
+        {
+            availableColors.Add(new Color(UnityEngine.Random.Range(0, 255), UnityEngine.Random.Range(0, 255), UnityEngine.Random.Range(0, 255), UnityEngine.Random.Range(0, 255)));
+        }
     }
 
     void ListenForUsers()
@@ -239,7 +250,7 @@ public class TCPServer : MonoBehaviour
             }
             else
             {
-                message.SerializeJson(-1, "Server", DateTime.Now, "Invalid command, please write one form the list. Type /help to see all commands");
+                message.SerializeJson(-1, "Server", DateTime.Now, "Invalid command, please write one form the list. Type /help to see all commands", color);
                 message._returnCode = 404;
 
                 Send(originUser, message);

@@ -5,10 +5,12 @@ using UnityEngine.UI;
 
 public class TextLogItem : MonoBehaviour
 {
-    RectTransform _rectTransform;
     public GameObject _usernameObject;
     private Text _username;
     public int userId;
+
+    RectTransform _rectTransform;
+    RectTransform _textRectTransform;
 
     public GameObject _messageObject;
     private Text _message;
@@ -17,17 +19,11 @@ public class TextLogItem : MonoBehaviour
     {
         if(_rectTransform == null)
         {
-            _rectTransform = GetComponent<RectTransform>();
-        }
-
-        if (_username == null)
-        {
             _username = _usernameObject.GetComponent<Text>();
-        }
-
-        if (_message == null)
-        {
             _message = _messageObject.GetComponent<Text>();
+
+            _rectTransform = gameObject.GetComponent<RectTransform>();
+            _textRectTransform = _messageObject.GetComponent<RectTransform>();
         }
     }
 
@@ -35,17 +31,11 @@ public class TextLogItem : MonoBehaviour
     {
         if (_rectTransform == null)
         {
-            _rectTransform = GetComponent<RectTransform>();
-        }
-
-        if (_username == null)
-        {
             _username = _usernameObject.GetComponent<Text>();
-        }
-
-        if(_message == null)
-        {
             _message = _messageObject.GetComponent<Text>();
+
+            _rectTransform = gameObject.GetComponent<RectTransform>();
+            _textRectTransform = _messageObject.GetComponent<RectTransform>();
         }
 
 
@@ -62,7 +52,9 @@ public class TextLogItem : MonoBehaviour
         }
 
         int entersAmount = text.Split('\n').Length - 1;
-        _rectTransform.sizeDelta = (_rectTransform.rect.size) + new Vector2(0.0f, entersAmount * 20.0f);
+        _rectTransform.sizeDelta =_rectTransform.rect.size + new Vector2(0.0f, entersAmount * 10.0f);
+        _textRectTransform.sizeDelta = _textRectTransform.rect.size + new Vector2(0.0f, entersAmount * 10.0f);
+        _textRectTransform.localPosition -= new Vector3(0.0f, entersAmount * 4.5f, 0.0f);
 
         userId = id;
     }

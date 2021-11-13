@@ -28,6 +28,8 @@ public class TCPClient : MonoBehaviour
     bool chatOpen = false;
     public Dictionary<string, Command> commands;
 
+    public Color color = Color.white;
+
     void Start()
     {
         username = null;
@@ -45,7 +47,7 @@ public class TCPClient : MonoBehaviour
                 byte[] tmp = new byte[1];
                 socket.Send(tmp, 0, 0);
 
-                logControl.LogText("Server", "Connected", -1);
+                logControl.LogText("Server", "Connected", -1, Color.magenta);
                 Debug.Log("Connected to IP: " + endPoint.Address.ToString() + " with port: " + port.ToString());
 
                 break;
@@ -70,7 +72,7 @@ public class TCPClient : MonoBehaviour
             }
         }
 
-        if(connectedPort != -1)
+        if (connectedPort != -1)
         {
             chatOpen = true;
 
@@ -85,7 +87,7 @@ public class TCPClient : MonoBehaviour
     void StartSending()
     {
         //Receive();
-        logControl.LogText("Server", "Please write a username", -1);
+        logControl.LogText("Server", "Please write a username", -1, Color.magenta);
 
         Thread.Sleep(2500);
 
@@ -142,7 +144,7 @@ public class TCPClient : MonoBehaviour
         try
         {
             Message _message = new Message();
-            _message.SerializeJson(id, username == null ? "None" : username, DateTime.Now, message);
+            _message.SerializeJson(id, username == null ? "None" : username, DateTime.Now, message, color);
 
             byte[] msg = System.Text.Encoding.ASCII.GetBytes(_message.json);
             int bytesCount = socket.Send(msg, msg.Length, SocketFlags.None);
@@ -180,7 +182,7 @@ public class TCPClient : MonoBehaviour
 
             if (logControl != null)
             {
-                logControl.LogText(message._username, message._message, message._userId);
+                logControl.LogText(message._username, message._message, message._userId, message._userColor);
             }
         }
     }

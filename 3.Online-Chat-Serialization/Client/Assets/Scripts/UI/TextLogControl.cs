@@ -5,16 +5,18 @@ using UnityEngine;
 
 struct TextLog
 {
-    public TextLog(string myUsername, string myMessage, int myUserId)
+    public TextLog(string myUsername, string myMessage, int myUserId, Color myColor)
     {
         username = myUsername;
         message = myMessage;
         userId = myUserId;
+        color = myColor;
     }
 
     public string username;
     public string message;
     public int userId;
+    public Color color;
 }
 
 
@@ -50,15 +52,13 @@ public class TextLogControl : MonoBehaviour
                 Destroy(tempItem.gameObject);
             }
 
-            Color color = Color.green;
-
             //Create a new text to add to the chat
             GameObject newText = Instantiate(textTemplate);
             newText.SetActive(true);
 
             //Set all its parameters
             TextLogItem textLogItem = newText.GetComponent<TextLogItem>();
-            textLogItem.SetText(textLogs[0].username, textLogs[0].message, color, textLogs[0].userId);
+            textLogItem.SetText(textLogs[0].username, textLogs[0].message, textLogs[0].color, textLogs[0].userId);
             newText.transform.SetParent(textTemplate.transform.parent, false);
 
             //Add it to the items create and remove it from the list to be created
@@ -67,7 +67,7 @@ public class TextLogControl : MonoBehaviour
         }
     }
 
-    public void LogText(string username, string message, int id)
+    public void LogText(string username, string message, int id, Color color)
     {
         if (textLogs == null)
         {
@@ -75,7 +75,7 @@ public class TextLogControl : MonoBehaviour
         }
 
         //Debug.Log(newTextString);
-        textLogs.Add(new TextLog(username, message, id));
+        textLogs.Add(new TextLog(username, message, id, color));
     }
 
     public void ChangeUsername(int id, string newUsername)
