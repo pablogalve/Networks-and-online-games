@@ -179,6 +179,17 @@ public class TCPServer : MonoBehaviour
         Debug.Log("Exiting the chat loop");
     }
 
+    public User GetUserByName(string username)
+    {
+        for(int i = 0; i < users.Count; ++i)
+        {
+            if (users[i].username == username)
+                return users[i];
+        }
+
+        return null;
+    }
+
     Message ReceiveMessage(Socket socket)
     {
         try
@@ -232,24 +243,7 @@ public class TCPServer : MonoBehaviour
                 message._returnCode = 404;
 
                 Send(originUser, message);
-            }
-
-            switch (commandName)
-            {
-                case "/listUsers":
-                    message._userId = -1;
-                    message._message = "List of users: ";
-                    for (int i = 0; i < users.Count; ++i)
-                    {
-                        message._message += users[i].username + " ";
-                    }
-                    message.Serialize();
-                    //SendToEveryone(message);
-                    break;
-
-                default:
-                    break;
-            }
+            }            
         }
         else
         {
@@ -324,8 +318,11 @@ public class TCPServer : MonoBehaviour
         return selectedUsers;
     }
 
-    void RemoveUser(User user)
+    public bool RemoveUser(User user)
     {
+        if (user == null)
+            return false;
+
         users.Remove(user);
 
         auxiliarMessage.SerializeJson(-1, "Server", DateTime.Now, "User: " + user.username + " has left the room");
@@ -333,6 +330,7 @@ public class TCPServer : MonoBehaviour
         CloseSocket(user.socket);
 
         Debug.Log("User: " + user.username + " kicked");
+        return true;
     }
 
     int GetPort(Socket socket)

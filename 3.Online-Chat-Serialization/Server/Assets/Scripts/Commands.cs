@@ -7,7 +7,6 @@ public class Command
     public string name;
     public string description;
 
-
     public virtual void Execute(TCPServer server, User originUser, Message originalMessage)
     {
         Debug.Log("Override execute function");
@@ -101,5 +100,51 @@ public class ChangeName : Command
             server.SendToEveryone(originalMessage, originUser);
         }
 
+    }
+}
+
+public class ListUsers : Command
+{
+    public ListUsers()
+    {
+        name = "list";
+        description = "list all connected users";
+    }
+
+    public override void Execute(TCPServer server, User originUser, Message originalMessage)
+    {
+        originalMessage._message = "List of users: ";
+        for (int i = 0; i < server.users.Count; ++i)
+        {
+            originalMessage._message += server.users[i].username + " ";
+        }
+        originalMessage.SerializeJson(-1, "Server", System.DateTime.Now, originalMessage._message);
+        server.Send(originUser, originalMessage);
+    }
+}
+
+public class KickUser : Command
+{
+    public KickUser()
+    {
+        name = "kick";
+        description = "kicks a user out of the group chat";
+    }
+
+    public override void Execute(TCPServer server, User originUser, Message originalMessage)
+    {
+        string usernameToRemove = originalMessage._message;
+        User userToRemove = server.GetUserByName(usernameToRemove);
+
+        if (server.RemoveUser(userToRemove))
+        {
+            originalMessage.SerializeJson(-1, "Server", System.DateTime.Now, "User" + usernameToRemove + "kicked");
+            server.Send(originUser, originalMessage);
+        }
+        else
+        {
+            originalMessage.SerializeJson(-1, "Server", System.DateTime.Now, "Error. User" + usernameToRemove + " wasn't kicked");
+            server.Send(originUser, originalMessage);
+        }        
     }
 }
