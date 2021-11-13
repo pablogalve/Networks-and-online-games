@@ -11,6 +11,13 @@ public class Command
     {
         Debug.Log("Override execute function");
     }
+
+    public string GetContent(Message message)
+    {
+        int index = message._message.IndexOf(" ");
+        string content = message._message.Substring(index + 1, message._message.Length - index - 1);
+        return content;
+    }
 }
 
 public class HelpCommand : Command
@@ -51,8 +58,7 @@ public class ChangeName : Command
     {
         bool usernameFound = false;
 
-        int index = originalMessage._message.IndexOf(" ");
-        string content = originalMessage._message.Substring(index, originalMessage._message.Length - index);
+        string content = GetContent(originalMessage);
 
         //Debug.Log("Username: " + username);
 
@@ -133,18 +139,18 @@ public class KickUser : Command
 
     public override void Execute(TCPServer server, User originUser, Message originalMessage)
     {
-        string usernameToRemove = originalMessage._message;
+        string usernameToRemove = GetContent(originalMessage);
         User userToRemove = server.GetUserByName(usernameToRemove);
 
         if (server.RemoveUser(userToRemove))
         {
-            originalMessage.SerializeJson(-1, "Server", System.DateTime.Now, "User" + usernameToRemove + "kicked");
-            server.Send(originUser, originalMessage);
+            originalMessage.SerializeJson(-1, "Server", System.DateTime.Now, "User " + usernameToRemove + " kicked");
+            server.SendToEveryone(originalMessage, null);
         }
         else
         {
             originalMessage.SerializeJson(-1, "Server", System.DateTime.Now, "Error. User" + usernameToRemove + " wasn't kicked");
-            server.Send(originUser, originalMessage);
+            server.SendToEveryone(originalMessage, null);
         }        
     }
 }

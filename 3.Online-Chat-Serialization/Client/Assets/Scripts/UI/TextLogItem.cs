@@ -62,7 +62,7 @@ public class TextLogItem : MonoBehaviour
         }
 
         int entersAmount = text.Split('\n').Length - 1;
-        _rectTransform.sizeDelta = (_rectTransform.rect.size) + new Vector2(0.0f, entersAmount * 10.0f);
+        _rectTransform.sizeDelta = (_rectTransform.rect.size) + new Vector2(0.0f, entersAmount * 20.0f);
 
         userId = id;
     }

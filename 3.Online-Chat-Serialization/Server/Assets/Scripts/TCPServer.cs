@@ -325,8 +325,8 @@ public class TCPServer : MonoBehaviour
 
         users.Remove(user);
 
-        auxiliarMessage.SerializeJson(-1, "Server", DateTime.Now, "User: " + user.username + " has left the room");
-        SendToEveryone(auxiliarMessage, null);
+        //auxiliarMessage.SerializeJson(-1, "Server", DateTime.Now, "User: " + user.username + " has left the room");
+        //SendToEveryone(auxiliarMessage, null);
         CloseSocket(user.socket);
 
         Debug.Log("User: " + user.username + " kicked");
