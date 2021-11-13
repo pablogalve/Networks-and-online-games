@@ -15,6 +15,7 @@ public class TCPClient : MonoBehaviour
     private Thread sendThread;
     private Thread receiveThread;
     private readonly int port = 7777; //0 means take the first free port you get
+    private readonly int maxConnectionTests = 1;
 
     public UserList userlist;
 
@@ -30,13 +31,30 @@ public class TCPClient : MonoBehaviour
     void Start()
     {
         username = null;
-        endPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), port);
-        socket = new Socket(endPoint.Address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
-        socket.Connect(endPoint);
-        logControl.LogText("Server", "Connected", -1);
+        int connectedPort = -1;
+        for (int i = 0; i < maxConnectionTests; ++i)
+        {
+            try
+            {
+                connectedPort = port + i;
+                endPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), connectedPort);
+                socket = new Socket(endPoint.Address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                socket.Connect(endPoint);
 
-        Debug.Log("Connected to: " + endPoint.Address.ToString());
+                byte[] tmp = new byte[1];
+                socket.Send(tmp, 0, 0);
+
+                logControl.LogText("Server", "Connected", -1);
+                Debug.Log("Connected to IP: " + endPoint.Address.ToString() + " with port: " + port.ToString());
+
+                break;
+            }
+            catch
+            {
+                connectedPort = -1;
+            }
+        }
 
         //Create a command for each type
         commands = new Dictionary<string, Command>();
@@ -52,13 +70,16 @@ public class TCPClient : MonoBehaviour
             }
         }
 
-        chatOpen = true;
+        if(connectedPort != -1)
+        {
+            chatOpen = true;
 
-        sendThread = new Thread(new ThreadStart(StartSending));
-        sendThread.Start();
+            sendThread = new Thread(new ThreadStart(StartSending));
+            sendThread.Start();
 
-        receiveThread = new Thread(new ThreadStart(StartReceiving));
-        receiveThread.Start();
+            receiveThread = new Thread(new ThreadStart(StartReceiving));
+            receiveThread.Start();
+        }
     }
 
     void StartSending()
@@ -187,13 +208,16 @@ public class TCPClient : MonoBehaviour
     {
         if (socket != null)
         {
+            socket.Shutdown(SocketShutdown.Both);
             socket.Close();
+            socket = null;
             Debug.Log("Socket closed");
         }
     }
 
     private void OnDestroy()
     {
+
         Close();
         if (sendThread != null)
         {

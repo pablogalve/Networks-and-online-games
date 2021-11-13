@@ -28,12 +28,11 @@ public class TCPServer : MonoBehaviour
 
     private readonly int port = 7777;
     private int maximumSockets = 1;
+    private int maximumUsers = 30;
 
     List<int> availablePorts;
     private List<Socket> listenSockets;
-
     private List<Socket> listenList;
-    private List<Socket> acceptList;
 
     private Thread listenThread;
     private Thread chatThread;
@@ -74,7 +73,7 @@ public class TCPServer : MonoBehaviour
 
         //Generate random ids to identificate users
         availableIds = new List<int>();
-        for (int i = 0; i < maximumSockets; ++i)
+        for (int i = 0; i < maximumUsers; ++i)
         {
             availableIds.Add(UnityEngine.Random.Range(0, int.MaxValue));
         }
@@ -95,7 +94,6 @@ public class TCPServer : MonoBehaviour
 
             ((Socket)listenSockets[i]).Bind(new IPEndPoint(IPAddress.Parse("127.0.0.1"), availablePorts[i]));
         }
-
         Debug.Log("Binding completed");
 
         bool chatStarted = false;
@@ -126,11 +124,10 @@ public class TCPServer : MonoBehaviour
                 availableIds.RemoveAt(0);
 
                 //Remove the port from the available ones
-                IPEndPoint ipEndPoint = socket.LocalEndPoint as IPEndPoint;
-                availablePorts.Remove(ipEndPoint.Port);
+                availablePorts.Remove(GetPort(socket));
 
                 //Remove also from listenning sockets to avoid being used again
-                listenSockets.Remove(listenList[i]);
+                //listenSockets.Remove(listenList[i]);
             }
 
             listenList.Clear();
@@ -284,7 +281,6 @@ public class TCPServer : MonoBehaviour
         {
             Debug.LogWarning("Error. Couldn't send message: " + exception.ToString());
             CloseSocket(user.socket);
-            acceptList.Remove(user.socket);
             users.Remove(user);
         }
     }
@@ -298,23 +294,6 @@ public class TCPServer : MonoBehaviour
                 Send(users[i], messageToSend);
             }
         }
-    }
-
-    ArrayList GenerateSocketsArrayList(Socket[] sockets)
-    {
-        ArrayList arrayList = new ArrayList();
-        for (int i = 0; i < sockets.Length; ++i)
-        {
-            arrayList.Add(sockets[i]);
-        }
-
-        return arrayList;
-    }
-
-    ArrayList Select(ArrayList arrayToBeSelected)
-    {
-        Socket.Select(arrayToBeSelected, null, null, 1000);
-        return arrayToBeSelected;
     }
 
     List<User> SelectUsers()
@@ -347,14 +326,27 @@ public class TCPServer : MonoBehaviour
 
     void RemoveUser(User user)
     {
-        CloseSocket(user.socket);
         users.Remove(user);
 
         auxiliarMessage.SerializeJson(-1, "Server", DateTime.Now, "User: " + user.username + " has left the room");
-
         SendToEveryone(auxiliarMessage, null);
+        CloseSocket(user.socket);
 
         Debug.Log("User: " + user.username + " kicked");
+    }
+
+    int GetPort(Socket socket)
+    {
+        IPEndPoint ipEndPoint = socket.LocalEndPoint as IPEndPoint;
+        if (ipEndPoint != null)
+        {
+            return ipEndPoint.Port;
+        }
+        else
+        {
+            Debug.LogWarning("Trying to get port when no IPEndPoint is set");
+            return -1;
+        }
     }
 
     void CloseSocket(Socket socket)
