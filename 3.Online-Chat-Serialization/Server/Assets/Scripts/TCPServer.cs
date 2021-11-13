@@ -224,8 +224,6 @@ public class TCPServer : MonoBehaviour
 
     void ProcessMessage(Message message, User originUser)
     {
-        message._userId = originUser.id;
-
         if (message._type == MessageType.COMMAND)
         {
             int index = message._message.IndexOf(" ");
@@ -336,8 +334,6 @@ public class TCPServer : MonoBehaviour
 
         users.Remove(user);
 
-        //auxiliarMessage.SerializeJson(-1, "Server", DateTime.Now, "User: " + user.username + " has left the room");
-        //SendToEveryone(auxiliarMessage, null);
         CloseSocket(user.socket);
 
         Debug.Log("User: " + user.username + " kicked");

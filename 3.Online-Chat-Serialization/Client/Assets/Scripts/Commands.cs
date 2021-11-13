@@ -56,29 +56,3 @@ public class ChangeOtherUsername : Command
         client.logControl.ChangeUsername(originalMessage._userId, content);
     }
 }
-
-public class ListUsers : Command
-{
-    public ListUsers()
-    {
-        name = "list";
-    }
-
-    public override void Execute(TCPClient client, Message originalMessage)
-    {
-        client.logControl.LogText(originalMessage._username, originalMessage._message, originalMessage._userId, originalMessage._userColor);
-    }
-}
-
-public class KickUser : Command
-{
-    public KickUser()
-    {
-        name = "kick";
-    }
-
-    public override void Execute(TCPClient client, Message originalMessage)
-    {
-        client.logControl.LogText(originalMessage._username, originalMessage._message, originalMessage._userId,originalMessage._userColor);
-    }
-}

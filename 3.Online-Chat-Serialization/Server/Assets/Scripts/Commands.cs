@@ -38,7 +38,7 @@ public class HelpCommand : Command
             concatenatedCommands += ": " + command.Value.description + "\n";
         }
 
-        originalMessage.SerializeJson(-1, "Server", System.DateTime.Now, concatenatedCommands, Color.white);
+        originalMessage.SerializeJson(-1, "Server", System.DateTime.Now, concatenatedCommands, server.color);
         originalMessage._returnCode = 200;
         originalMessage._type = MessageType.MESSAGE;
 
@@ -103,7 +103,7 @@ public class ChangeName : Command
         //Tell everyone about the change
         if (!userHadUsernameSet) 
         {
-            originalMessage.SerializeJson(-1, "Server", System.DateTime.Now, "User: " + username + " has joined the chat", server.color);
+            originalMessage.SerializeJson(-1, "Server", System.DateTime.Now, "User " + username + " has joined the chat", server.color);
             server.SendToEveryone(originalMessage, originUser);
         }
         else
@@ -158,5 +158,51 @@ public class KickUser : Command
             originalMessage.SerializeJson(-1, "Server", System.DateTime.Now, "Error. User" + usernameToRemove + " wasn't kicked", server.color);
             server.SendToEveryone(originalMessage, null);
         }        
+    }
+}
+
+public class Leave : Command
+{
+    public Leave()
+    {
+        name = "leave";
+        description = "leave the server";
+    }
+
+    public override void Execute(TCPServer server, User originUser, Message originalMessage)
+    {
+        server.RemoveUser(originUser);
+        
+        originalMessage.SerializeJson(-1, "Server", System.DateTime.Now, originUser.username + " left the chat", server.color);
+        server.SendToEveryone(originalMessage, null);        
+    }
+}
+
+public class Whisper : Command
+{
+    public Whisper()
+    {
+        name = "whisper";
+        description = "send a message only to a desired user";
+    }
+
+    public override void Execute(TCPServer server, User originUser, Message originalMessage)
+    {
+        string text = GetContent(originalMessage);
+        int index = text.IndexOf(' ', 0);
+        string usernameToWhisper = text.Substring(0, index);
+        User userToWhisper = server.GetUserByName(usernameToWhisper);
+        if (userToWhisper != null)
+        {
+            originalMessage._message = text.Substring(index + 1);
+
+            originalMessage.SerializeJson(originalMessage._userId, originUser.username, System.DateTime.Now, originalMessage._message, originUser.color);
+            server.Send(userToWhisper, originalMessage);
+        }
+        else
+        {
+            originalMessage.SerializeJson(-1, "Server", System.DateTime.Now, "User doesn't exist", server.color);
+            server.Send(userToWhisper, originalMessage);
+        }  
     }
 }
