@@ -89,10 +89,12 @@ public class ChangeName : Command
         if (!usernameFound)
         {
             originUser.username = username;
-            originUser.color = server.availableColors[0];
+            if (!userHadUsernameSet)
+            {
+                originUser.color = server.availableColors[0];
+                server.availableColors.RemoveAt(0);
+            }
             originalMessage._userColor = originUser.color;
-            server.availableColors.RemoveAt(0);
-
             Debug.Log("Username: " + username + " accepted");
         }
 
@@ -101,7 +103,7 @@ public class ChangeName : Command
         server.Send(originUser, originalMessage);
 
         //Tell everyone about the change
-        if (!userHadUsernameSet) 
+        if (!userHadUsernameSet && !usernameFound)
         {
             originalMessage.SerializeJson(-1, "Server", System.DateTime.Now, "User " + username + " has joined the chat", server.color);
             server.SendToEveryone(originalMessage, originUser);
@@ -157,7 +159,7 @@ public class KickUser : Command
         {
             originalMessage.SerializeJson(-1, "Server", System.DateTime.Now, "Error. User" + usernameToRemove + " wasn't kicked", server.color);
             server.SendToEveryone(originalMessage, null);
-        }        
+        }
     }
 }
 
@@ -172,9 +174,9 @@ public class Leave : Command
     public override void Execute(TCPServer server, User originUser, Message originalMessage)
     {
         server.RemoveUser(originUser);
-        
+
         originalMessage.SerializeJson(-1, "Server", System.DateTime.Now, originUser.username + " left the chat", server.color);
-        server.SendToEveryone(originalMessage, null);        
+        server.SendToEveryone(originalMessage, null);
     }
 }
 
@@ -203,6 +205,6 @@ public class Whisper : Command
         {
             originalMessage.SerializeJson(-1, "Server", System.DateTime.Now, "User doesn't exist", server.color);
             server.Send(userToWhisper, originalMessage);
-        }  
+        }
     }
 }

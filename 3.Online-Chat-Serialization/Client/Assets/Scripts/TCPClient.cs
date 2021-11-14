@@ -14,8 +14,7 @@ public class TCPClient : MonoBehaviour
 
     private Thread sendThread;
     private Thread receiveThread;
-    private readonly int port = 7777; //0 means take the first free port you get
-    private readonly int maxConnectionTests = 1;
+    private readonly int port = 7777;
 
     public UserList userlist;
 
@@ -34,29 +33,26 @@ public class TCPClient : MonoBehaviour
     {
         username = null;
 
-        int connectedPort = -1;
-        for (int i = 0; i < maxConnectionTests; ++i)
+        try
         {
-            try
-            {
-                connectedPort = port + i;
-                endPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), connectedPort);
-                socket = new Socket(endPoint.Address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-                socket.Connect(endPoint);
+            endPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), port);
+            socket = new Socket(endPoint.Address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            socket.Connect(endPoint);
 
-                byte[] tmp = new byte[1];
-                socket.Send(tmp, 0, 0);
+            byte[] tmp = new byte[1];
+            socket.Send(tmp, 0, 0);
 
-                logControl.LogText("Server", "Connected", -1, Color.magenta);
-                Debug.Log("Connected to IP: " + endPoint.Address.ToString() + " with port: " + port.ToString());
-
-                break;
-            }
-            catch
-            {
-                connectedPort = -1;
-            }
+            logControl.LogText("Server", "Connected", -1, Color.magenta, DateTime.Now);
+            Debug.Log("Connected to IP: " + endPoint.Address.ToString() + " with port: " + port.ToString());
         }
+        catch
+        {
+            logControl.LogText("Server", "Could not connect properly to server, please restart the server", -1, Color.magenta, DateTime.Now);
+            socket = null;
+            //Close();
+            return;
+        }
+
 
         //Create a command for each type
         commands = new Dictionary<string, Command>();
@@ -72,22 +68,20 @@ public class TCPClient : MonoBehaviour
             }
         }
 
-        if (connectedPort != -1)
-        {
-            chatOpen = true;
+        chatOpen = true;
 
-            sendThread = new Thread(new ThreadStart(StartSending));
-            sendThread.Start();
+        sendThread = new Thread(new ThreadStart(StartSending));
+        sendThread.Start();
 
-            receiveThread = new Thread(new ThreadStart(StartReceiving));
-            receiveThread.Start();
-        }
+        receiveThread = new Thread(new ThreadStart(StartReceiving));
+        receiveThread.Start();
+
     }
 
     void StartSending()
     {
         //Receive();
-        logControl.LogText("Server", "Please write a username", -1, Color.magenta);
+        logControl.LogText("Server", "Please write a username", -1, Color.magenta, DateTime.Now);
 
         Thread.Sleep(2500);
 
@@ -182,7 +176,7 @@ public class TCPClient : MonoBehaviour
 
             if (logControl != null)
             {
-                logControl.LogText(message._username, message._message, message._userId, message._userColor);
+                logControl.LogText(message._username, message._message, message._userId, message._userColor, message._timestamp);
             }
         }
     }

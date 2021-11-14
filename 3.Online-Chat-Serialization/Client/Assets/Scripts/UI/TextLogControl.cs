@@ -5,18 +5,20 @@ using UnityEngine;
 
 struct TextLog
 {
-    public TextLog(string myUsername, string myMessage, int myUserId, Color myColor)
+    public TextLog(string myUsername, string myMessage, int myUserId, Color myColor, DateTime myDate)
     {
         username = myUsername;
         message = myMessage;
         userId = myUserId;
         color = myColor;
+        date = myDate;
     }
 
     public string username;
     public string message;
     public int userId;
     public Color color;
+    public DateTime date;
 }
 
 
@@ -58,7 +60,7 @@ public class TextLogControl : MonoBehaviour
 
             //Set all its parameters
             TextLogItem textLogItem = newText.GetComponent<TextLogItem>();
-            textLogItem.SetText(textLogs[0].username, textLogs[0].message, textLogs[0].color, textLogs[0].userId);
+            textLogItem.SetText(textLogs[0].username, textLogs[0].message, textLogs[0].color, textLogs[0].userId, textLogs[0].date);
             newText.transform.SetParent(textTemplate.transform.parent, false);
 
             //Add it to the items create and remove it from the list to be created
@@ -67,7 +69,7 @@ public class TextLogControl : MonoBehaviour
         }
     }
 
-    public void LogText(string username, string message, int id, Color color)
+    public void LogText(string username, string message, int id, Color color ,DateTime date)
     {
         if (textLogs == null)
         {
@@ -75,7 +77,7 @@ public class TextLogControl : MonoBehaviour
         }
 
         //Debug.Log(newTextString);
-        textLogs.Add(new TextLog(username, message, id, color));
+        textLogs.Add(new TextLog(username, message, id, color, date));
     }
 
     public void ChangeUsername(int id, string newUsername)

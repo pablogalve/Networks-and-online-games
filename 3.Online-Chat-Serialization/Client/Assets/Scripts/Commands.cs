@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -37,7 +38,7 @@ public class ChangeName : Command
             client.id = originalMessage._userId;
         }
 
-        client.logControl.LogText("Server", "Username set to: " + content, -1, Color.magenta);
+        client.logControl.LogText("Server", "Username set to: " + content, -1, Color.magenta, DateTime.Now);
         Debug.Log("Username id is: " + client.id);
     }
 }

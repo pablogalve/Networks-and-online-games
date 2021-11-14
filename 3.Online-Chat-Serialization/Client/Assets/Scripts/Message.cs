@@ -8,6 +8,24 @@ public enum MessageType
     MESSAGE
 }
 
+[Serializable]
+public struct JsonDateTime
+{
+    public long value;
+    public static implicit operator DateTime(JsonDateTime jdt)
+    {
+        //Debug.Log("Converted to time");
+        return DateTime.FromFileTimeUtc(jdt.value);
+    }
+    public static implicit operator JsonDateTime(DateTime dt)
+    {
+        //Debug.Log("Converted to JDT");
+        JsonDateTime jdt = new JsonDateTime();
+        jdt.value = dt.ToFileTimeUtc();
+        return jdt;
+    }
+}
+
 public class Message
 {
     string jsonMsg;
@@ -15,7 +33,7 @@ public class Message
 
     public int _userId;
     public string _username;
-    public DateTime _timestamp;
+    public JsonDateTime _timestamp;
     public string _message;
     public MessageType _type;
     public int _returnCode = 200;
