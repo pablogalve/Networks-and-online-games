@@ -44,13 +44,11 @@ public class TCPServer : MonoBehaviour
     bool serverOpen = true;
 
     public Dictionary<string, Command> commands;
-    Message auxiliarMessage;
     public Color color = Color.magenta;
 
     // Start is called before the first frame update
     void Start()
     {
-        auxiliarMessage = new Message();
         listenSockets = new List<Socket>();
         listenList = new List<Socket>();
 
@@ -85,6 +83,7 @@ public class TCPServer : MonoBehaviour
         listenThread = new Thread(new ThreadStart(ListenForUsers));
         listenThread.Start();
 
+        //Create a set of basic colors and some random ones just in case there are a lot of players
         Color[] colors = { Color.green, Color.yellow, Color.blue, Color.red, Color.magenta};
         availableColors = new List<Color>();
         availableColors.AddRange(colors);
@@ -141,6 +140,7 @@ public class TCPServer : MonoBehaviour
                 //listenSockets.Remove(listenList[i]);
             }
 
+            //Clear the listen list so we can fill it in the next iteration
             listenList.Clear();
 
             if (!chatStarted)
@@ -163,22 +163,24 @@ public class TCPServer : MonoBehaviour
 
             if (users.Count > 0)
             {
+                //Get all users who are willing to send
                 List<User> receiveList = SelectUsers();
-
                 for (int i = 0; i < receiveList.Count; ++i)
                 {
                     Message receivedMessage = ReceiveMessage(receiveList[i].socket);
 
+                    //If the message is correct process it 
                     if (receivedMessage != null)
                     {
                         ProcessMessage(receivedMessage, receiveList[i]);
                         if (receivedMessage != null)
                         {
-                            Debug.Log(receivedMessage.json);
+                            Debug.Log(receivedMessage._message);
                         }
                     }
                     else
                     {
+                        //If there is an error receiving the message remove the user to avoid problems
                         RemoveUser(receiveList[i]);
                     }
                 }
@@ -207,17 +209,15 @@ public class TCPServer : MonoBehaviour
         {
             byte[] msg = new byte[512];
             int recv = socket.Receive(msg);
-            string encodedMessage = System.Text.Encoding.ASCII.GetString(msg);
-            Message message = Message.DeserializeJson(encodedMessage);
+            Message message = Message.DeserializeJson(msg);
 
-            Debug.Log("Encoded message: " + encodedMessage);
+            Debug.Log("Encoded message: " + message._message);
 
             return message;
         }
         catch (System.Exception exception)
         {
             Debug.LogWarning("Exception caught: " + exception.ToString());
-            //CloseSocket(socket);
             return null;
         }
     }
@@ -239,6 +239,7 @@ public class TCPServer : MonoBehaviour
                 commandName = message._message.Substring(1);
             }
 
+            //Check if it is a correct command and execute
             if (commands.ContainsKey(commandName))
             {
                 message._username = "Server";
@@ -246,6 +247,7 @@ public class TCPServer : MonoBehaviour
 
                 Debug.Log("Command: " + commandName + " executed");
             }
+            //In the case it does not exist tell the user to send another one
             else
             {
                 message.SerializeJson(-1, "Server", DateTime.Now, "Invalid command, please write one form the list. Type /help to see all commands", color);
@@ -270,9 +272,7 @@ public class TCPServer : MonoBehaviour
 
         try
         {
-            //Debug.Log("Sending Pong");
-            message.Serialize();
-            byte[] msg = System.Text.Encoding.ASCII.GetBytes(message.json);
+            byte[] msg = message.Serialize();
             int bytesSent = user.socket.Send(msg, msg.Length, SocketFlags.None);
 
             if (bytesSent > 0)
@@ -375,14 +375,18 @@ public class TCPServer : MonoBehaviour
     {
         //Close server
         CloseSockets(listenSockets);
-        //CloseSockets(acceptSockets);
 
+        //Close all threads
         if (listenThread != null)
         {
             listenThread.Abort();
         }
 
-        // Close clients
+        if(chatThread != null)
+        {
+            chatThread.Abort();
+        }
+
         users.Clear();
     }
 }

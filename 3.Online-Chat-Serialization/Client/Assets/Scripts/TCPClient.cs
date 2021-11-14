@@ -39,6 +39,7 @@ public class TCPClient : MonoBehaviour
             socket = new Socket(endPoint.Address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             socket.Connect(endPoint);
 
+            //Send a test message to check if the user has been properly connected
             byte[] tmp = new byte[1];
             socket.Send(tmp, 0, 0);
 
@@ -116,13 +117,12 @@ public class TCPClient : MonoBehaviour
             Debug.Log("Waiting to receive");
             byte[] msg = new byte[512];
             var recv = socket.Receive(msg);
-            string decodedMessage = System.Text.Encoding.ASCII.GetString(msg);
-            Debug.Log("Decoded message: " + decodedMessage);
-
-            Message message = Message.DeserializeJson(decodedMessage);
+          
+            Message message = Message.DeserializeJson(msg);
+            Debug.Log("Decoded message: " + message._message);
             ProcessMessage(message);
+
             return message;
-            //Debug.Log(message.json);
         }
         catch (System.Exception exception)
         {
@@ -138,9 +138,8 @@ public class TCPClient : MonoBehaviour
         try
         {
             Message _message = new Message();
-            _message.SerializeJson(id, username == null ? "None" : username, DateTime.Now, message, color);
-
-            byte[] msg = System.Text.Encoding.ASCII.GetBytes(_message.json);
+           
+            byte[] msg = _message.SerializeJson(id, username == null ? "None" : username, DateTime.Now, message, color);
             int bytesCount = socket.Send(msg, msg.Length, SocketFlags.None);
 
             Debug.Log("Message sent with: " + bytesCount + "bytes");
@@ -159,6 +158,7 @@ public class TCPClient : MonoBehaviour
             Debug.Log("Command: " + message._message);
 
             int index = message._message.IndexOf(" ");
+
             //We start at 1 to avoid "/"
             string commandName = message._message.Substring(1, index - 1);
 
@@ -207,17 +207,24 @@ public class TCPClient : MonoBehaviour
             socket.Shutdown(SocketShutdown.Both);
             socket.Close();
             socket = null;
+
             Debug.Log("Socket closed");
         }
     }
 
     private void OnDestroy()
     {
-
         Close();
+
+        //Close all threads
         if (sendThread != null)
         {
             sendThread.Abort();
+        }
+
+        if(receiveThread != null)
+        {
+            receiveThread.Abort();
         }
     }
 }
