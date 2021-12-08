@@ -2,18 +2,34 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public class Enemy : NetworkedObject
 {
-    // Start is called before the first frame update
+    [SerializeField]
+    private int points = 5;
+
+    public GameObject particles;
+
     void Start()
     {
-
+        base.Init();
     }
 
-    // Update is called once per frame
     void Update()
     {
+        Move();
+    }
 
+    private void Move()
+    {
+        
+    }
+
+    public override void Die()
+    {
+        GameManager.instance.InstantiateParticles(particles, transform.position);
+        GameManager.instance.AddScore(points);
+
+        base.Die();
     }
 
     void OnCollisionEnter(Collision collision)
@@ -24,11 +40,5 @@ public class Enemy : MonoBehaviour
                 Die();
                 break;
         }
-    }
-
-    void Die()
-    {
-        Debug.Log("Die");
-        Destroy(gameObject);
     }
 }
