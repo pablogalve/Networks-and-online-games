@@ -15,26 +15,21 @@ public class Player : MonoBehaviour
     public Animator movementAnimator;
     public BoxCollider _collider;
 
-    private Plane[] planes;
-
-    private Vector3 backPoint;
-    private Vector3 frontPoint;
-    private Vector3 topPoint;
-    private Vector3 downPoint;
+    Vector2 colliderScreenSize;
 
     void Start()
     {
         lives = 1;
         playerAttack = GetComponent<PlayerAttack>();
 
-        planes = GeometryUtility.CalculateFrustumPlanes(Camera.main);
+        colliderScreenSize = (Camera.main.WorldToViewportPoint(_collider.bounds.center + _collider.size) - Camera.main.WorldToViewportPoint(_collider.center));
 
-
-        backPoint = _collider.bounds.center - new Vector3(_collider.size.x, 0, 0);
-        frontPoint = _collider.bounds.center + new Vector3(_collider.size.x, 0, 0);
-        topPoint = _collider.bounds.center + new Vector3(0, _collider.size.y, 0);
-        downPoint = _collider.bounds.center - new Vector3(0, _collider.size.y, 0);
-
+        Debug.Log(colliderScreenSize.x.ToString());
+        //Debug.Log("sIZE IS: " + _collider.size + "and " + (_collider.bounds.center + new Vector3(0.0f, _collider.size.y, 0.0f)));
+        //Debug.Log("This is stupid " + Camera.main.WorldToViewportPoint((_collider.bounds.center + new Vector3(0.0f, _collider.size.y, 0.0f))));
+        //Debug.Log("Screen size is: " + Camera.main.WorldToViewportPoint(_collider.bounds.center + new Vector3(0.0f, _collider.size.y, 0.0f)));
+        //Debug.Log("Center screen is: " + Camera.main.WorldToViewportPoint(_collider.bounds.center));
+        //Debug.Log(Camera.main.WorldToViewportPoint(_collider.bounds.center + new Vector3(_collider.size.x, 0.0f, 0.0f)) - Camera.main.WorldToViewportPoint(_collider.bounds.center));
 
     }
 
@@ -45,42 +40,78 @@ public class Player : MonoBehaviour
 
         if (horizontal != 0.0f || vertical != 0.0f)
         {
-
-            //if(vertical != 0.0f && Mathf.Abs(transform.eulerAngles.x) < 38)
-            //{
-            //    transform.Rotate(transform.right, 100 * -vertical * Time.deltaTime);
-            //}
-            //else if(Mathf.Abs(transform.eulerAngles.x) < 38)
-            //{
-            //    transform.Rotate(transform.right, 100 * -vertical * Time.deltaTime);
-            //}
             movementAnimator.SetFloat("blendTilt", vertical);
 
+            //backPoint = _collider.bounds.center - new Vector3(_collider.size.x, 0, 0);
+            //frontPoint = _collider.bounds.center + new Vector3(_collider.size.x, 0, 0);
+            //topPoint = _collider.bounds.center + new Vector3(0, _collider.size.y, 0);
+            //downPoint = _collider.bounds.center - new Vector3(0, _collider.size.y, 0);
 
 
-            //if (GeometryUtility.TestPlanesAABB(planes, _collider.bounds))
+            //float corrX = 0.0f;
+            //float corrY = 0.0f;
+            //Vector3 finalPosition = transform.position;
+            //if(vertical != 0.0f)
             //{
-            //    transform.Translate(new Vector3(horizontal, vertical, 0.0f) * movementSpeed * Time.deltaTime, Space.World);
+            //    if (CheckVerticalScreenPoint(Camera.main.WorldToViewportPoint(topPoint)))
+            //    {
+            //        finalPosition.y = topPoint.y - _collider.size.y;
+            //        //Debug.Log("top out");
+            //    }
+            //    else if (CheckVerticalScreenPoint(Camera.main.WorldToViewportPoint(downPoint)))
+            //    {
+            //        finalPosition.y = downPoint.y + _collider.size.y;
+            //        //Debug.Log("down out");
+            //    }
+            //    else
+            //    {
+            //        finalPosition.y += vertical * movementSpeed * Time.deltaTime;
+            //    }
+            //}
+            //if(horizontal != 0.0f)
+            //{
+            //    if (CheckHorizontalScreenPoint(Camera.main.WorldToViewportPoint(frontPoint)))
+            //    {
+            //        finalPosition.x = frontPoint.x - _collider.size.x;
+            //        //Debug.Log("front out");
+            //    }
+            //    else if (CheckHorizontalScreenPoint(Camera.main.WorldToViewportPoint(backPoint)))
+            //    {
+            //        finalPosition.x = backPoint.x + _collider.size.x;
+            //        //Debug.Log("back out");
+            //    }
+            //    else
+            //    {
+            //        finalPosition.x += horizontal * movementSpeed * Time.deltaTime;
+            //    }
             //}
 
-            //Vector3 screenPosition = Camera.main.WorldToViewportPoint(transform.position + (new Vector3(horizontal, vertical, 0.0f) * movementSpeed * Time.deltaTime));
-            //if (screenPosition.x < 0f || screenPosition.x > 1f || screenPosition.y > 1f || screenPosition.y < 0f)
-            //{
-            //    //Cant move, we would go offscreen
-            //}
-            //else
-            //{
-            //    //Can move, the position is on screen
-            //}
+           
 
 
 
+            Vector3 newPosition = transform.position + (new Vector3(horizontal, vertical, 0.0f) * movementSpeed * Time.deltaTime);
+            //Debug.Log(corrX + " // " + corrY);
 
-            transform.Translate(new Vector3(horizontal, vertical, 0.0f) * movementSpeed * Time.deltaTime, Space.World);
+            float screenFinalPosX = Mathf.Clamp(Camera.main.WorldToViewportPoint(newPosition).x, 0.0f - (colliderScreenSize.x / 4.0f), 1.0f + (colliderScreenSize.x / 4.0f));
+            float screenFinalPosY = Mathf.Clamp(Camera.main.WorldToViewportPoint(newPosition).y, 0.0f + colliderScreenSize.y, 1.0f - colliderScreenSize.y);
 
+            Debug.Log(Camera.main.rect);
+            transform.position = new Vector3(Camera.main.ViewportToWorldPoint(new Vector3(screenFinalPosX, 0.0f, 0.0f)).x, Camera.main.ViewportToWorldPoint(new Vector3(0.0f, screenFinalPosY, 0.0f)).y, 0.0f);
 
-
+            //transform.position.x = Camera.main.ViewportToWorldPoint(new Vector3(screenFinalPosX, 0.0f, 0.0f)).x;
+            //transform.position.y = Camera.main.ViewportToWorldPoint(new vector3(0.0f, screenFinalPosY, 0.0f)).y;
         }
+    }
+
+    public bool CheckVerticalScreenPoint(Vector2 point)
+    {
+        return (point.y > 1f || point.y < 0f);
+    }
+
+    public bool CheckHorizontalScreenPoint(Vector2 point)
+    {
+        return (point.x < 0f || point.x > 1f);
     }
 
     public void IncreaseLives(int amountToIncrease)
