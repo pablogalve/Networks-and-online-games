@@ -24,7 +24,10 @@ public class Projectile : NetworkedObject
 
     void OnCollisionEnter(Collision collision)
     {
-        Die();
+        if(collision.gameObject.tag != "Player")
+        {
+            Die();
+        }
     }
 
     public override void Die()

@@ -13,11 +13,16 @@ public class Player : MonoBehaviour
     public float movementSpeed = 5.0f;
 
     public Animator movementAnimator;
+    public BoxCollider _collider;
+
+    private Plane[] planes;
 
     void Start()
     {
         lives = 1;
         playerAttack = GetComponent<PlayerAttack>();
+
+        planes = GeometryUtility.CalculateFrustumPlanes(Camera.main);
     }
 
     void Update()
@@ -38,7 +43,26 @@ public class Player : MonoBehaviour
             //}
             movementAnimator.SetFloat("blendTilt", vertical);
 
-            transform.Translate(new Vector3(horizontal, vertical, 0.0f) * movementSpeed * Time.deltaTime, Space.World);
+
+
+            //if (GeometryUtility.TestPlanesAABB(planes, _collider.bounds))
+            //{
+            //    transform.Translate(new Vector3(horizontal, vertical, 0.0f) * movementSpeed * Time.deltaTime, Space.World);
+            //}
+
+            Vector3 screenPosition = Camera.main.WorldToViewportPoint(transform.position + (new Vector3(horizontal, vertical, 0.0f) * movementSpeed * Time.deltaTime));
+            if (screenPosition.x < 0f || screenPosition.x > 1f || screenPosition.y > 1f || screenPosition.y < 0f)
+            {
+                //Cant move, we would go offscreen
+            }
+            else
+            {
+                //Can move, the position is on screen
+                transform.Translate(new Vector3(horizontal, vertical, 0.0f) * movementSpeed * Time.deltaTime, Space.World);
+            }
+
+
+
         }
     }
 
