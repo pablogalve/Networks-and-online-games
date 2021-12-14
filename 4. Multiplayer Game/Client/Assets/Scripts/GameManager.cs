@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviour
         {
             particleSystem.Play();
             particlesInstance.transform.SetParent(particlesContainer.transform);
-            Destroy(particlesInstance, particleSystem.main.duration);
+            Destroy(particlesInstance, particleSystem.main.duration * 0.8f);
         }
         else
         {

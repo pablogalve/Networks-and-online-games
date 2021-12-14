@@ -17,12 +17,25 @@ public class Player : MonoBehaviour
 
     private Plane[] planes;
 
+    private Vector3 backPoint;
+    private Vector3 frontPoint;
+    private Vector3 topPoint;
+    private Vector3 downPoint;
+
     void Start()
     {
         lives = 1;
         playerAttack = GetComponent<PlayerAttack>();
 
         planes = GeometryUtility.CalculateFrustumPlanes(Camera.main);
+
+
+        backPoint = _collider.bounds.center - new Vector3(_collider.size.x, 0, 0);
+        frontPoint = _collider.bounds.center + new Vector3(_collider.size.x, 0, 0);
+        topPoint = _collider.bounds.center + new Vector3(0, _collider.size.y, 0);
+        downPoint = _collider.bounds.center - new Vector3(0, _collider.size.y, 0);
+
+
     }
 
     void Update()
@@ -50,16 +63,20 @@ public class Player : MonoBehaviour
             //    transform.Translate(new Vector3(horizontal, vertical, 0.0f) * movementSpeed * Time.deltaTime, Space.World);
             //}
 
-            Vector3 screenPosition = Camera.main.WorldToViewportPoint(transform.position + (new Vector3(horizontal, vertical, 0.0f) * movementSpeed * Time.deltaTime));
-            if (screenPosition.x < 0f || screenPosition.x > 1f || screenPosition.y > 1f || screenPosition.y < 0f)
-            {
-                //Cant move, we would go offscreen
-            }
-            else
-            {
-                //Can move, the position is on screen
-                transform.Translate(new Vector3(horizontal, vertical, 0.0f) * movementSpeed * Time.deltaTime, Space.World);
-            }
+            //Vector3 screenPosition = Camera.main.WorldToViewportPoint(transform.position + (new Vector3(horizontal, vertical, 0.0f) * movementSpeed * Time.deltaTime));
+            //if (screenPosition.x < 0f || screenPosition.x > 1f || screenPosition.y > 1f || screenPosition.y < 0f)
+            //{
+            //    //Cant move, we would go offscreen
+            //}
+            //else
+            //{
+            //    //Can move, the position is on screen
+            //}
+
+
+
+
+            transform.Translate(new Vector3(horizontal, vertical, 0.0f) * movementSpeed * Time.deltaTime, Space.World);
 
 
 
