@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Server : UDPObject
 {
-    void Start()
+    public override void Start()
     {
         
     }

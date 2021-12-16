@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-enum MessageType
+public enum MessageType
 {
     INSTANCE,
     DESTROY
@@ -12,8 +12,8 @@ enum MessageType
 
 public class Message
 {
-    string objectId;
-    MessageType type;
+    public string objectId;
+    public MessageType type;
 
     public Guid guid
     {
@@ -24,9 +24,11 @@ public class Message
     public byte[] Serialize()
     {
         string json = JsonUtility.ToJson(this);
+
         MemoryStream stream = new MemoryStream();
         BinaryWriter writer = new BinaryWriter(stream);
         writer.Write(json);
+
         return stream.ToArray();
     }
 
@@ -43,8 +45,8 @@ public class Message
             case MessageType.INSTANCE:
                 return JsonUtility.FromJson<VectorMessage>(reader.ReadString());
 
-            default: return new Message();
-
+            default: 
+                return new Message();
         }
 
     }
@@ -52,6 +54,13 @@ public class Message
 
 public class VectorMessage : Message
 {
+    public VectorMessage(MessageType type, NetworkedObject networkedObject)
+    {
+        this.objectId = networkedObject.id.ToString();
+        this.type = type;
+        vector = networkedObject.transform.position;
+    }
+
     Vector3 vector;
 }
 

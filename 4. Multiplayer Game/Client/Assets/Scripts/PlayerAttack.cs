@@ -5,14 +5,17 @@ using UnityEngine;
 public class PlayerAttack : MonoBehaviour
 {
     public float defaultTimeBetweenShots;
-    
+
     [HideInInspector]
     public float timeBetweenShots;
-    
+
     [HideInInspector]
     public float shotsTimer = 0.0f;
 
     public GameObject projectile;
+
+    [SerializeField]
+    private Client client;
 
     void Start()
     {
@@ -21,15 +24,20 @@ public class PlayerAttack : MonoBehaviour
 
     void Update()
     {
-        if(shotsTimer > 0.0f)
+        if (shotsTimer > 0.0f)
         {
             shotsTimer -= Time.deltaTime;
         }
 
-        if(Input.GetKeyDown(KeyCode.Space) && shotsTimer <= 0.0f)
+        if (Input.GetKeyDown(KeyCode.Space) && shotsTimer <= 0.0f)
         {
-           GameObject projectileInstance = Instantiate(projectile, gameObject.transform.position + new Vector3(0.0f, 0.0f, 1.0f), Quaternion.identity);
+            GameObject projectileInstance = Instantiate(projectile, gameObject.transform.position + new Vector3(0.0f, 0.0f, 1.0f), Quaternion.identity);
             shotsTimer = timeBetweenShots;
+            
+            if(client != null)
+            {
+                client.Send(MessageType.INSTANCE, projectileInstance);
+            }
         }
     }
 }

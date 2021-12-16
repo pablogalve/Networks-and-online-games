@@ -17,6 +17,9 @@ public class Player : MonoBehaviour
 
     Vector2 colliderScreenSize;
 
+    [SerializeField]
+    private Client client;
+
     void Start()
     {
         lives = 1;
@@ -85,10 +88,6 @@ public class Player : MonoBehaviour
             //        finalPosition.x += horizontal * movementSpeed * Time.deltaTime;
             //    }
             //}
-
-           
-
-
 
             Vector3 newPosition = transform.position + (new Vector3(horizontal, vertical, 0.0f) * movementSpeed * Time.deltaTime);
             //Debug.Log(corrX + " // " + corrY);
