@@ -38,16 +38,24 @@ public class UDPObject : MonoBehaviour
     {
         while (active)
         {
-            for(int i = 0; i < messagesToSend.Count; ++i)
+            if(messagesToSend.Count > 0)
             {
                 try
                 {
-                    byte[] msg = messagesToSend[i].Serialize();
-                    int bytesSent = socket.SendTo(msg, msg.Length, SocketFlags.None, senderRemote);
+                    if (messagesToSend[0] != null)
+                    {
+                        byte[] msg = messagesToSend[0].Serialize();
+                        int bytesSent = socket.SendTo(msg, msg.Length, SocketFlags.None, senderRemote);
+
+                        Debug.Log("Message sent!");
+                        messagesToSend.RemoveAt(0);
+                    }
                 }
                 catch (System.Exception exception)
                 {
                     Debug.LogException(exception);
+                    CloseSocket(socket);
+                    active = false;
                 }
             }
         }
@@ -66,26 +74,37 @@ public class UDPObject : MonoBehaviour
             {
                 byte[] msg = new byte[256];
 
-                var recv = socket.ReceiveFrom(msg, ref senderRemote);
-                Message receivedMessage = Message.Deserialize(msg);
+                int recv = socket.ReceiveFrom(msg, ref senderRemote);
 
-                ProcessMessage(receivedMessage);
+                if (recv > 0)
+                {
+                    Message receivedMessage = Message.Deserialize(msg);
+                    if (receivedMessage != null)
+                    {
+                        ProcessMessage(receivedMessage);
+                        Debug.Log("Received message: " + receivedMessage.type.ToString());
+                    }
+                }
             }
             catch (System.Exception exception)
             {
                 Debug.LogException(exception);
+                CloseSocket(socket);
+                active = false;
             }
-
         }
     }
 
     public virtual void ProcessMessage(Message receivedMessage)
-    {}
+    { }
 
     private void CloseSocket(Socket socket)
     {
-        socket.Close();
-        Debug.LogWarning("Socket closed");
+        if (socket != null)
+        {
+            socket.Close();
+            Debug.LogWarning("Socket closed");
+        }
     }
 
     private void OnDestroy()

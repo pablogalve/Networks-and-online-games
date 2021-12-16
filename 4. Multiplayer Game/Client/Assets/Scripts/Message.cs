@@ -21,7 +21,7 @@ public class Message
         set { objectId = value.ToString(); }
     }
 
-    public byte[] Serialize()
+    public virtual byte[] Serialize()
     {
         string json = JsonUtility.ToJson(this);
 
@@ -38,14 +38,18 @@ public class Message
         BinaryReader reader = new BinaryReader(stream);
         stream.Seek(0, SeekOrigin.Begin);
 
-        MessageType type = JsonUtility.FromJson<Message>(reader.ReadString()).type;
+        string json = reader.ReadString();
+        MessageType type = JsonUtility.FromJson<Message>(json).type;
+
+        Debug.Log(json);
 
         switch (type)
         {
             case MessageType.INSTANCE:
-                return JsonUtility.FromJson<VectorMessage>(reader.ReadString());
+                VectorMessage vectorMessage = JsonUtility.FromJson<VectorMessage>(json);
+                return vectorMessage;
 
-            default: 
+            default:
                 return new Message();
         }
 
@@ -58,9 +62,17 @@ public class VectorMessage : Message
     {
         this.objectId = networkedObject.id.ToString();
         this.type = type;
-        vector = networkedObject.transform.position;
+        floatVector = new float[3] { networkedObject.transform.position.x, networkedObject.transform.position.y, networkedObject.transform.position.z };
     }
 
-    Vector3 vector;
+    public float[] floatVector;
+
+    public Vector3 vector
+    {
+        get
+        {
+            return new Vector3(floatVector[0], floatVector[1], floatVector[2]);
+        }
+    }
 }
 
