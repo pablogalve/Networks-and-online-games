@@ -36,7 +36,7 @@ public class PlayerAttack : MonoBehaviour
             
             if(client != null)
             {
-                client.Send(MessageType.INSTANCE, projectileInstance);
+                client.Send(MessageType.INSTATIATION, projectileInstance.GetComponent<NetworkedObject>());
             }
         }
     }

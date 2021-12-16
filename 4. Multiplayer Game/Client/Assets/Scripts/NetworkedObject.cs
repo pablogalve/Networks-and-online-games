@@ -7,6 +7,8 @@ public class NetworkedObject : MonoBehaviour
     [HideInInspector]
     public int id;
 
+    public short instancedId = 0;
+
     public void Init()
     {
         id = Random.Range(0, int.MaxValue);

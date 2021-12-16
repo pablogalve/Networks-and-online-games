@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
@@ -7,7 +8,7 @@ using UnityEngine;
 
 public class UDPObject : MonoBehaviour
 {
-    Socket socket;
+    public Socket socket;
     EndPoint senderRemote;
 
     int port = 7777;
@@ -18,6 +19,7 @@ public class UDPObject : MonoBehaviour
     bool active = true;
 
     List<Message> messagesToSend = new List<Message>();
+    List<Action> functionsToRunInMainThread = new List<Action>();
 
     public virtual void Start()
     {
@@ -34,11 +36,26 @@ public class UDPObject : MonoBehaviour
         receiveThread.Start();
     }
 
+    public virtual void Update()
+    {
+        while (functionsToRunInMainThread.Count > 0)
+        {
+            Action functionToRun = functionsToRunInMainThread[0];
+            functionsToRunInMainThread.RemoveAt(0);
+            functionToRun();
+        }
+    }
+
+    public void AddFunctionToRun(Action actionToRun)
+    { 
+        functionsToRunInMainThread.Add(actionToRun);
+    }
+
     public void StartSending()
     {
         while (active)
         {
-            if(messagesToSend.Count > 0)
+            while (messagesToSend.Count > 0)
             {
                 try
                 {
@@ -82,7 +99,7 @@ public class UDPObject : MonoBehaviour
                     if (receivedMessage != null)
                     {
                         ProcessMessage(receivedMessage);
-                        Debug.Log("Received message: " + receivedMessage.type.ToString());
+                        //Debug.Log("Received message: " + receivedMessage.type.ToString());
                     }
                 }
             }

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : NetworkedObject
 {
     private int maxLives = 5;
     private int lives = 5;
@@ -34,6 +34,7 @@ public class Player : MonoBehaviour
         //Debug.Log("Center screen is: " + Camera.main.WorldToViewportPoint(_collider.bounds.center));
         //Debug.Log(Camera.main.WorldToViewportPoint(_collider.bounds.center + new Vector3(_collider.size.x, 0.0f, 0.0f)) - Camera.main.WorldToViewportPoint(_collider.bounds.center));
 
+        StartCoroutine(SendCurrentPosition());
     }
 
     void Update()
@@ -95,11 +96,20 @@ public class Player : MonoBehaviour
             float screenFinalPosX = Mathf.Clamp(Camera.main.WorldToViewportPoint(newPosition).x, 0.0f - (colliderScreenSize.x / 4.0f), 1.0f + (colliderScreenSize.x / 4.0f));
             float screenFinalPosY = Mathf.Clamp(Camera.main.WorldToViewportPoint(newPosition).y, 0.0f + colliderScreenSize.y, 1.0f - colliderScreenSize.y);
 
-            Debug.Log(Camera.main.rect);
+            //Debug.Log(Camera.main.rect);
             transform.position = new Vector3(Camera.main.ViewportToWorldPoint(new Vector3(screenFinalPosX, 0.0f, 0.0f)).x, Camera.main.ViewportToWorldPoint(new Vector3(0.0f, screenFinalPosY, 0.0f)).y, 0.0f);
 
             //transform.position.x = Camera.main.ViewportToWorldPoint(new Vector3(screenFinalPosX, 0.0f, 0.0f)).x;
             //transform.position.y = Camera.main.ViewportToWorldPoint(new vector3(0.0f, screenFinalPosY, 0.0f)).y;
+        }
+    }
+
+    IEnumerator SendCurrentPosition()
+    {
+        while(gameObject.activeSelf)
+        {
+            client.Send(MessageType.PLAYER_POSITION, this, null);
+            yield return new WaitForSeconds(client.secondsBetweenPlayerPositionUpdates);
         }
     }
 

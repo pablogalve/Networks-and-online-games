@@ -6,8 +6,9 @@ using UnityEngine;
 
 public enum MessageType
 {
-    INSTANCE,
-    DESTROY
+    INSTATIATION,
+    DESTROY,
+    PLAYER_POSITION,
 }
 
 public class Message
@@ -45,9 +46,13 @@ public class Message
 
         switch (type)
         {
-            case MessageType.INSTANCE:
-                VectorMessage vectorMessage = JsonUtility.FromJson<VectorMessage>(json);
-                return vectorMessage;
+            case MessageType.INSTATIATION:
+                VectorMessage instantiationMessage = JsonUtility.FromJson<VectorMessage>(json);
+                return instantiationMessage;
+
+            case MessageType.PLAYER_POSITION:
+                VectorMessage playerPositionMessage = JsonUtility.FromJson<VectorMessage>(json);
+                return playerPositionMessage;
 
             default:
                 return new Message();
@@ -58,13 +63,15 @@ public class Message
 
 public class VectorMessage : Message
 {
-    public VectorMessage(MessageType type, NetworkedObject networkedObject)
+    public VectorMessage(MessageType type, string id, Vector3 vector, Type instanceType = null)
     {
-        this.objectId = networkedObject.id.ToString();
+        this.objectId = id;
         this.type = type;
-        floatVector = new float[3] { networkedObject.transform.position.x, networkedObject.transform.position.y, networkedObject.transform.position.z };
+        this.instanceType = instanceType;
+        floatVector = new float[3] { vector.x, vector.y, vector.z };
     }
 
+    Type instanceType;
     public float[] floatVector;
 
     public Vector3 vector

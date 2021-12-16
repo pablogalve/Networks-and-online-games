@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Server : UDPObject
-{
-    public override void Start()
+{ 
+    public override void ProcessMessage(Message receivedMessage)
     {
-        
-    }
+        base.ProcessMessage(receivedMessage);
 
-    void Update()
-    {
-        
+        switch(receivedMessage.type)
+        {
+            case MessageType.PLAYER_POSITION:
+                SendMessage(receivedMessage);
+                break;
+        }
     }
 }
