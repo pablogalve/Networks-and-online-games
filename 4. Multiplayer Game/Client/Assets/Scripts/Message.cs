@@ -9,6 +9,7 @@ public enum MessageType
     INSTATIATION,
     DESTROY,
     PLAYER_POSITION,
+    PING_PONG,
 }
 
 public class Message
@@ -53,6 +54,10 @@ public class Message
             case MessageType.PLAYER_POSITION:
                 VectorMessage playerPositionMessage = JsonUtility.FromJson<VectorMessage>(json);
                 return playerPositionMessage;
+
+            case MessageType.PING_PONG:
+                VectorMessage ping_pong = JsonUtility.FromJson<VectorMessage>(json);
+                return ping_pong;
 
             default:
                 return new Message();

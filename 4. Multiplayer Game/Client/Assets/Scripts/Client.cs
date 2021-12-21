@@ -13,6 +13,10 @@ public class Client : UDPObject
     public float interpolationSpeed = 5.0f;
     public float secondsBetweenPlayerPositionUpdates = 0.1f;
 
+    private float secondsBetweenPings = 5.0f;
+    private float currentTimer = 0.0f;
+    private bool timerActive = true;
+
     public override void Start()
     {
         base.Start();
@@ -22,6 +26,19 @@ public class Client : UDPObject
     {
         base.Update();
         player2.transform.position = Vector3.Lerp(player2.transform.position, otherPlayerLastPosition, interpolationSpeed * Time.deltaTime);
+
+        // Send pings to server to ensure that client remains active in UDP
+        if (timerActive)
+        {
+            if (currentTimer >= 0)
+                currentTimer -= Time.deltaTime;            
+            else
+            {
+                timerActive = false;
+                Send(MessageType.PING_PONG, null);
+                currentTimer = secondsBetweenPings;
+            }
+        }        
     }
 
     public void Send(MessageType type, NetworkedObject primaryNetworkedObject, UnityEngine.Object secondaryObject = null)
@@ -41,6 +58,11 @@ public class Client : UDPObject
 
             case MessageType.PLAYER_POSITION:
                 message = new VectorMessage(type, primaryNetworkedObject.id.ToString(), primaryNetworkedObject.transform.position + new Vector3(0.0f, -10.0f, 0.0f));
+                break;
+
+            case MessageType.PING_PONG:
+                Debug.Log("Ping sent");
+                message = new VectorMessage(type, "0", new Vector3(0, 0, 0));
                 break;
         }
 
@@ -72,6 +94,9 @@ public class Client : UDPObject
                 otherPlayerLastPosition = playerPositionMessage.vector;
                 break;
 
+            case MessageType.PING_PONG:
+                timerActive = true;
+                break;
         }
     }
 }
