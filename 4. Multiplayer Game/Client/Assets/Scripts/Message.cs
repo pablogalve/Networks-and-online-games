@@ -43,7 +43,7 @@ public class Message
         string json = reader.ReadString();
         MessageType type = JsonUtility.FromJson<Message>(json).type;
 
-        Debug.Log(json);
+        //Debug.Log(json);
 
         switch (type)
         {

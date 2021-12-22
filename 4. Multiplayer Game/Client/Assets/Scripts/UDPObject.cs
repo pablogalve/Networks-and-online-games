@@ -64,7 +64,7 @@ public class UDPObject : MonoBehaviour
                         byte[] msg = messagesToSend[0].Serialize();
                         int bytesSent = socket.SendTo(msg, msg.Length, SocketFlags.None, senderRemote);
 
-                        Debug.Log("Message sent!");
+                        //Debug.Log("Message sent!");
                         messagesToSend.RemoveAt(0);
                     }
                 }

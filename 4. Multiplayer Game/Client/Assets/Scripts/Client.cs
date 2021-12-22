@@ -48,8 +48,8 @@ public class Client : UDPObject
         switch (type)
         {
             case MessageType.INSTATIATION:
-                NetworkedObject secondaryNetworkedObject = secondaryObject as NetworkedObject;
-                message = new VectorMessage(type, primaryNetworkedObject.id.ToString(), primaryNetworkedObject.transform.position, secondaryNetworkedObject.GetType());
+                //NetworkedObject secondaryNetworkedObject = secondaryObject as NetworkedObject;
+                //message = new VectorMessage(type, primaryNetworkedObject.id.ToString(), primaryNetworkedObject.transform.position, secondaryNetworkedObject.GetType());
                 break;
 
             case MessageType.DESTROY:
