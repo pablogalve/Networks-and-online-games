@@ -93,7 +93,7 @@ public class Player : NetworkedObject
             Vector3 newPosition = transform.position + (new Vector3(horizontal, vertical, 0.0f) * movementSpeed * Time.deltaTime);
             //Debug.Log(corrX + " // " + corrY);
 
-            float screenFinalPosX = Mathf.Clamp(Camera.main.WorldToViewportPoint(newPosition).x, 0.0f - (colliderScreenSize.x / 4.0f), 1.0f + (colliderScreenSize.x / 4.0f));
+            float screenFinalPosX = Mathf.Clamp(Camera.main.WorldToViewportPoint(newPosition).x, 0.0f - (colliderScreenSize.x / 4f), 1.0f + (colliderScreenSize.x / 1.5f));
             float screenFinalPosY = Mathf.Clamp(Camera.main.WorldToViewportPoint(newPosition).y, 0.0f + colliderScreenSize.y, 1.0f - colliderScreenSize.y);
 
             //Debug.Log(Camera.main.rect);
@@ -115,7 +115,7 @@ public class Player : NetworkedObject
 
     public bool CheckVerticalScreenPoint(Vector2 point)
     {
-        return (point.y > 1f || point.y < 0f);
+        return (point.y > 0.6f || point.y < 0f);
     }
 
     public bool CheckHorizontalScreenPoint(Vector2 point)

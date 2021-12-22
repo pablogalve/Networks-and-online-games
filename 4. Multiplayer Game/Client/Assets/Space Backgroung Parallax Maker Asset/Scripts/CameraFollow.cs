@@ -2,16 +2,26 @@
 
 namespace Mkey
 {
-    public enum TrackMode { Player, Mouse, Gyroscope, Keyboard, Touch }
+    public enum TrackMode { Player, Mouse, Gyroscope, Keyboard, Touch, Auto }
+    public enum LayerType { Group, Stars, Planet, Nebula }
     public class CameraFollow : MonoBehaviour
     {
         //player follow options
         private Vector2 margin;
         private Vector2 smooth;
 
-        public TrackMode track = TrackMode.Touch;
+        public TrackMode track = TrackMode.Auto;
+        public LayerType type = LayerType.Group;
         public bool ClampPosition;
         public BoxCollider2D ClampField;  // camera motion field
+
+        float nebula_move_speed = 2;
+        float group_move_speed = -15;
+        float stars_move_speed = 5;
+
+        float group_new_speed_x = 0;
+        float group_new_speed_y = 0;
+
 
         [SerializeField]
         private GameObject player;
@@ -50,22 +60,18 @@ namespace Mkey
                 case TrackMode.Player:
                     TrackPlayer();
                     break;
-                case TrackMode.Mouse:
-                    TrackMouseMotion();
-                    break;
-                case TrackMode.Gyroscope:
-                    TrackGyroscope();
-                    break;
                 case TrackMode.Keyboard:
                     TrackKeyboard();
                     break;
-
+                case TrackMode.Auto:
+                    TrackAuto();
+                    break;
             }
         }
 
         private void OnDesctroy()
         {
-            TouchPad.Instance.ScreenDragEvent -= TrackTouchDrag;
+           
         }
         #endregion regular
 
@@ -88,56 +94,64 @@ namespace Mkey
             }
         }
 
-        /// <summary>
-        /// Camera follow mouse cursor position
-        /// </summary>
-        private void TrackMouseMotion()
+        private void TrackAuto()
         {
-            acceleration = Vector3.Lerp(acceleration, Camera.main.ScreenToViewportPoint(Input.mousePosition), Time.deltaTime);
-            Vector3 target = transform.position + new Vector3(acceleration.x - 0.5f, acceleration.y - 0.5f, 0);
-            transform.position = Vector3.Lerp(transform.position, target, 5f * Time.deltaTime);
-            ClampCameraPosInField();
-        }
+            Vector3 dir = Vector3.zero;
+            dir.y = Input.GetAxis("Vertical");
+            dir.x = Input.GetAxis("Horizontal");
 
-        /// <summary>
-        /// Camera follow Player Gameobject position
-        /// </summary>
-        private void TrackPlayer()
-        {
-            if (!player)
+            if(dir.x>0)
             {
-                return;
+                   group_new_speed_x=dir.x*group_move_speed*7;
             }
-            float targetX = transform.position.x;
-            float targetY = transform.position.y;
+            else if(dir.x<0)
+            {
+                group_new_speed_x = dir.x * group_move_speed *4;
+            }
+            else
+            {
+                group_new_speed_x = group_move_speed;
+            }
 
-            if (OutOfXMargin)
-                targetX = Mathf.Lerp(transform.position.x, player.transform.position.x, smooth.x * Time.deltaTime);
+            if (dir.y > 0)
+            {
+                group_new_speed_y = dir.y * -35;
+            }
+            else if (dir.y < 0)
+            {
+                group_new_speed_y = dir.y * -35;
+            }
+            else
+            {
+                group_new_speed_y = 0;
+            }
 
-            if (OutOfYMargin)
-                targetY = Mathf.Lerp(transform.position.y, player.transform.position.y, smooth.y * Time.deltaTime);
-            transform.position = new Vector3(targetX, targetY, transform.position.z);
+            switch (type)
+            {
+                case LayerType.Group:
+                Vector3 target = transform.position + new Vector3(group_new_speed_x, group_new_speed_y, 0);
+                transform.position = Vector3.Lerp(transform.position, target, 1.0f * Time.deltaTime);
+                    break;
+
+                case LayerType.Stars:
+                    Vector3 target2 = transform.position + new Vector3(stars_move_speed, 0, 0);
+                    transform.position = Vector3.Lerp(transform.position, target2, 1.0f * Time.deltaTime);
+                    break;
+
+                case LayerType.Nebula:
+                    Vector3 target3 = transform.position + new Vector3(nebula_move_speed, 0, 0);
+                    transform.position = Vector3.Lerp(transform.position, target3, 1.0f * Time.deltaTime);
+                    break;
+
+                case LayerType.Planet:
+                    Vector3 target4 = transform.position + new Vector3(12, 0, 0);
+                    transform.position = Vector3.Lerp(transform.position, target4, 1.0f * Time.deltaTime);
+                    break;
+            }
+            
             ClampCameraPosInField();
         }
 
-        /// <summary>
-        /// Camera rotate to mouse cursor position
-        /// </summary>
-        private void TrackMouseRotation() //http://answers.unity3d.com/questions/149022/how-to-make-camera-move-with-the-mouse-cursors.html?childToView=1097525#answer-1097525
-        {
-            if (!m_camera) return;
-            float sensitivity = 0.00001f;
-            Vector3 vp = m_camera.ScreenToViewportPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, m_camera.nearClipPlane));
-            vp.x -= 0.5f;
-            vp.y -= 0.5f;
-            vp.x *= sensitivity;
-            vp.y *= sensitivity;
-            vp.x += 0.5f;
-            vp.y += 0.5f;
-            Vector3 sp = m_camera.ViewportToScreenPoint(vp);
-            Vector3 v = m_camera.ScreenToWorldPoint(sp);
-            transform.LookAt(v, Vector3.up);
-        }
 
         /// <summary>
         /// Clamp camera position in BoxCollider2D rect. Max and Min camera position dependet from collider size, camera size and screen ratio;
@@ -168,40 +182,6 @@ namespace Mkey
                 transform.position = new Vector3(posX, posY, transform.position.z);
             }
         }
-
-        /// <summary>
-        /// Camera follow gyroscope acceleration
-        /// </summary>
-        private void TrackGyroscope()
-        {
-            Vector3 dir = Vector3.zero;
-            dir.x = Input.acceleration.x;
-            dir.y = Input.acceleration.y;
-            if (dir.sqrMagnitude > 1) dir.Normalize();
-            acceleration = dir;// acceleration = Vector3.Lerp(acceleration, dir, Time.deltaTime);
-            Vector3 target = transform.position + new Vector3(acceleration.x, acceleration.y, 0);
-            transform.position = Vector3.Lerp(transform.position, target, 1f * Time.deltaTime);
-            ClampCameraPosInField();
-        }
-
-        /// <summary>
-        /// Camera follow touch drag direction
-        /// </summary>
-        /// <param name="tpea"></param>
-        private void TrackTouchDrag(TouchPadEventArgs tpea)
-        {
-            if (track == TrackMode.Touch)
-            {
-                Vector3 dir = tpea.DragDirection;
-                // dir.x = -tpea.DragDirection.x;
-                // dir.y = -tpea.DragDirection.y;
-
-                Vector3 target = transform.position + new Vector3(dir.x, dir.y, 0);
-                transform.position = Vector3.Lerp(transform.position, target, 0.02f * Time.fixedDeltaTime);
-                ClampCameraPosInField();
-            }
-        }
-
         /// <summary>
         /// Camera follow keyboard input
         /// </summary>
@@ -212,10 +192,30 @@ namespace Mkey
             dir.y = Input.GetAxis("Vertical");
             dir.x = Input.GetAxis("Horizontal");
 
-            Vector3 target = transform.position + new Vector3(dir.x*10, dir.y*10, 0);
+            Vector3 target = transform.position + new Vector3(dir.x * 10, dir.y * 10, 0);
             transform.position = Vector3.Lerp(transform.position, target, 1.0f * Time.deltaTime);
             ClampCameraPosInField();
         }
 
+        /// <summary>
+        /// Camera follow Player Gameobject position
+        /// </summary>
+        private void TrackPlayer()
+        {
+            if (!player)
+            {
+                return;
+            }
+            float targetX = transform.position.x;
+            float targetY = transform.position.y;
+
+            if (OutOfXMargin)
+                targetX = Mathf.Lerp(transform.position.x, player.transform.position.x, smooth.x * Time.deltaTime);
+
+            if (OutOfYMargin)
+                targetY = Mathf.Lerp(transform.position.y, player.transform.position.y, smooth.y * Time.deltaTime);
+            transform.position = new Vector3(targetX, targetY, transform.position.z);
+            ClampCameraPosInField();
+        }
     }
 }
