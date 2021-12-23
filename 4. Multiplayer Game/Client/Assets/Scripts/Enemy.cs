@@ -28,7 +28,7 @@ public class Enemy : NetworkedObject
     {
         GameManager.instance.InstantiateParticles(particles, transform.position);
         GameManager.instance.AddScore(points);
-
+        WaveManager.IsWaveDone();
         base.Die();
     }
 

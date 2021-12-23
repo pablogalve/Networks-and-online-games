@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44850147, g: 0.49854308, b: 0.5756467, a: 1}
+  m_IndirectSpecularColor: {r: 0.44850183, g: 0.49854356, b: 0.57564723, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -604,11 +604,11 @@ MonoBehaviour:
   - {fileID: 100862649}
   - {fileID: 1057174646}
   - {fileID: 1820239434}
-  - {fileID: 474849366}
+  - {fileID: 0}
   - {fileID: 1645263960}
   - {fileID: 0}
   - {fileID: 9715859}
-  - {fileID: 1288734367}
+  - {fileID: 0}
   infiniteMap: 1
   mapSizeX: 57.2
   mapSizeY: 57.2
@@ -838,6 +838,60 @@ MonoBehaviour:
   ClampPosition: 0
   ClampField: {fileID: 0}
   player: {fileID: 0}
+--- !u!1 &525410690
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 525410692}
+  - component: {fileID: 525410691}
+  m_Layer: 0
+  m_Name: WaveManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &525410691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 525410690}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80607ce15754ee043ae58de71394c0f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemy: {fileID: 1366760980311141414, guid: 84b0aaecf9a18c549bd474cf6e27cd66, type: 3}
+  totalWaves:
+  - {fileID: 1453350657}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  firstWave_enemies:
+  - {fileID: 1170366516}
+--- !u!4 &525410692
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 525410690}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1453350658}
+  m_Father: {fileID: 0}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &619336813
 GameObject:
   m_ObjectHideFlags: 0
@@ -1393,6 +1447,36 @@ Transform:
   m_Father: {fileID: 411495814}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1170366516
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1170366517}
+  m_Layer: 0
+  m_Name: enemy1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1170366517
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1170366516}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 18.1, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1453350658}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1208194079
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1426,7 +1510,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1154772864311252467, guid: feb130a8adcebe54aa314f58f408c412, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -9.7
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1154772864311252467, guid: feb130a8adcebe54aa314f58f408c412, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1626,6 +1710,37 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1453350657
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1453350658}
+  m_Layer: 0
+  m_Name: wave1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1453350658
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1453350657}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1170366517}
+  m_Father: {fileID: 525410692}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1517880009
 GameObject:
   m_ObjectHideFlags: 0
@@ -6769,7 +6884,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 265504785059399627, guid: aa4c0abc352002b4bbae2ca619754403, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -9.7
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 265504785059399627, guid: aa4c0abc352002b4bbae2ca619754403, type: 3}
       propertyPath: m_LocalRotation.w
