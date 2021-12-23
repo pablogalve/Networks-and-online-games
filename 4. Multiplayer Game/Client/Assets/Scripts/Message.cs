@@ -66,17 +66,49 @@ public class Message
     }
 }
 
+public class InstanceMessage : Message
+{
+    public enum InstanceType
+    {
+        PLAYER_BULLET,
+        ENEMY_BULLET,
+        EXPLOSION_PARTICLES
+    }
+
+    public InstanceMessage (MessageType messageType, string id, InstanceType instanceType, Vector3 position, Vector3 speed)
+    {
+        type = messageType;
+        objectId = id;
+        _instanceType = instanceType;
+        _position = fromVector(position);
+        _speed = fromVector(speed);
+
+    }
+
+    InstanceType _instanceType;
+    float[] _position;
+    float[] _speed;
+
+    public Vector3 toVector3(float[] floatVector)
+    {
+        return new Vector3(floatVector[0], floatVector[1], floatVector[2]); 
+    }
+
+    public float[] fromVector(Vector3 vector)
+    {
+        return new float[] { vector.x, vector.y, vector.z };
+    }
+}
+
 public class VectorMessage : Message
 {
-    public VectorMessage(MessageType type, string id, Vector3 vector, Type instanceType = null)
+    public VectorMessage(MessageType type, string id, Vector3 vector)
     {
         this.objectId = id;
         this.type = type;
-        this.instanceType = instanceType;
         floatVector = new float[3] { vector.x, vector.y, vector.z };
     }
 
-    Type instanceType;
     public float[] floatVector;
 
     public Vector3 vector

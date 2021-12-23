@@ -49,7 +49,7 @@ public class Client : UDPObject
         {
             case MessageType.INSTATIATION:
                 //NetworkedObject secondaryNetworkedObject = secondaryObject as NetworkedObject;
-                //message = new VectorMessage(type, primaryNetworkedObject.id.ToString(), primaryNetworkedObject.transform.position, secondaryNetworkedObject.GetType());
+                //message = new InstanceMessage(type, primaryNetworkedObject.id.ToString(), primaryNetworkedObject.transform.position, secondaryNetworkedObject.GetType());
                 break;
 
             case MessageType.DESTROY:
@@ -61,7 +61,7 @@ public class Client : UDPObject
                 break;
 
             case MessageType.PING_PONG:
-                Debug.Log("Ping sent");
+                //Debug.Log("Ping sent");
                 message = new VectorMessage(type, "0", new Vector3(0, 0, 0));
                 break;
         }
