@@ -2,15 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PowerUp : MonoBehaviour
+public class PowerUp : NetworkedObject
 {
     public float activeTime = 5.0f;
     private float deactivationTimer = 0.0f;
 
     private Player player;
 
-    private void Update()
+    private void Start()
     {
+        networkedObjectType = NetworkedObjectType.POWER_UP;
+    }
+
+    public override void Update()
+    {
+        base.Update();
+
         if (deactivationTimer > 0.0f)
         {
             deactivationTimer -= Time.deltaTime;

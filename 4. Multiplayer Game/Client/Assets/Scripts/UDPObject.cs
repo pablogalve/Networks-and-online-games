@@ -5,8 +5,19 @@ using System.Net.Sockets;
 using System.Threading;
 using UnityEngine;
 
+public enum ConnectionType
+{
+    SERVER,
+    CLIENT
+}
+
 public class UDPObject : MonoBehaviour
 {
+    public ConnectionType connectionType;
+    
+    [HideInInspector]
+    public Dictionary<string, NetworkedObject> networkedObjects;
+
     public Socket socket;
     EndPoint senderRemote;
 
@@ -20,8 +31,14 @@ public class UDPObject : MonoBehaviour
     public List<Message> messagesToSend = new List<Message>();
     public List<Action> functionsToRunInMainThread = new List<Action>();
 
+    [Header("Instanceable Objects")]
+    public GameObject playerProjectilePrefab;
+    public GameObject enemyPrefab;
+
     public virtual void Start()
     {
+        networkedObjects = new Dictionary<string, NetworkedObject>();
+
         IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), port);
         socket = new Socket(endPoint.Address.AddressFamily, SocketType.Dgram, ProtocolType.Udp);
         senderRemote = (EndPoint)endPoint;
@@ -126,5 +143,20 @@ public class UDPObject : MonoBehaviour
     private void OnDestroy()
     {
         CloseSocket(socket);
+    }
+
+    public GameObject GetObjectToInstantiate(InstanceMessage instanceMessage)
+    {
+        switch (instanceMessage._instanceType)
+        {
+            case InstanceMessage.InstanceType.PLAYER_BULLET:
+                return playerProjectilePrefab;
+
+            case InstanceMessage.InstanceType.ENEMY:
+                return enemyPrefab;
+
+            default:
+                return null;
+        }
     }
 }

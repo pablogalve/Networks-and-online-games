@@ -8,19 +8,25 @@ public enum MessageType
 {
     INSTATIATION,
     DESTROY,
-    PLAYER_POSITION,
+    OBJECT_POSITION,
+    COLLISION,
     PING_PONG,
 }
 
 public class Message
 {
-    public string objectId;
+    public string objectId = "-1";
     public MessageType type;
 
     public Guid guid
     {
         get { return new Guid(objectId); }
         set { objectId = value.ToString(); }
+    }
+
+    public static Guid GenerateNewGuid()
+    {
+        return new Guid();
     }
 
     public virtual byte[] Serialize()
@@ -51,9 +57,13 @@ public class Message
                 InstanceMessage instantiationMessage = JsonUtility.FromJson<InstanceMessage>(json);
                 return instantiationMessage;
 
-            case MessageType.PLAYER_POSITION:
+            case MessageType.OBJECT_POSITION:
                 VectorMessage playerPositionMessage = JsonUtility.FromJson<VectorMessage>(json);
                 return playerPositionMessage;
+
+            case MessageType.COLLISION:
+                CollisionMessage collisionMessage = JsonUtility.FromJson<CollisionMessage>(json);
+                return collisionMessage;
 
             case MessageType.PING_PONG:
                 VectorMessage ping_pong = JsonUtility.FromJson<VectorMessage>(json);
@@ -76,9 +86,9 @@ public class InstanceMessage : Message
         EXPLOSION_PARTICLES
     }
 
-    public InstanceMessage (MessageType messageType, string id, InstanceType instanceType, Vector3 position, float speed)
+    public InstanceMessage(MessageType messageType, string id, InstanceType instanceType, Vector3 position, float speed)
     {
-        type = messageType;
+        type = MessageType.INSTATIATION;
         objectId = id;
         _instanceType = instanceType;
         _position = fromVector(position);
@@ -92,7 +102,7 @@ public class InstanceMessage : Message
 
     public Vector3 toVector3(float[] floatVector)
     {
-        return new Vector3(floatVector[0], floatVector[1], floatVector[2]); 
+        return new Vector3(floatVector[0], floatVector[1], floatVector[2]);
     }
 
     public float[] fromVector(Vector3 vector)
@@ -121,9 +131,34 @@ public class VectorMessage : Message
     }
 }
 
+public class CollisionMessage : Message
+{
+    string colliderObjectId;
+    string collidedObjectId;
+
+    public CollisionMessage(string colliderObjectId, string collidedObjectId)
+    {
+        type = MessageType.COLLISION;
+        this.colliderObjectId = colliderObjectId;
+        this.collidedObjectId = collidedObjectId;
+    }
+}
+
+public class DestructionMessage : Message
+{
+    string objectToDestroyId;
+
+    DestructionMessage(string objectToDestroyId)
+    {
+        type = MessageType.DESTROY;
+        this.objectToDestroyId = objectToDestroyId; 
+    }
+}
+
 public class PingPongMessage : Message
-{    
-    public PingPongMessage(string id, string message){
+{
+    public PingPongMessage(string id, string message)
+    {
         this.objectId = id;
     }
 }

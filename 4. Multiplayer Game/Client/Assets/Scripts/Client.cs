@@ -5,21 +5,14 @@ using UnityEngine;
 
 public class Client : UDPObject
 {
-    public GameObject player1;
-    public GameObject player2;
+    public NetworkedObject player1;
+    public NetworkedObject player2;
 
-    private Vector3 otherPlayerLastPosition;
-
-    public float interpolationSpeed = 5.0f;
     public float secondsBetweenPlayerPositionUpdates = 0.1f;
 
     private float secondsBetweenPings = 5.0f;
     private float currentTimer = 0.0f;
     private bool timerActive = true;
-
-    [Header("Instanceable Objects")]
-    public GameObject playerProjectilePrefab;
-    public GameObject enemyPrefab;
 
     public override void Start()
     {
@@ -29,7 +22,6 @@ public class Client : UDPObject
     public override void Update()
     {
         base.Update();
-        player2.transform.position = Vector3.Lerp(player2.transform.position, otherPlayerLastPosition, interpolationSpeed * Time.deltaTime);
 
         // Send pings to server to ensure that client remains active in UDP
         if (timerActive)
@@ -64,7 +56,9 @@ public class Client : UDPObject
                 Action instantationAction = () =>
                 {
                     GameObject objectToInstance = GetObjectToInstantiate(instanceMessage);
-                    Instantiate(objectToInstance, instanceMessage.toVector3(instanceMessage._position), Quaternion.identity);
+                    GameObject objectInstance = Instantiate(objectToInstance, instanceMessage.toVector3(instanceMessage._position), Quaternion.identity);
+                    NetworkedObject networkedInstance = objectInstance.GetComponent<NetworkedObject>();
+                    networkedInstance.id = instanceMessage.objectId;
                 };
                 functionsToRunInMainThread.Add(instantationAction);
                 break;
@@ -73,9 +67,9 @@ public class Client : UDPObject
 
                 break;
 
-            case MessageType.PLAYER_POSITION:
+            case MessageType.OBJECT_POSITION:
                 VectorMessage playerPositionMessage = (VectorMessage)receivedMessage;
-                otherPlayerLastPosition = playerPositionMessage.vector;
+                player2.desiredPosition = playerPositionMessage.vector;
                 break;
 
             case MessageType.PING_PONG:
@@ -84,20 +78,7 @@ public class Client : UDPObject
         }
     }
 
-    public GameObject GetObjectToInstantiate(InstanceMessage instanceMessage)
-    {
-        switch (instanceMessage._instanceType)
-        {
-            case InstanceMessage.InstanceType.PLAYER_BULLET:
-                return playerProjectilePrefab;
 
-            case InstanceMessage.InstanceType.ENEMY:
-                return enemyPrefab;
-
-            default:
-                return null;
-        }
-    }
 }
 
 

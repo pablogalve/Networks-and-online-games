@@ -12,6 +12,8 @@ public class Enemy : NetworkedObject
     void Start()
     {
         base.Init();
+
+        networkedObjectType = NetworkedObjectType.ENEMY;
     }
 
     void Update()
@@ -26,18 +28,19 @@ public class Enemy : NetworkedObject
 
     public override void Die()
     {
-        GameManager.instance.InstantiateParticles(particles, transform.position);
         GameManager.instance.AddScore(points);
         WaveManager.IsWaveDone();
         base.Die();
     }
 
-    void OnCollisionEnter(Collision collision)
+    public override void OnCollisionEnter(Collision collision)
     {
+        base.OnCollisionEnter(collision);
+
         switch (collision.gameObject.tag)
         {
             case "Projectile":
-                Die();
+                //Die();
                 break;
         }
     }

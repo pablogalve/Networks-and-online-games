@@ -13,6 +13,7 @@ public class Projectile : NetworkedObject
     {
        base.Init();
 
+        networkedObjectType = NetworkedObjectType.PROJECTILE;
        //transform.SetParent(bulletsContainer.transform);
     }
 
@@ -22,11 +23,13 @@ public class Projectile : NetworkedObject
         transform.Translate(new Vector3(1.0f, 0.0f, 0.0f) * speed * Time.deltaTime, Space.World);
     }
 
-    void OnCollisionEnter(Collision collision)
+    public override void OnCollisionEnter(Collision collision)
     {
+        base.OnCollisionEnter(collision);
+
         if(collision.gameObject.tag != "Player")
         {
-            Die();
+            //Die();
         }
     }
 

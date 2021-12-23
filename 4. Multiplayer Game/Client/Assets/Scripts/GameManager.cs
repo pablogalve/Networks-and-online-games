@@ -6,10 +6,10 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
+    public UDPObject udpObject;
+
     private int score = 0;
 
-    [SerializeField]
-    private GameObject particlesContainer;
 
     void Start()
     {
@@ -22,20 +22,18 @@ public class GameManager : MonoBehaviour
         Debug.Log(score);
     }
 
-    public void InstantiateParticles(GameObject particlesObject, Vector3 position)
+    public void OnObjectCollided(GameObject colliderObject, GameObject collidedObject)
     {
-        GameObject particlesInstance = Instantiate(particlesObject, position, Quaternion.identity);
+        if (udpObject.connectionType == ConnectionType.CLIENT)
+        {
+            Client client = udpObject as Client;
 
-        ParticleSystem particleSystem = particlesInstance.GetComponent<ParticleSystem>();
-        if(particleSystem != null)
-        {
-            particleSystem.Play();
-            particlesInstance.transform.SetParent(particlesContainer.transform);
-            Destroy(particlesInstance, particleSystem.main.duration * 0.8f);
-        }
-        else
-        {
-            Destroy(particlesInstance);
+            NetworkedObject networkedCollider = colliderObject.GetComponent<NetworkedObject>();
+            NetworkedObject networkedCollided = collidedObject.GetComponent<NetworkedObject>();
+
+
+            CollisionMessage collisionMessage = new CollisionMessage(networkedCollider.id, networkedCollided.id);
+            client.Send(collisionMessage);
         }
     }
 
@@ -45,6 +43,7 @@ public class GameManager : MonoBehaviour
 
         if (networkedObject != null)
         {
+
             //Debug.Log("Dead object id: " + networkedObject.id);
         }
     }
