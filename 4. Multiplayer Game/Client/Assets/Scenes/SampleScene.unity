@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44850183, g: 0.49854356, b: 0.57564723, a: 1}
+  m_IndirectSpecularColor: {r: 0.44850147, g: 0.49854308, b: 0.5756467, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1042,6 +1042,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: caa0120fe349f15429375d6ed8aee485, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerProjectilePrefab: {fileID: 907793732191305706, guid: 3643cf695c219c04fba1c5e7467418da, type: 3}
   player1: {fileID: 40919614}
   player2: {fileID: 1294141848}
   interpolationSpeed: 2.5
