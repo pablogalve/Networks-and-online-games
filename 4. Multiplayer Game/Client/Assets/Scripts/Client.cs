@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class Client : UDPObject
 {
-    public GameObject playerProjectilePrefab;
-
     public GameObject player1;
     public GameObject player2;
 
@@ -18,6 +16,10 @@ public class Client : UDPObject
     private float secondsBetweenPings = 5.0f;
     private float currentTimer = 0.0f;
     private bool timerActive = true;
+
+    [Header("Instanceable Objects")]
+    public GameObject playerProjectilePrefab;
+    public GameObject enemyPrefab;
 
     public override void Start()
     {
@@ -88,6 +90,9 @@ public class Client : UDPObject
         {
             case InstanceMessage.InstanceType.PLAYER_BULLET:
                 return playerProjectilePrefab;
+
+            case InstanceMessage.InstanceType.ENEMY:
+                return enemyPrefab;
 
             default:
                 return null;

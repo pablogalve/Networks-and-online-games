@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
@@ -18,7 +17,7 @@ public class UDPObject : MonoBehaviour
 
     bool active = true;
 
-    List<Message> messagesToSend = new List<Message>();
+    public List<Message> messagesToSend = new List<Message>();
     public List<Action> functionsToRunInMainThread = new List<Action>();
 
     public virtual void Start()

@@ -44,5 +44,12 @@ public class PlayerAttack : MonoBehaviour
                 client.Send(projectileInstanceMessage);
             }
         }
+
+        if(Input.GetKeyDown(KeyCode.Q))
+        {
+            Vector3 position = new Vector3(Random.Range(-5.0f, 5.0f), Random.Range(-5.0f, 5.0f), 0.0f);
+            InstanceMessage enemyInstanceMessage = new InstanceMessage(MessageType.INSTATIATION, "-1", InstanceMessage.InstanceType.ENEMY, position, 0.0f);
+            client.Send(enemyInstanceMessage);
+        }
     }
 }

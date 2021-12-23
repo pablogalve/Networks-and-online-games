@@ -72,6 +72,7 @@ public class InstanceMessage : Message
     {
         PLAYER_BULLET,
         ENEMY_BULLET,
+        ENEMY,
         EXPLOSION_PARTICLES
     }
 

@@ -1042,11 +1042,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: caa0120fe349f15429375d6ed8aee485, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerProjectilePrefab: {fileID: 907793732191305706, guid: 3643cf695c219c04fba1c5e7467418da, type: 3}
   player1: {fileID: 40919614}
   player2: {fileID: 1294141848}
   interpolationSpeed: 2.5
   secondsBetweenPlayerPositionUpdates: 0.1
+  playerProjectilePrefab: {fileID: 907793732191305706, guid: 3643cf695c219c04fba1c5e7467418da, type: 3}
+  enemyPrefab: {fileID: 1366760980311141414, guid: 84b0aaecf9a18c549bd474cf6e27cd66, type: 3}
 --- !u!4 &655991274
 Transform:
   m_ObjectHideFlags: 0
