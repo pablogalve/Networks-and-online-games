@@ -120,3 +120,9 @@ public class VectorMessage : Message
     }
 }
 
+public class PingPongMessage : Message
+{    
+    public PingPongMessage(string id, string message){
+        this.objectId = id;
+    }
+}

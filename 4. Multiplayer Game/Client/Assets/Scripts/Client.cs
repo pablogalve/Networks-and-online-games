@@ -62,7 +62,7 @@ public class Client : UDPObject
 
             case MessageType.PING_PONG:
                 //Debug.Log("Ping sent");
-                message = new VectorMessage(type, "0", new Vector3(0, 0, 0));
+                message = new PingPongMessage(primaryNetworkedObject.id.ToString(), "ping");
                 break;
         }
 
