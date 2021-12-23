@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class Client : UDPObject
 {
+    public GameObject playerProjectilePrefab;
+
     public GameObject player1;
     public GameObject player2;
 
@@ -31,41 +33,18 @@ public class Client : UDPObject
         if (timerActive)
         {
             if (currentTimer >= 0)
-                currentTimer -= Time.deltaTime;            
+                currentTimer -= Time.deltaTime;
             else
             {
                 timerActive = false;
-                Send(MessageType.PING_PONG, null);
+                //Send(MessageType.PING_PONG, null);
                 currentTimer = secondsBetweenPings;
             }
-        }        
+        }
     }
 
-    public void Send(MessageType type, NetworkedObject primaryNetworkedObject, UnityEngine.Object secondaryObject = null)
+    public void Send(Message message)
     {
-        Message message = null;
-
-        switch (type)
-        {
-            case MessageType.INSTATIATION:
-                //NetworkedObject secondaryNetworkedObject = secondaryObject as NetworkedObject;
-                //message = new InstanceMessage(type, primaryNetworkedObject.id.ToString(), primaryNetworkedObject.transform.position, secondaryNetworkedObject.GetType());
-                break;
-
-            case MessageType.DESTROY:
-                //Please write something xd
-                break;
-
-            case MessageType.PLAYER_POSITION:
-                message = new VectorMessage(type, primaryNetworkedObject.id.ToString(), primaryNetworkedObject.transform.position + new Vector3(0.0f, -10.0f, 0.0f));
-                break;
-
-            case MessageType.PING_PONG:
-                //Debug.Log("Ping sent");
-                message = new VectorMessage(type, "0", new Vector3(0, 0, 0));
-                break;
-        }
-
         if (message != null)
         {
             SendMessage(message);
@@ -79,10 +58,13 @@ public class Client : UDPObject
         switch (receivedMessage.type)
         {
             case MessageType.INSTATIATION:
+                InstanceMessage instanceMessage = receivedMessage as InstanceMessage;
                 Action instantationAction = () =>
                 {
-                    
+                    GameObject objectToInstance = GetObjectToInstantiate(instanceMessage);
+                    Instantiate(objectToInstance, instanceMessage.toVector3(instanceMessage._position), Quaternion.identity);
                 };
+                functionsToRunInMainThread.Add(instantationAction);
                 break;
 
             case MessageType.DESTROY:
@@ -99,4 +81,18 @@ public class Client : UDPObject
                 break;
         }
     }
+
+    public GameObject GetObjectToInstantiate(InstanceMessage instanceMessage)
+    {
+        switch (instanceMessage._instanceType)
+        {
+            case InstanceMessage.InstanceType.PLAYER_BULLET:
+                return playerProjectilePrefab;
+
+            default:
+                return null;
+        }
+    }
 }
+
+

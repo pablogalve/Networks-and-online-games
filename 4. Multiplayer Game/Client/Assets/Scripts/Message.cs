@@ -48,7 +48,7 @@ public class Message
         switch (type)
         {
             case MessageType.INSTATIATION:
-                VectorMessage instantiationMessage = JsonUtility.FromJson<VectorMessage>(json);
+                InstanceMessage instantiationMessage = JsonUtility.FromJson<InstanceMessage>(json);
                 return instantiationMessage;
 
             case MessageType.PLAYER_POSITION:
@@ -75,19 +75,19 @@ public class InstanceMessage : Message
         EXPLOSION_PARTICLES
     }
 
-    public InstanceMessage (MessageType messageType, string id, InstanceType instanceType, Vector3 position, Vector3 speed)
+    public InstanceMessage (MessageType messageType, string id, InstanceType instanceType, Vector3 position, float speed)
     {
         type = messageType;
         objectId = id;
         _instanceType = instanceType;
         _position = fromVector(position);
-        _speed = fromVector(speed);
+        _speed = speed;
 
     }
 
-    InstanceType _instanceType;
-    float[] _position;
-    float[] _speed;
+    public InstanceType _instanceType;
+    public float[] _position;
+    public float _speed;
 
     public Vector3 toVector3(float[] floatVector)
     {

@@ -19,7 +19,7 @@ public class UDPObject : MonoBehaviour
     bool active = true;
 
     List<Message> messagesToSend = new List<Message>();
-    List<Action> functionsToRunInMainThread = new List<Action>();
+    public List<Action> functionsToRunInMainThread = new List<Action>();
 
     public virtual void Start()
     {
