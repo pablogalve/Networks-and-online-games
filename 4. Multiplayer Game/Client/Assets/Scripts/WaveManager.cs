@@ -6,49 +6,89 @@ public class WaveManager : MonoBehaviour
 {
     public GameObject enemy;
 
-    [SerializeField]
-    private GameObject[] totalWaves;
-
+    private GameObject[] currentWave;
 
     [SerializeField]
-    private GameObject[] firstWave_enemies;
+    private GameObject[] waveEnemies_1;
 
-    int waveCount = 0;
+        [SerializeField]
+    private GameObject[] waveEnemies_2;
+
+    //[SerializeField]
+    //private GameObject[] waveEnemies_3;
+
+    //[SerializeField]
+    //private GameObject[] waveEnemies_4;
+
+    //[SerializeField]
+    //private GameObject[] waveEnemies_5;
+
+    //[SerializeField]
+    //private GameObject[] waveEnemies_6;
+
+    //[SerializeField]
+    //private GameObject[] waveEnemies_7;
+
+    //[SerializeField]
+    //private GameObject[] waveEnemies_8;
+
+    //[SerializeField]
+    //private GameObject[] waveEnemies_9;
+
+
+    static int waveCount = 0;
+    int oldWaveCount = 0;
+    static int current_enemies = 0;
+
 
     // Start is called before the first frame update
     void Start()
     {
-        CheckWave();
+        SpawnWave(waveCount);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
-    }
-
-    void CheckWave()
-    {
-        switch(waveCount)
+        if(waveCount!=oldWaveCount)
         {
-            case 0:
-                SpawnWave(0);
-                break;
+            SpawnWave(waveCount);
+            oldWaveCount = waveCount;
+
         }
     }
 
-    void SpawnWave(int wave_number)
+   void SpawnWave(int wave_num)
     {
-        if(wave_number==0)
+        Debug.Log("Wave:" + wave_num);
+
+        #region pickWave
+        switch(wave_num)
         {
-            Debug.Log(firstWave_enemies[0].transform.position.x);
-            GameObject enemyInstance = Instantiate(enemy, firstWave_enemies[0].transform.position, Quaternion.identity);
-            
+            case 0:
+                currentWave = waveEnemies_1;
+                break;
+            case 1:
+                currentWave = waveEnemies_2;
+                break;
+        }
+        #endregion pickWave
+
+
+        for (int i = 0; i < currentWave.Length; i++)
+        {
+            GameObject enemyInstance = Instantiate(enemy, currentWave[i].transform.position, Quaternion.identity);
+            current_enemies++;
         }
     }
 
     public static void IsWaveDone()
     {
-
+        current_enemies--;
+        if(current_enemies==0)
+        {
+            waveCount++;
+            current_enemies = 0;
+        }
     }
 }
