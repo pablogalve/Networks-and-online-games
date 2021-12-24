@@ -44,11 +44,6 @@ public class Enemy : NetworkedObject
         
     }
 
-    private void OnDestroy()
-    {
-
-    }
-
     public override void Die()
     {
         base.Die();

@@ -5,6 +5,7 @@ using UnityEngine;
 using System.Net.Sockets;
 using System.Net;
 using System.Threading;
+using System.Text;
 
 public class Client : UDPObject
 {
@@ -21,21 +22,15 @@ public class Client : UDPObject
 
     public override void Start()
     {
-        //base.Start();
-        port = 7778;
-        networkedObjects = new Dictionary<string, NetworkedObject>();
+        socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+        IPEndPoint ipep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), port);
 
-        IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), port);
-        socket = new Socket(endPoint.Address.AddressFamily, SocketType.Dgram, ProtocolType.Udp);
-        senderRemote = (EndPoint)endPoint;
+        int sentBytes = socket.SendTo((new ConnectionMessage(playerId)).Serialize(), ipep);
 
-        socket.Bind(endPoint);
+        IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
+        Remote = (EndPoint)sender;
 
-        sendThread = new Thread(StartSending);
-        sendThread.Start();
-
-        receiveThread = new Thread(new ThreadStart(StartReceiving));
-        receiveThread.Start();
+        base.Start();
     }
 
     public override void Update()

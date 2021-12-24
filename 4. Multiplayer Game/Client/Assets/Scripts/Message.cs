@@ -6,6 +6,7 @@ using UnityEngine;
 
 public enum MessageType
 {
+    CONNECTION,
     INSTANTIATE,
     DESTROY,
     OBJECT_POSITION,
@@ -74,6 +75,15 @@ public class Message
                 return new Message();
         }
 
+    }
+}
+
+public class ConnectionMessage : Message
+{
+    public ConnectionMessage(byte sender)
+    {
+        type = MessageType.CONNECTION;
+        senderId = sender;
     }
 }
 

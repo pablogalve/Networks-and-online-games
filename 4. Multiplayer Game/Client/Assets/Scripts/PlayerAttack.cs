@@ -34,7 +34,7 @@ public class PlayerAttack : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space) && shotsTimer <= 0.0f)
         {
-            Projectile projectileInstance = Instantiate(projectile, gameObject.transform.position + new Vector3(0.0f, 0.0f, 1.0f), Quaternion.identity).GetComponent<Projectile>();
+            Projectile projectileInstance = Instantiate(projectile, gameObject.transform.position + new Vector3(1.0f, 0.0f, 0.0f), Quaternion.identity).GetComponent<Projectile>();
             projectileInstance.udpObject = player.udpObject;
 
             shotsTimer = timeBetweenShots;
@@ -44,14 +44,6 @@ public class PlayerAttack : MonoBehaviour
                 InstanceMessage projectileInstanceMessage = new InstanceMessage(MessageType.INSTANTIATE, projectileInstance.id, InstanceMessage.InstanceType.PLAYER_BULLET, projectileInstance.transform.position + new Vector3(0.0f, -10.0f, 0.0f), projectileInstance.speed);
                 client.Send(projectileInstanceMessage);
             }
-        }
-
-
-        if(Input.GetKeyDown(KeyCode.Q))
-        {
-            Vector3 position = new Vector3(Random.Range(-5.0f, 5.0f), Random.Range(-5.0f, 5.0f), 0.0f);
-            InstanceMessage enemyInstanceMessage = new InstanceMessage(MessageType.INSTANTIATE, "-1", InstanceMessage.InstanceType.ENEMY, position, 0.0f);
-            client.Send(enemyInstanceMessage);
         }
     }
 }

@@ -20,7 +20,7 @@ public class UDPObject : MonoBehaviour
     public Dictionary<string, NetworkedObject> networkedObjects;
 
     public Socket socket;
-    public EndPoint senderRemote;
+    public EndPoint Remote;
 
     public int port = 7777;
 
@@ -40,17 +40,11 @@ public class UDPObject : MonoBehaviour
     {
         networkedObjects = new Dictionary<string, NetworkedObject>();
 
-        IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), port);
-        socket = new Socket(endPoint.Address.AddressFamily, SocketType.Dgram, ProtocolType.Udp);
-        senderRemote = (EndPoint)endPoint;
-
-        socket.Bind(endPoint);
-
-        sendThread = new Thread(StartSending);
-        sendThread.Start();
-
         receiveThread = new Thread(new ThreadStart(StartReceiving));
         receiveThread.Start();
+
+        sendThread = new Thread(new ThreadStart(StartSending));
+        sendThread.Start();
     }
 
     public virtual void Update()
@@ -79,7 +73,7 @@ public class UDPObject : MonoBehaviour
                     if (messagesToSend[0] != null)
                     {
                         byte[] msg = messagesToSend[0].Serialize();
-                        int bytesSent = socket.SendTo(msg, msg.Length, SocketFlags.None, senderRemote);
+                        int bytesSent = socket.SendTo(msg, msg.Length, SocketFlags.None, Remote);
 
                         //Debug.Log("Message sent!");
                         messagesToSend.RemoveAt(0);
@@ -108,7 +102,7 @@ public class UDPObject : MonoBehaviour
             {
                 byte[] msg = new byte[256];
 
-                int recv = socket.ReceiveFrom(msg, ref senderRemote);
+                int recv = socket.ReceiveFrom(msg, ref Remote);
 
                 if (recv > 0)
                 {
@@ -123,8 +117,8 @@ public class UDPObject : MonoBehaviour
             catch (System.Exception exception)
             {
                 Debug.LogException(exception);
-                CloseSocket(socket);
                 active = false;
+                CloseSocket(socket);
             }
         }
     }
@@ -138,6 +132,7 @@ public class UDPObject : MonoBehaviour
         {
             socket.Close();
             Debug.LogWarning("Socket closed");
+            socket = null;
         }
     }
 

@@ -36,15 +36,4 @@ public class GameManager : MonoBehaviour
             client.Send(collisionMessage);
         }
     }
-
-    public void OnObjectDead(GameObject deadObject)
-    {
-        NetworkedObject networkedObject = deadObject.GetComponent<NetworkedObject>();
-
-        if (networkedObject != null)
-        {
-
-            //Debug.Log("Dead object id: " + networkedObject.id);
-        }
-    }
 }
