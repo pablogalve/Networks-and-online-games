@@ -1085,6 +1085,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connectionType: 1
+  port: 7777
   playerProjectilePrefab: {fileID: 907793732191305706, guid: 3643cf695c219c04fba1c5e7467418da, type: 3}
   enemyPrefab: {fileID: 1366760980311141414, guid: 84b0aaecf9a18c549bd474cf6e27cd66, type: 3}
   player1: {fileID: 265504783835719743}
@@ -6897,7 +6898,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_TargetDisplay: 0
 --- !u!224 &1773696500
 RectTransform:
@@ -7152,6 +7153,38 @@ PrefabInstance:
       propertyPath: livePrefabs
       value: 
       objectReference: {fileID: 2129246308151673451, guid: fd06cd23c237d9b4fb7937660f95a952, type: 3}
+    - target: {fileID: 265504785059399624, guid: aa4c0abc352002b4bbae2ca619754403, type: 3}
+      propertyPath: liveActive.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 265504785059399624, guid: aa4c0abc352002b4bbae2ca619754403, type: 3}
+      propertyPath: liveActive.b
+      value: 0.13200422
+      objectReference: {fileID: 0}
+    - target: {fileID: 265504785059399624, guid: aa4c0abc352002b4bbae2ca619754403, type: 3}
+      propertyPath: liveActive.g
+      value: 0.9716981
+      objectReference: {fileID: 0}
+    - target: {fileID: 265504785059399624, guid: aa4c0abc352002b4bbae2ca619754403, type: 3}
+      propertyPath: liveActive.r
+      value: 0.86411566
+      objectReference: {fileID: 0}
+    - target: {fileID: 265504785059399624, guid: aa4c0abc352002b4bbae2ca619754403, type: 3}
+      propertyPath: liveDisabled.a
+      value: 0.7372549
+      objectReference: {fileID: 0}
+    - target: {fileID: 265504785059399624, guid: aa4c0abc352002b4bbae2ca619754403, type: 3}
+      propertyPath: liveDisabled.b
+      value: 0.4528302
+      objectReference: {fileID: 0}
+    - target: {fileID: 265504785059399624, guid: aa4c0abc352002b4bbae2ca619754403, type: 3}
+      propertyPath: liveDisabled.g
+      value: 0.4528302
+      objectReference: {fileID: 0}
+    - target: {fileID: 265504785059399624, guid: aa4c0abc352002b4bbae2ca619754403, type: 3}
+      propertyPath: liveDisabled.r
+      value: 0.4528302
+      objectReference: {fileID: 0}
     - target: {fileID: 265504785059399627, guid: aa4c0abc352002b4bbae2ca619754403, type: 3}
       propertyPath: m_RootOrder
       value: 4

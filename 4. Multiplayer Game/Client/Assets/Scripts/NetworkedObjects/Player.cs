@@ -13,7 +13,29 @@ public class Player : NetworkedObject
     {
         set
         {
+
+            if(value > liveDisplays.Count)
+            {            
+                for (int i = 0; i < value; i++)
+                {
+                    GameObject temp = Instantiate(livePrefabs, liveHolder.transform);
+                    liveDisplays.Add(temp.GetComponent<Image>());
+                }
+            }
+
             _lives = value;
+
+            for (int i = 0; i < liveDisplays.Count; i++)
+            {
+                if (i < _lives)
+                {
+                    liveDisplays[i].color = liveActive;
+                }
+                else
+                {
+                    liveDisplays[i].color = liveDisabled;
+                }
+            }
         }
 
         get
@@ -40,6 +62,9 @@ public class Player : NetworkedObject
     public List<Image> liveDisplays;
     public GameObject livePrefabs;
 
+    public Color liveActive;
+    public Color liveDisabled;
+
 
     void Start()
     {
@@ -58,12 +83,6 @@ public class Player : NetworkedObject
         //Debug.Log(Camera.main.WorldToViewportPoint(_collider.bounds.center + new Vector3(_collider.size.x, 0.0f, 0.0f)) - Camera.main.WorldToViewportPoint(_collider.bounds.center));
 
         StartCoroutine(SendCurrentPosition());
-
-        for (int i = 0; i < lives; i++)
-        {
-            GameObject temp = Instantiate(livePrefabs, liveHolder.transform);
-            liveDisplays.Add(temp.GetComponent<Image>());
-        }
     }
 
     public override void Update()
