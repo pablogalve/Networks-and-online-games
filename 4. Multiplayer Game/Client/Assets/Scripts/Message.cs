@@ -157,8 +157,12 @@ public class DestructionMessage : Message
 
 public class PingPongMessage : Message
 {
+    public string messageToSend;
+
     public PingPongMessage(string id, string message)
     {
+        type = MessageType.PING_PONG;
         this.objectId = id;
+        messageToSend = message;
     }
 }

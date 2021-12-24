@@ -5,10 +5,32 @@ using UnityEngine;
 
 public class Server : UDPObject
 {
+    private class Player
+    {
+        public Player(string _id, float _lastPing = 0.0f) {
+            id = _id;
+            lastPing = _lastPing; }
+        public string id;
+        public float lastPing;
+    };
+    private List<Player> connectedPlayers = new List<Player>(); //id of connected players
+    public float maxPingAllowed = 5.0f;
+
     public override void Start()
     {
         base.Start();
         StartCoroutine(SpawnEnemy());
+    }
+
+    public override void Update()
+    {
+        base.Update();
+        for(int i = 0; i < connectedPlayers.Count; ++i)
+        {
+            connectedPlayers[i].lastPing += Time.deltaTime;
+            if (connectedPlayers[i].lastPing >= maxPingAllowed)
+                DisconnectPlayer(connectedPlayers[i].id);
+        }
     }
 
     public override void ProcessMessage(Message receivedMessage)
@@ -36,10 +58,12 @@ public class Server : UDPObject
                     networkedObjects[networkedInstance.id] = networkedInstance;
                 };
                 functionsToRunInMainThread.Add(instantationAction);
+                
                 break;
 
             case MessageType.PING_PONG:
-                //Debug.Log("Pong Sent to client!");
+                Debug.Log("Pong Sent to client!");
+                //TODO: Return a pong to the client
                 break;
         }
 
@@ -54,6 +78,22 @@ public class Server : UDPObject
             messagesToSend.Add(enemyInstanceMessage);
 
             yield return new WaitForSeconds(3.0f);
+        }
+    }
+
+    void ConnectPlayer(string id) {
+        connectedPlayers.Add(new Player(id, 0.0f));
+    }
+
+    void DisconnectPlayer(string id) { 
+        for(int i = 0; i < connectedPlayers.Count; ++i)
+        {
+            if(connectedPlayers[i].id == id)
+            {
+                //TODO: Disconnect player
+                connectedPlayers.RemoveAt(i);
+                break;
+            }
         }
     }
 }

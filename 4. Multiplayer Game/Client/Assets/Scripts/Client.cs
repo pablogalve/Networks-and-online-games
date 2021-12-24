@@ -31,7 +31,8 @@ public class Client : UDPObject
             else
             {
                 timerActive = false;
-                //Send(MessageType.PING_PONG, null);
+                PingPongMessage msg = new PingPongMessage(player1.id, "ping");
+                Send(msg);
                 currentTimer = secondsBetweenPings;
             }
         }
@@ -77,8 +78,4 @@ public class Client : UDPObject
                 break;
         }
     }
-
-
 }
-
-

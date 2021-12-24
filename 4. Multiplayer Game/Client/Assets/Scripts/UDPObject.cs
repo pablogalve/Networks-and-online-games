@@ -32,8 +32,8 @@ public class UDPObject : MonoBehaviour
     public List<Action> functionsToRunInMainThread = new List<Action>();
 
     [Header("Instanceable Objects")]
-    public GameObject playerProjectilePrefab;
-    public GameObject enemyPrefab;
+    public GameObject playerProjectilePrefab = null;
+    public GameObject enemyPrefab = null;
 
     public virtual void Start()
     {
