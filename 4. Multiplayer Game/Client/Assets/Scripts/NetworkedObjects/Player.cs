@@ -1,11 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : NetworkedObject
 {
     private int maxLives = 5;
-    private int lives = 5;
+
+
+    private int _lives = 5;
+    public int lives
+    {
+        set
+        {
+            _lives = value;
+        }
+
+        get
+        {
+            return _lives;
+        }
+    }
 
     [HideInInspector]
     public PlayerAttack playerAttack;
@@ -22,12 +37,15 @@ public class Player : NetworkedObject
 
     [Header("UI")]
     public GameObject liveHolder;
+    public List<Image> liveDisplays;
+    public GameObject livePrefabs;
+
 
     void Start()
     {
         networkedObjectType = NetworkedObjectType.PLAYER;
 
-        lives = 1;
+        lives = 3;
         playerAttack = GetComponent<PlayerAttack>();
 
         colliderScreenSize = (Camera.main.WorldToViewportPoint(_collider.bounds.center + _collider.size) - Camera.main.WorldToViewportPoint(_collider.center));
@@ -40,6 +58,12 @@ public class Player : NetworkedObject
         //Debug.Log(Camera.main.WorldToViewportPoint(_collider.bounds.center + new Vector3(_collider.size.x, 0.0f, 0.0f)) - Camera.main.WorldToViewportPoint(_collider.bounds.center));
 
         StartCoroutine(SendCurrentPosition());
+
+        for (int i = 0; i < lives; i++)
+        {
+            GameObject temp = Instantiate(livePrefabs, liveHolder.transform);
+            liveDisplays.Add(temp.GetComponent<Image>());
+        }
     }
 
     public override void Update()
