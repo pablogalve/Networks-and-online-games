@@ -12,6 +12,15 @@ public class Projectile : NetworkedObject
        base.Init();
 
         networkedObjectType = NetworkedObjectType.PROJECTILE;
+
+        if (GameManager.instance.udpObject.connectionType == ConnectionType.SERVER)
+        {
+            Collider collider = GetComponent<Collider>();
+            if (collider != null)
+            {
+                collider.enabled = false;
+            }
+        }
     }
 
     // Update is called once per frame

@@ -130,4 +130,4 @@ MonoBehaviour:
   instancedId: 0
   desiredPosition: {x: 0, y: 0, z: 0}
   points: 5
-  particles: {fileID: 6510125619236422602, guid: 6d7b01bdef4c9d44596d7108af762e72, type: 3}
+  destroyParticles: {fileID: 6510125619236422602, guid: 6d7b01bdef4c9d44596d7108af762e72, type: 3}

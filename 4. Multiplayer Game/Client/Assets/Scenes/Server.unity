@@ -153,7 +153,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   udpObject: {fileID: 1882045083}
-  particlesContainer: {fileID: 0}
 --- !u!4 &518789153
 Transform:
   m_ObjectHideFlags: 0
@@ -197,6 +196,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d932bca831f850b40966b61fcffbba70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  connectionType: 0
+  playerProjectilePrefab: {fileID: 907793732191305706, guid: 3643cf695c219c04fba1c5e7467418da, type: 3}
+  enemyPrefab: {fileID: 1366760980311141414, guid: 84b0aaecf9a18c549bd474cf6e27cd66, type: 3}
+  maxPingAllowed: 5
 --- !u!4 &1882045084
 Transform:
   m_ObjectHideFlags: 0

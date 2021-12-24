@@ -43,6 +43,9 @@ public class Server : UDPObject
         switch (receivedMessage.type)
         {
             case MessageType.OBJECT_POSITION:
+                VectorMessage objectPositionMessage = (VectorMessage)receivedMessage;
+                SetObjectDesiredPosition(objectPositionMessage.objectId, objectPositionMessage.vector);
+                //TODO: Send object position to the other player
                 break;
 
             case MessageType.INSTANTIATE:

@@ -13,13 +13,29 @@ public class Enemy : NetworkedObject
     {
         base.Init();
         networkedObjectType = NetworkedObjectType.ENEMY;
+
+        if(GameManager.instance.udpObject.connectionType == ConnectionType.SERVER)
+        {
+            Collider collider = GetComponent<Collider>();
+            if(collider != null)
+            {
+                collider.enabled = false;
+            }
+        }
     }
 
     public override void Update()
     {
-        base.Update();
-
-        Move();
+        //Move on server
+        if (GameManager.instance.udpObject.connectionType == ConnectionType.SERVER)
+        {
+            Move();
+        }
+        //Synchronize position from client
+        else
+        {
+            base.Update();
+        }
     }
 
     private void Move()

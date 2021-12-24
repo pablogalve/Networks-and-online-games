@@ -14,6 +14,8 @@ public class Client : UDPObject
     private float currentTimer = 0.0f;
     private bool timerActive = true;
 
+    byte playerId = 0;
+
     public override void Start()
     {
         base.Start();
@@ -42,6 +44,7 @@ public class Client : UDPObject
     {
         if (message != null)
         {
+            message.senderId = playerId;
             SendMessage(message);
         }
     }
@@ -54,14 +57,7 @@ public class Client : UDPObject
         {
             case MessageType.INSTANTIATE:
                 InstanceMessage instanceMessage = receivedMessage as InstanceMessage;
-                Action instantationAction = () =>
-                {
-                    GameObject objectToInstance = GetObjectToInstantiate(instanceMessage);
-                    GameObject objectInstance = Instantiate(objectToInstance, instanceMessage.toVector3(instanceMessage._position), Quaternion.identity);
-                    NetworkedObject networkedInstance = objectInstance.GetComponent<NetworkedObject>();
-                    networkedInstance.id = instanceMessage.objectId;
-                };
-                functionsToRunInMainThread.Add(instantationAction);
+                InstantiateObject(instanceMessage.objectId, GetObjectToInstantiate(instanceMessage), instanceMessage.toVector3(instanceMessage._position));
                 break;
 
             case MessageType.DESTROY:
