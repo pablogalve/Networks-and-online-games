@@ -159,4 +159,41 @@ public class UDPObject : MonoBehaviour
                 return null;
         }
     }
+
+    public void InstantiateObject(string objectId, GameObject objectToInstantiate, Vector3 position)
+    {
+        Action instantationAction = () =>
+        {
+            GameObject objectInstance = Instantiate(objectToInstantiate, position, Quaternion.identity);
+            NetworkedObject networkedInstance = objectInstance.GetComponent<NetworkedObject>();
+            networkedInstance.id = objectId;
+            networkedObjects[networkedInstance.id] = networkedInstance;
+        };
+        functionsToRunInMainThread.Add(instantationAction);
+    }
+
+    public virtual void DestroyObject(string objectId)
+    {
+        if(networkedObjects.ContainsKey(objectId))
+        {
+            Action destroyAction = () =>
+            {
+                Destroy(networkedObjects[objectId]);
+                networkedObjects.Remove(objectId);
+            };
+            functionsToRunInMainThread.Add(destroyAction);
+        }
+        else
+        {
+            Debug.LogWarning("Trying to destroy an object which does not exist");
+        }
+    }
+
+    public void SetObjectDesiredPosition(string objectId, Vector3 desiredPosition)
+    {
+        if(networkedObjects.ContainsKey(objectId))
+        {
+            networkedObjects[objectId].desiredPosition = desiredPosition;
+        }
+    }
 }

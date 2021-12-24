@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 1304791584592557698}
   m_Layer: 0
   m_Name: HealthRegenPU
-  m_TagString: Untagged
+  m_TagString: PowerUp
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -96,6 +96,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30765501b6796f044a1861082f927f3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  networkedObjectType: 0
+  id: 
+  instancedId: 0
+  desiredPosition: {x: 0, y: 0, z: 0}
   activeTime: 0
   amountToIncrase: 1
 --- !u!135 &582921838641913637

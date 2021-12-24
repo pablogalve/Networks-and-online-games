@@ -6,7 +6,7 @@ using UnityEngine;
 
 public enum MessageType
 {
-    INSTATIATION,
+    INSTANTIATE,
     DESTROY,
     OBJECT_POSITION,
     COLLISION,
@@ -15,14 +15,15 @@ public enum MessageType
 
 public class Message
 {
-    public string objectId = "-1";
+    public byte senderId = 0; 
+    //public string objectId = "-1";
     public MessageType type;
 
-    public Guid guid
-    {
-        get { return new Guid(objectId); }
-        set { objectId = value.ToString(); }
-    }
+    //public Guid guid
+    //{
+    //    get { return new Guid(objectId); }
+    //    set { objectId = value.ToString(); }
+    //}
 
     public static Guid GenerateNewGuid()
     {
@@ -53,7 +54,7 @@ public class Message
 
         switch (type)
         {
-            case MessageType.INSTATIATION:
+            case MessageType.INSTANTIATE:
                 InstanceMessage instantiationMessage = JsonUtility.FromJson<InstanceMessage>(json);
                 return instantiationMessage;
 
@@ -86,9 +87,11 @@ public class InstanceMessage : Message
         EXPLOSION_PARTICLES
     }
 
+
+
     public InstanceMessage(MessageType messageType, string id, InstanceType instanceType, Vector3 position, float speed)
     {
-        type = MessageType.INSTATIATION;
+        type = MessageType.INSTANTIATE;
         objectId = id;
         _instanceType = instanceType;
         _position = fromVector(position);
@@ -99,6 +102,7 @@ public class InstanceMessage : Message
     public InstanceType _instanceType;
     public float[] _position;
     public float _speed;
+    public string objectId;
 
     public Vector3 toVector3(float[] floatVector)
     {
@@ -120,6 +124,7 @@ public class VectorMessage : Message
         floatVector = new float[3] { vector.x, vector.y, vector.z };
     }
 
+    public string objectId;
     public float[] floatVector;
 
     public Vector3 vector
@@ -133,8 +138,8 @@ public class VectorMessage : Message
 
 public class CollisionMessage : Message
 {
-    string colliderObjectId;
-    string collidedObjectId;
+    public string colliderObjectId;
+    public string collidedObjectId;
 
     public CollisionMessage(string colliderObjectId, string collidedObjectId)
     {
@@ -144,14 +149,14 @@ public class CollisionMessage : Message
     }
 }
 
-public class DestructionMessage : Message
+public class IdMessage : Message
 {
-    string objectToDestroyId;
+    public string objectId;
 
-    DestructionMessage(string objectToDestroyId)
+    public IdMessage(MessageType messageType, string objectToDestroyId)
     {
-        type = MessageType.DESTROY;
-        this.objectToDestroyId = objectToDestroyId; 
+        type = messageType;
+        this.objectId = objectToDestroyId; 
     }
 }
 
@@ -162,7 +167,7 @@ public class PingPongMessage : Message
     public PingPongMessage(string id, string message)
     {
         type = MessageType.PING_PONG;
-        this.objectId = id;
+        //this.objectId = id;
         messageToSend = message;
     }
 }

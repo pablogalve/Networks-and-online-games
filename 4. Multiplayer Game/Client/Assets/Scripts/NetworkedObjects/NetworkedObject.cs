@@ -42,10 +42,4 @@ public class NetworkedObject : MonoBehaviour
     {
         GameManager.instance.OnObjectCollided(gameObject, collision.gameObject);
     }
-
-    public virtual void Die()
-    {
-        GameManager.instance.OnObjectDead(gameObject);
-        //Destroy(gameObject);
-    }
 }

@@ -7,9 +7,11 @@ public class Server : UDPObject
 {
     private class Player
     {
-        public Player(string _id, float _lastPing = 0.0f) {
+        public Player(string _id, float _lastPing = 0.0f)
+        {
             id = _id;
-            lastPing = _lastPing; }
+            lastPing = _lastPing;
+        }
         public string id;
         public float lastPing;
     };
@@ -25,7 +27,7 @@ public class Server : UDPObject
     public override void Update()
     {
         base.Update();
-        for(int i = 0; i < connectedPlayers.Count; ++i)
+        for (int i = 0; i < connectedPlayers.Count; ++i)
         {
             connectedPlayers[i].lastPing += Time.deltaTime;
             if (connectedPlayers[i].lastPing >= maxPingAllowed)
@@ -43,22 +45,18 @@ public class Server : UDPObject
             case MessageType.OBJECT_POSITION:
                 break;
 
-            case MessageType.INSTATIATION:
+            case MessageType.INSTANTIATE:
                 InstanceMessage instanceMessage = receivedMessage as InstanceMessage;
-                if (receivedMessage.objectId == "-1")
+                if (instanceMessage.objectId == "-1")
                 {
-                    receivedMessage.objectId = Message.GenerateNewGuid().ToString();
+                    instanceMessage.objectId = Message.GenerateNewGuid().ToString();
                 }
-                Action instantationAction = () =>
-                {
-                    GameObject objectToInstance = GetObjectToInstantiate(instanceMessage);
-                    GameObject objectInstance = Instantiate(objectToInstance, instanceMessage.toVector3(instanceMessage._position), Quaternion.identity);
-                    NetworkedObject networkedInstance = objectInstance.GetComponent<NetworkedObject>();
-                    networkedInstance.id = instanceMessage.objectId;
-                    networkedObjects[networkedInstance.id] = networkedInstance;
-                };
-                functionsToRunInMainThread.Add(instantationAction);
-                
+                InstantiateObject(instanceMessage.objectId, GetObjectToInstantiate(instanceMessage), instanceMessage.toVector3(instanceMessage._position));
+                break;
+
+            case MessageType.COLLISION:
+                CollisionMessage collisionMessage = receivedMessage as CollisionMessage;
+                SolveCollision(collisionMessage.colliderObjectId, collisionMessage.collidedObjectId);
                 break;
 
             case MessageType.PING_PONG:
@@ -74,26 +72,44 @@ public class Server : UDPObject
     {
         while (gameObject.activeSelf)
         {
-            InstanceMessage enemyInstanceMessage = new InstanceMessage(MessageType.INSTATIATION, "-1", InstanceMessage.InstanceType.ENEMY, new Vector3(0.0f, 0.0f, 0.0f), 0.0f);
+            InstanceMessage enemyInstanceMessage = new InstanceMessage(MessageType.INSTANTIATE, "-1", InstanceMessage.InstanceType.ENEMY, new Vector3(0.0f, 0.0f, 0.0f), 0.0f);
             messagesToSend.Add(enemyInstanceMessage);
 
             yield return new WaitForSeconds(3.0f);
         }
     }
 
-    void ConnectPlayer(string id) {
+    void ConnectPlayer(string id)
+    {
         connectedPlayers.Add(new Player(id, 0.0f));
     }
 
-    void DisconnectPlayer(string id) { 
-        for(int i = 0; i < connectedPlayers.Count; ++i)
+    void DisconnectPlayer(string id)
+    {
+        for (int i = 0; i < connectedPlayers.Count; ++i)
         {
-            if(connectedPlayers[i].id == id)
+            if (connectedPlayers[i].id == id)
             {
                 //TODO: Disconnect player
                 connectedPlayers.RemoveAt(i);
                 break;
             }
         }
+    }
+
+    void SolveCollision(string colliderObejctId, string collidedObjectId)
+    {
+        DestroyObject(colliderObejctId);
+        DestroyObject(collidedObjectId);
+    }
+
+    public override void DestroyObject(string objectId)
+    {
+        IdMessage destroyMessage = new IdMessage(MessageType.DESTROY, objectId);
+
+        //TODO: Send to both players
+        SendMessage(destroyMessage);
+
+        base.DestroyObject(objectId);
     }
 }

@@ -40,7 +40,7 @@ public class PlayerAttack : MonoBehaviour
             
             if(client != null)
             {
-                InstanceMessage projectileInstanceMessage = new InstanceMessage(MessageType.INSTATIATION, "-1", InstanceMessage.InstanceType.PLAYER_BULLET, projectileInstance.transform.position + new Vector3(0.0f, -10.0f, 0.0f), projectileInstance.speed);
+                InstanceMessage projectileInstanceMessage = new InstanceMessage(MessageType.INSTANTIATE, projectileInstance.id, InstanceMessage.InstanceType.PLAYER_BULLET, projectileInstance.transform.position + new Vector3(0.0f, -10.0f, 0.0f), projectileInstance.speed);
                 client.Send(projectileInstanceMessage);
             }
         }
@@ -48,7 +48,7 @@ public class PlayerAttack : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Q))
         {
             Vector3 position = new Vector3(Random.Range(-5.0f, 5.0f), Random.Range(-5.0f, 5.0f), 0.0f);
-            InstanceMessage enemyInstanceMessage = new InstanceMessage(MessageType.INSTATIATION, "-1", InstanceMessage.InstanceType.ENEMY, position, 0.0f);
+            InstanceMessage enemyInstanceMessage = new InstanceMessage(MessageType.INSTANTIATE, "-1", InstanceMessage.InstanceType.ENEMY, position, 0.0f);
             client.Send(enemyInstanceMessage);
         }
     }

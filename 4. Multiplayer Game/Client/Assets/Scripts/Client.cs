@@ -52,7 +52,7 @@ public class Client : UDPObject
 
         switch (receivedMessage.type)
         {
-            case MessageType.INSTATIATION:
+            case MessageType.INSTANTIATE:
                 InstanceMessage instanceMessage = receivedMessage as InstanceMessage;
                 Action instantationAction = () =>
                 {
@@ -65,12 +65,13 @@ public class Client : UDPObject
                 break;
 
             case MessageType.DESTROY:
-
+                IdMessage idMessage = receivedMessage as IdMessage;
+                DestroyObject(idMessage.objectId);
                 break;
 
             case MessageType.OBJECT_POSITION:
-                VectorMessage playerPositionMessage = (VectorMessage)receivedMessage;
-                player2.desiredPosition = playerPositionMessage.vector;
+                VectorMessage objectPositionMessage = (VectorMessage)receivedMessage;
+                SetObjectDesiredPosition(objectPositionMessage.objectId, objectPositionMessage.vector);
                 break;
 
             case MessageType.PING_PONG:
