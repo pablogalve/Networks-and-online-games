@@ -54,7 +54,7 @@ public class Server : UDPObject
                 {
                     instanceMessage.objectId = Message.GenerateNewGuid().ToString();
                 }
-                InstantiateObject(instanceMessage.objectId, GetObjectToInstantiate(instanceMessage), instanceMessage.toVector3(instanceMessage._position));
+                //InstantiateObject(instanceMessage.objectId, GetObjectToInstantiate(instanceMessage), instanceMessage.toVector3(instanceMessage._position));
                 break;
 
             case MessageType.COLLISION:

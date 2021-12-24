@@ -2,6 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Net.Sockets;
+using System.Net;
+using System.Threading;
 
 public class Client : UDPObject
 {
@@ -18,7 +21,21 @@ public class Client : UDPObject
 
     public override void Start()
     {
-        base.Start();
+        //base.Start();
+        port = 7778;
+        networkedObjects = new Dictionary<string, NetworkedObject>();
+
+        IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), port);
+        socket = new Socket(endPoint.Address.AddressFamily, SocketType.Dgram, ProtocolType.Udp);
+        senderRemote = (EndPoint)endPoint;
+
+        socket.Bind(endPoint);
+
+        sendThread = new Thread(StartSending);
+        sendThread.Start();
+
+        receiveThread = new Thread(new ThreadStart(StartReceiving));
+        receiveThread.Start();
     }
 
     public override void Update()
@@ -71,6 +88,7 @@ public class Client : UDPObject
                 break;
 
             case MessageType.PING_PONG:
+                Debug.Log("Pong received. I'm still connected to server");
                 timerActive = true;
                 break;
         }

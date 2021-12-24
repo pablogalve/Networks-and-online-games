@@ -19,12 +19,12 @@ public class UDPObject : MonoBehaviour
     public Dictionary<string, NetworkedObject> networkedObjects;
 
     public Socket socket;
-    EndPoint senderRemote;
+    public EndPoint senderRemote;
 
-    int port = 7777;
+    public int port = 7777;
 
-    Thread receiveThread;
-    Thread sendThread;
+    public Thread receiveThread;
+    public Thread sendThread;
 
     bool active = true;
 
