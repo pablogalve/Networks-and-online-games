@@ -7089,6 +7089,10 @@ PrefabInstance:
       propertyPath: client
       value: 
       objectReference: {fileID: 655991273}
+    - target: {fileID: 265504785059399631, guid: aa4c0abc352002b4bbae2ca619754403, type: 3}
+      propertyPath: defaultTimeBetweenShots
+      value: 0.1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aa4c0abc352002b4bbae2ca619754403, type: 3}
 --- !u!114 &265504783835719743 stripped

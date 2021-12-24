@@ -46,6 +46,7 @@ public class PlayerAttack : MonoBehaviour
             }
         }
 
+
         if(Input.GetKeyDown(KeyCode.Q))
         {
             Vector3 position = new Vector3(Random.Range(-5.0f, 5.0f), Random.Range(-5.0f, 5.0f), 0.0f);
