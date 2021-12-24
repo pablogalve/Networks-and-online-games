@@ -26,11 +26,6 @@ public class BH_LoadScene : MonoBehaviour
 
     List<string> blockedChars = new List<string> { " ", "{", "}", "{}", "}{"};
 
-    public void OpenServer()
-    {
-        SceneManager.LoadSceneAsync(1);
-    }
-
     public void OpenClient()
     {
         bool ValidateIP = IPAddress.TryParse(inputIP.text, out StaticVariables.userPointIP);
@@ -56,7 +51,7 @@ public class BH_LoadScene : MonoBehaviour
             if (isValidUserName == true)
             {
                 //StaticVariables.userName = inputName.text;
-                SceneManager.LoadSceneAsync(2);
+                SceneManager.LoadSceneAsync(1);
             }
         }
     }
