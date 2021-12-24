@@ -13,8 +13,8 @@ public class Client : UDPObject
 
     public float secondsBetweenPlayerPositionUpdates = 0.1f;
 
-    private float secondsBetweenPings = 5.0f;
-    private float currentTimer = 0.0f;
+    private float secondsBetweenPings = 0.5f;
+    private float currentTimer = 0.5f;
     private bool timerActive = true;
 
     byte playerId = 0;
@@ -50,7 +50,7 @@ public class Client : UDPObject
             else
             {
                 timerActive = false;
-                PingPongMessage msg = new PingPongMessage(player1.id, "ping");
+                PingPongMessage msg = new PingPongMessage();
                 Send(msg);
                 currentTimer = secondsBetweenPings;
             }

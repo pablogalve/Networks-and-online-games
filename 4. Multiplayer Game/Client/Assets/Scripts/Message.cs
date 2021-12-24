@@ -87,8 +87,6 @@ public class InstanceMessage : Message
         EXPLOSION_PARTICLES
     }
 
-
-
     public InstanceMessage(MessageType messageType, string id, InstanceType instanceType, Vector3 position, float speed)
     {
         type = MessageType.INSTANTIATE;
@@ -96,7 +94,6 @@ public class InstanceMessage : Message
         _instanceType = instanceType;
         _position = fromVector(position);
         _speed = speed;
-
     }
 
     public InstanceType _instanceType;
@@ -162,12 +159,8 @@ public class IdMessage : Message
 
 public class PingPongMessage : Message
 {
-    public string messageToSend;
-
-    public PingPongMessage(string id, string message)
+    public PingPongMessage()
     {
         type = MessageType.PING_PONG;
-        //this.objectId = id;
-        messageToSend = message;
     }
 }

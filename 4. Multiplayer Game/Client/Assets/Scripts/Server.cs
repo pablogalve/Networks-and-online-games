@@ -5,17 +5,17 @@ using UnityEngine;
 
 public class Server : UDPObject
 {
-    private class Player
+    public class Player
     {
-        public Player(string _id, float _lastPing = 0.0f)
+        public Player(byte _id, float _lastPing = 0.0f)
         {
             id = _id;
             lastPing = _lastPing;
         }
-        public string id;
+        public byte id;
         public float lastPing;
     };
-    private List<Player> connectedPlayers = new List<Player>(); //id of connected players
+    public static List<Player> connectedPlayers = new List<Player>(); //id of connected players
     public float maxPingAllowed = 5.0f;
 
     public override void Start()
@@ -26,9 +26,20 @@ public class Server : UDPObject
 
     public override void Update()
     {
+        if (IsConnected(0))
+            Debug.Log("Player 1 last ping: " + connectedPlayers[0].lastPing);
+        else
+        {
+            //ConnectPlayer(0);
+            //Debug.Log("Player 1 is not connected");
+        }
+        /*if (IsConnected(1))
+            Debug.Log("Player 2 last ping: " + connectedPlayers[1].lastPing);
+        else Debug.Log("Player 2 is not connected");*/
+
         base.Update();
         for (int i = 0; i < connectedPlayers.Count; ++i)
-        {
+        {            
             connectedPlayers[i].lastPing += Time.deltaTime;
             if (connectedPlayers[i].lastPing >= maxPingAllowed)
                 DisconnectPlayer(connectedPlayers[i].id);
@@ -37,7 +48,7 @@ public class Server : UDPObject
 
     public override void ProcessMessage(Message receivedMessage)
     {
-        //Debug.Log("Message being processed by server");
+        Debug.Log("Message being processed by server");
         base.ProcessMessage(receivedMessage);
 
         switch (receivedMessage.type)
@@ -63,8 +74,11 @@ public class Server : UDPObject
                 break;
 
             case MessageType.PING_PONG:
-                Debug.Log("Pong Sent to client!");
-                //TODO: Return a pong to the client
+                PingReceived(receivedMessage.senderId);
+                if(IsConnected(receivedMessage.senderId) == false)
+                {
+                    ConnectPlayer(receivedMessage.senderId);
+                }
                 break;
         }
 
@@ -75,19 +89,39 @@ public class Server : UDPObject
     {
         while (gameObject.activeSelf)
         {
-            InstanceMessage enemyInstanceMessage = new InstanceMessage(MessageType.INSTANTIATE, "-1", InstanceMessage.InstanceType.ENEMY, new Vector3(0.0f, 0.0f, 0.0f), 0.0f);
-            messagesToSend.Add(enemyInstanceMessage);
+            /*InstanceMessage enemyInstanceMessage = new InstanceMessage(MessageType.INSTANTIATE, "-1", InstanceMessage.InstanceType.ENEMY, new Vector3(0.0f, 0.0f, 0.0f), 0.0f);
+            messagesToSend.Add(enemyInstanceMessage);*/
 
             yield return new WaitForSeconds(3.0f);
         }
     }
 
-    void ConnectPlayer(string id)
+    bool IsConnected(byte id)
+    {
+        for (int i = 0; i < connectedPlayers.Count; ++i)
+        {
+            if (connectedPlayers[i].id == id) return true;
+        }
+        return false;
+    }
+
+    void PingReceived(byte id)
+    {
+        for (int i = 0; i < connectedPlayers.Count; ++i)
+        {
+            if(connectedPlayers[i].id == id)
+            {
+                connectedPlayers[i].lastPing = 0.0f;
+            }
+        }
+    }
+
+    void ConnectPlayer(byte id)
     {
         connectedPlayers.Add(new Player(id, 0.0f));
     }
 
-    void DisconnectPlayer(string id)
+    void DisconnectPlayer(byte id)
     {
         for (int i = 0; i < connectedPlayers.Count; ++i)
         {
