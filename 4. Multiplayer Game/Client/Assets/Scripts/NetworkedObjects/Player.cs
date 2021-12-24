@@ -20,6 +20,9 @@ public class Player : NetworkedObject
     [SerializeField]
     private Client client;
 
+    [Header("UI")]
+    public GameObject liveHolder;
+
     void Start()
     {
         networkedObjectType = NetworkedObjectType.PLAYER;
