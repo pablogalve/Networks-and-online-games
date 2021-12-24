@@ -5,6 +5,7 @@ using UnityEngine;
 public class WaveManager : MonoBehaviour
 {
     public GameObject enemy;
+    public Server server;
 
     private GameObject[] currentWave;
 
@@ -40,7 +41,6 @@ public class WaveManager : MonoBehaviour
     int oldWaveCount = 0;
     static int current_enemies = 0;
 
-
     // Start is called before the first frame update
     void Start()
     {
@@ -74,10 +74,10 @@ public class WaveManager : MonoBehaviour
         }
         #endregion pickWave
 
-
         for (int i = 0; i < currentWave.Length; i++)
         {
-            GameObject enemyInstance = Instantiate(enemy, currentWave[i].transform.position, Quaternion.identity);
+            //GameObject enemyInstance = Instantiate(enemy, currentWave[i].transform.position, Quaternion.identity);
+            server.SpawnEnemies(currentWave[i].transform.position);
             current_enemies++;
         }
     }

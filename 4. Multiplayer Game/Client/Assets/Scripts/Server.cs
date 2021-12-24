@@ -21,7 +21,7 @@ public class Server : UDPObject
     public override void Start()
     {
         base.Start();
-        StartCoroutine(SpawnEnemy());
+        //StartCoroutine(SpawnEnemy());
     }
 
     public override void Update()
@@ -85,19 +85,29 @@ public class Server : UDPObject
         SendMessage(receivedMessage);
     }
 
-    IEnumerator SpawnEnemy()
+    //IEnumerator SpawnEnemy()
+    //{
+    //    while (gameObject.activeSelf)
+    //    {
+    //        string id = InstanceMessage.GenerateNewGuid().ToString();
+    //        Vector3 position = new Vector3(UnityEngine.Random.Range(-10.0f, 10.0f), UnityEngine.Random.Range(-10.0f, 10.0f), 0.0f);
+    //        InstantiateObject(id, enemyPrefab, position);
+
+    //        InstanceMessage enemyInstanceMessage = new InstanceMessage(MessageType.INSTANTIATE, id, InstanceMessage.InstanceType.ENEMY, position, 0.0f);
+    //        SendMessageToBothPlayers(enemyInstanceMessage);
+
+    //        yield return new WaitForSeconds(3.0f);
+    //    }
+    //}
+
+    public void SpawnEnemies(Vector3 position)
     {
-        while (gameObject.activeSelf)
-        {
-            string id = InstanceMessage.GenerateNewGuid().ToString();
-            Vector3 position = new Vector3(UnityEngine.Random.Range(-10.0f, 10.0f), UnityEngine.Random.Range(-10.0f, 10.0f), 0.0f);
-            InstantiateObject(id, enemyPrefab, position);
+        string id = InstanceMessage.GenerateNewGuid().ToString();
+        //Vector3 position = new Vector3(UnityEngine.Random.Range(-10.0f, 10.0f), UnityEngine.Random.Range(-10.0f, 10.0f), 0.0f);
+        InstantiateObject(id, enemyPrefab, position);
 
-            InstanceMessage enemyInstanceMessage = new InstanceMessage(MessageType.INSTANTIATE, id, InstanceMessage.InstanceType.ENEMY, position, 0.0f);
-            SendMessageToBothPlayers(enemyInstanceMessage);
-
-            yield return new WaitForSeconds(3.0f);
-        }
+        InstanceMessage enemyInstanceMessage = new InstanceMessage(MessageType.INSTANTIATE, id, InstanceMessage.InstanceType.ENEMY, position, 0.0f);
+        SendMessageToBothPlayers(enemyInstanceMessage);
     }
 
     bool IsConnected(byte id)
