@@ -74,7 +74,7 @@ public class Client : UDPObject
         {
             case MessageType.INSTANTIATE:
                 InstanceMessage instanceMessage = receivedMessage as InstanceMessage;
-                InstantiateObject(instanceMessage.objectId, GetObjectToInstantiate(instanceMessage), instanceMessage.toVector3(instanceMessage._position), Quaternion.identity);
+                InstantiateObject(instanceMessage.objectId, GetObjectToInstantiate(instanceMessage), instanceMessage.toVector3(instanceMessage._position));
                 break;
 
             case MessageType.DESTROY:

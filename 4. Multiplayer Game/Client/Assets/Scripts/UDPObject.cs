@@ -162,7 +162,7 @@ public class UDPObject : MonoBehaviour
         }
     }
 
-    public void InstantiateObject(string objectId, GameObject objectToInstantiate, Vector3 position, Quaternion rotation)
+    public void InstantiateObject(string objectId, GameObject objectToInstantiate, Vector3 position)
     {
         Action instantationAction = () =>
         {
@@ -174,7 +174,7 @@ public class UDPObject : MonoBehaviour
             {
                 SceneManager.SetActiveScene(SceneManager.GetSceneByName("SampleScene"));
             }
-            GameObject objectInstance = Instantiate(objectToInstantiate, position, rotation);
+            GameObject objectInstance = Instantiate(objectToInstantiate, position, Quaternion.identity);
             NetworkedObject networkedInstance = objectInstance.GetComponent<NetworkedObject>();
 
             networkedInstance.udpObject = this;

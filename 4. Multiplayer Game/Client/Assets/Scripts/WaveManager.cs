@@ -77,7 +77,7 @@ public class WaveManager : MonoBehaviour
         for (int i = 0; i < currentWave.Length; i++)
         {
             //GameObject enemyInstance = Instantiate(enemy, currentWave[i].transform.position, Quaternion.identity);
-            server.SpawnEnemies(currentWave[i].transform.position, currentWave[i].transform.rotation);
+            server.SpawnEnemies(currentWave[i].transform.position);
             current_enemies++;
         }
     }
