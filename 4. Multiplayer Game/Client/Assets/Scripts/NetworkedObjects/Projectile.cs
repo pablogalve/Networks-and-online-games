@@ -18,6 +18,7 @@ public class Projectile : NetworkedObject
             Collider collider = GetComponent<Collider>();
             if (collider != null)
             {
+                //TODO: Uncomment
                 collider.enabled = false;
             }
         }
@@ -31,5 +32,10 @@ public class Projectile : NetworkedObject
 
     public override void OnCollisionEnter(Collision collision)
     {
+        if(collision.gameObject.CompareTag("Destroy"))
+        {
+            Destroy(gameObject);
+            //TODO: Tell the server to destroy this object
+        }
     }
 }

@@ -85,10 +85,17 @@ public class Client : UDPObject
             case MessageType.OBJECT_POSITION:
                 VectorMessage objectPositionMessage = (VectorMessage)receivedMessage;
                 SetObjectDesiredPosition(objectPositionMessage.objectId, objectPositionMessage.vector);
+
+                //TODO: Remove this, only for debug
+                if(objectPositionMessage.objectId == player1.id)
+                {
+                    player2.desiredPosition = objectPositionMessage.vector;
+                }
+
                 break;
 
             case MessageType.PING_PONG:
-                Debug.Log("Pong received. I'm still connected to server");
+                //Debug.Log("Pong received. I'm still connected to server");
                 timerActive = true;
                 break;
         }

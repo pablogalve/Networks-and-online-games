@@ -48,7 +48,7 @@ public class Server : UDPObject
 
     public override void ProcessMessage(Message receivedMessage)
     {
-        Debug.Log("Message being processed by server");
+        //Debug.Log("Message being processed by server");
         base.ProcessMessage(receivedMessage);
 
         switch (receivedMessage.type)
@@ -89,8 +89,12 @@ public class Server : UDPObject
     {
         while (gameObject.activeSelf)
         {
-            /*InstanceMessage enemyInstanceMessage = new InstanceMessage(MessageType.INSTANTIATE, "-1", InstanceMessage.InstanceType.ENEMY, new Vector3(0.0f, 0.0f, 0.0f), 0.0f);
-            messagesToSend.Add(enemyInstanceMessage);*/
+            string id = InstanceMessage.GenerateNewGuid().ToString();
+            Vector3 position = new Vector3(UnityEngine.Random.Range(-10.0f, 10.0f), UnityEngine.Random.Range(-10.0f, 10.0f), 0.0f);
+            InstantiateObject(id, enemyPrefab, position);
+
+            InstanceMessage enemyInstanceMessage = new InstanceMessage(MessageType.INSTANTIATE, id, InstanceMessage.InstanceType.ENEMY, position, 0.0f);
+            SendMessageToBothPlayers(enemyInstanceMessage);
 
             yield return new WaitForSeconds(3.0f);
         }
@@ -136,6 +140,8 @@ public class Server : UDPObject
 
     void SolveCollision(string colliderObejctId, string collidedObjectId)
     {
+        Debug.Log("Collided Objects: " + colliderObejctId + " " + collidedObjectId);
+
         DestroyObject(colliderObejctId);
         DestroyObject(collidedObjectId);
     }
@@ -144,9 +150,14 @@ public class Server : UDPObject
     {
         IdMessage destroyMessage = new IdMessage(MessageType.DESTROY, objectId);
 
-        //TODO: Send to both players
-        SendMessage(destroyMessage);
+        SendMessageToBothPlayers(destroyMessage);
 
         base.DestroyObject(objectId);
+    }
+
+    void SendMessageToBothPlayers(Message message)
+    {
+        //TODO: Send to both players
+        messagesToSend.Add(message);
     }
 }

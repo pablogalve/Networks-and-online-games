@@ -35,7 +35,8 @@ public class PlayerAttack : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && shotsTimer <= 0.0f)
         {
             Projectile projectileInstance = Instantiate(projectile, gameObject.transform.position + new Vector3(0.0f, 0.0f, 1.0f), Quaternion.identity).GetComponent<Projectile>();
-            
+            projectileInstance.udpObject = player.udpObject;
+
             shotsTimer = timeBetweenShots;
             
             if(client != null)

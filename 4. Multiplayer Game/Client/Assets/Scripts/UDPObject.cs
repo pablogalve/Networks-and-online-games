@@ -142,6 +142,7 @@ public class UDPObject : MonoBehaviour
 
     private void OnDestroy()
     {
+        messagesToSend.Clear();
         CloseSocket(socket);
     }
 
@@ -166,6 +167,9 @@ public class UDPObject : MonoBehaviour
         {
             GameObject objectInstance = Instantiate(objectToInstantiate, position, Quaternion.identity);
             NetworkedObject networkedInstance = objectInstance.GetComponent<NetworkedObject>();
+
+            networkedInstance.udpObject = this;
+
             networkedInstance.id = objectId;
             networkedObjects[networkedInstance.id] = networkedInstance;
         };
@@ -178,6 +182,7 @@ public class UDPObject : MonoBehaviour
         {
             Action destroyAction = () =>
             {
+                networkedObjects[objectId].Die();
                 Destroy(networkedObjects[objectId]);
                 networkedObjects.Remove(objectId);
             };

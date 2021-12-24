@@ -14,11 +14,12 @@ public class Enemy : NetworkedObject
         base.Init();
         networkedObjectType = NetworkedObjectType.ENEMY;
 
-        if(GameManager.instance.udpObject.connectionType == ConnectionType.SERVER)
+        if(udpObject.connectionType == ConnectionType.SERVER)
         {
             Collider collider = GetComponent<Collider>();
             if(collider != null)
             {
+                //TODO: Uncomment
                 collider.enabled = false;
             }
         }
@@ -45,6 +46,13 @@ public class Enemy : NetworkedObject
 
     private void OnDestroy()
     {
+
+    }
+
+    public override void Die()
+    {
+        base.Die();
+
         //Spawn paprticles
         GameObject particlesInstance = Instantiate(destroyParticles, transform.position, Quaternion.identity);
         ParticleSystem particleSystem = particlesInstance.GetComponent<ParticleSystem>();

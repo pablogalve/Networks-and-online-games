@@ -17,11 +17,11 @@ public class NetworkedObject : MonoBehaviour
     [HideInInspector]
     public string id;
 
-    public short instancedId = 0;
-
     private float interpolationSpeed  = 2.5f;
     [HideInInspector]
     public Vector3 desiredPosition;
+
+    public UDPObject udpObject = null;
 
     public void Init()
     {
@@ -36,6 +36,11 @@ public class NetworkedObject : MonoBehaviour
         {
             transform.position = Vector3.Lerp(transform.position, desiredPosition, interpolationSpeed * Time.deltaTime);
         }
+    }
+
+    public virtual void Die()
+    {
+
     }
 
     public virtual void OnCollisionEnter(Collision collision)
