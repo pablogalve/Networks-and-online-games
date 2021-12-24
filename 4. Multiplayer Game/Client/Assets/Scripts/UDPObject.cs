@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public enum ConnectionType
 {
@@ -161,11 +162,19 @@ public class UDPObject : MonoBehaviour
         }
     }
 
-    public void InstantiateObject(string objectId, GameObject objectToInstantiate, Vector3 position)
+    public void InstantiateObject(string objectId, GameObject objectToInstantiate, Vector3 position, Quaternion rotation)
     {
         Action instantationAction = () =>
         {
-            GameObject objectInstance = Instantiate(objectToInstantiate, position, Quaternion.identity);
+            if(connectionType==ConnectionType.SERVER)
+            {
+                SceneManager.SetActiveScene(SceneManager.GetSceneByName("Server"));
+            }
+            else
+            {
+                SceneManager.SetActiveScene(SceneManager.GetSceneByName("SampleScene"));
+            }
+            GameObject objectInstance = Instantiate(objectToInstantiate, position, rotation);
             NetworkedObject networkedInstance = objectInstance.GetComponent<NetworkedObject>();
 
             networkedInstance.udpObject = this;

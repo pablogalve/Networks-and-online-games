@@ -100,11 +100,11 @@ public class Server : UDPObject
     //    }
     //}
 
-    public void SpawnEnemies(Vector3 position)
+    public void SpawnEnemies(Vector3 position, Quaternion rotation)
     {
         string id = InstanceMessage.GenerateNewGuid().ToString();
         //Vector3 position = new Vector3(UnityEngine.Random.Range(-10.0f, 10.0f), UnityEngine.Random.Range(-10.0f, 10.0f), 0.0f);
-        InstantiateObject(id, enemyPrefab, position);
+        InstantiateObject(id, enemyPrefab, position, rotation);
 
         InstanceMessage enemyInstanceMessage = new InstanceMessage(MessageType.INSTANTIATE, id, InstanceMessage.InstanceType.ENEMY, position, 0.0f);
         SendMessageToBothPlayers(enemyInstanceMessage);
@@ -168,6 +168,7 @@ public class Server : UDPObject
     void SendMessageToBothPlayers(Message message)
     {
         //TODO: Send to both players
-        messagesToSend.Add(message);
+        //messagesToSend.Add(message);
+        SendMessage(message);
     }
 }

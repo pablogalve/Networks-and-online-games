@@ -100,10 +100,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4ffd489c9976c840a695034793bd9f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  networkedObjectType: 0
+  id: 
+  desiredPosition: {x: 0, y: 0, z: 0}
+  udpObject: {fileID: 0}
   playerAttack: {fileID: 0}
   movementSpeed: 20
   movementAnimator: {fileID: 6212047090154033354}
   _collider: {fileID: 265504785059399625}
+  client: {fileID: 0}
+  liveHolder: {fileID: 0}
+  liveDisplays: []
+  livePrefabs: {fileID: 0}
+  liveActive: {r: 0, g: 0, b: 0, a: 0}
+  liveDisabled: {r: 0, g: 0, b: 0, a: 0}
 --- !u!114 &265504785059399631
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -120,6 +130,7 @@ MonoBehaviour:
   timeBetweenShots: 0
   shotsTimer: 0
   projectile: {fileID: 907793732191305706, guid: 3643cf695c219c04fba1c5e7467418da, type: 3}
+  client: {fileID: 0}
 --- !u!65 &265504785059399625
 BoxCollider:
   m_ObjectHideFlags: 0
