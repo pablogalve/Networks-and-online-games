@@ -21,7 +21,7 @@ public class Server : UDPObject
     };
 
     public static List<Player> connectedPlayers = new List<Player>(); //id of connected players
-    public float maxPingAllowed = 5.0f;
+    public float maxPingAllowed = 2.0f;
 
     public override void Start()
     {
@@ -38,20 +38,7 @@ public class Server : UDPObject
     }
 
     public override void Update()
-    {
-        if (IsConnected(0))
-        {
-            //Debug.Log("Player 1 last ping: " + connectedPlayers[0].lastPing);
-        }
-        else
-        {
-            //ConnectPlayer(0);
-            //Debug.Log("Player 1 is not connected");
-        }
-        /*if (IsConnected(1))
-            Debug.Log("Player 2 last ping: " + connectedPlayers[1].lastPing);
-        else Debug.Log("Player 2 is not connected");*/
-
+    {        
         base.Update();
         for (int i = 0; i < connectedPlayers.Count; ++i)
         {            
@@ -94,6 +81,9 @@ public class Server : UDPObject
                 {
                     ConnectPlayer(receivedMessage.senderId);
                 }
+                break;
+            default:
+
                 break;
         }
 
@@ -146,7 +136,12 @@ public class Server : UDPObject
 
     void ConnectPlayer(byte id)
     {
-        connectedPlayers.Add(new Player(id, 0.0f));
+        if (connectedPlayers.Count < 2)
+        {
+            connectedPlayers.Add(new Player(id, 0.0f));
+            Debug.Log("Player with id: " + id + " has been connected to server successfully");
+        }            
+        else Debug.Log("Connection rejected. There are already 2 connected players");
     }
 
     void DisconnectPlayer(byte id)
@@ -154,12 +149,18 @@ public class Server : UDPObject
         for (int i = 0; i < connectedPlayers.Count; ++i)
         {
             if (connectedPlayers[i].id == id)
-            {
-                //TODO: Disconnect player
+            {                
                 connectedPlayers.RemoveAt(i);
                 break;
             }
         }
+        DisconnectPlayerMessage disconnectMessage = new DisconnectPlayerMessage();
+        SendMessageToBothPlayers(disconnectMessage);
+    }
+
+    void DisconnectAllPlayers()
+    {
+        connectedPlayers.Clear();
     }
 
     void SolveCollision(string colliderObejctId, string collidedObjectId)

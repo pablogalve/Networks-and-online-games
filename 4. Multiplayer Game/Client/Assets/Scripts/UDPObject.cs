@@ -22,7 +22,7 @@ public class UDPObject : MonoBehaviour
     public Socket socket;
     public EndPoint Remote;
 
-    public int port = 7777;
+    protected int port = 7777;
 
     public Thread receiveThread;
     public Thread sendThread;

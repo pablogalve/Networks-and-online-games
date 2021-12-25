@@ -93,6 +93,9 @@ public class Client : UDPObject
                 //Debug.Log("Pong received. I'm still connected to server");
                 timerActive = true;
                 break;
+            case MessageType.DISONNECT_PLAYER:
+                Debug.Log("Another player has been disconnected from server.");
+                break;
         }
     }
 }

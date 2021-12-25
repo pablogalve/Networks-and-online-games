@@ -12,6 +12,7 @@ public enum MessageType
     OBJECT_POSITION,
     COLLISION,
     PING_PONG,
+    DISONNECT_PLAYER,
 }
 
 public class Message
@@ -72,8 +73,12 @@ public class Message
                 return collisionMessage;
 
             case MessageType.PING_PONG:
-                VectorMessage ping_pong = JsonUtility.FromJson<VectorMessage>(json);
+                PingPongMessage ping_pong = JsonUtility.FromJson<PingPongMessage>(json);
                 return ping_pong;
+
+            case MessageType.DISONNECT_PLAYER:
+                DisconnectPlayerMessage diconnectMessage = JsonUtility.FromJson<DisconnectPlayerMessage>(json);
+                return diconnectMessage;
 
             default:
                 Debug.LogWarning("Needs to add new message type");
@@ -177,5 +182,13 @@ public class PingPongMessage : Message
     public PingPongMessage()
     {
         type = MessageType.PING_PONG;
+    }
+}
+
+public class DisconnectPlayerMessage : Message
+{
+    public DisconnectPlayerMessage()
+    {
+        type = MessageType.DISONNECT_PLAYER;
     }
 }
