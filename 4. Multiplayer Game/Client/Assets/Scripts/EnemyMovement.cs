@@ -19,14 +19,14 @@ public class EnemyMovement : MonoBehaviour
     private float waitBeforeStart = 0.0f;
     private float waitBeforeStart_timer = 0.0f;
 
-    public void Awake()
+    public void Start()
     {
         initialPos = gameObject.transform.localPosition;
         SetVehicleProperties();
         SetRandomInitialValues();
     }
 
-    public void Update()
+    public void Move()
     {
         if (waitBeforeStart_timer < waitBeforeStart)
         {

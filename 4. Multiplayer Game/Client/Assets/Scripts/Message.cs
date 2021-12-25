@@ -26,9 +26,9 @@ public class Message
     //    set { objectId = value.ToString(); }
     //}
 
-    public static Guid GenerateNewGuid()
+    public static int GenerateNewGuid()
     {
-        return new Guid();
+        return UnityEngine.Random.Range(0, int.MaxValue);
     }
 
     public virtual byte[] Serialize()

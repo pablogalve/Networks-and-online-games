@@ -9,13 +9,21 @@ public class Enemy : NetworkedObject
 
     public GameObject destroyParticles;
 
+    EnemyMovement enemyMovement;
+
+    public GameObject projectile;
+
     void Start()
     {
         base.Init();
         networkedObjectType = NetworkedObjectType.ENEMY;
 
+        enemyMovement = GetComponent<EnemyMovement>();
+
         if(udpObject.connectionType == ConnectionType.SERVER)
         {
+            StartCoroutine(Shoot());
+
             Collider collider = GetComponent<Collider>();
             if(collider != null)
             {
@@ -28,9 +36,16 @@ public class Enemy : NetworkedObject
     public override void Update()
     {
         //Move on server
-        if (GameManager.instance.udpObject.connectionType == ConnectionType.SERVER)
+        if (udpObject.connectionType == ConnectionType.SERVER)
         {
-            Move();
+            if(enemyMovement != null)
+            {
+                enemyMovement.Move();
+                Server server = udpObject as Server;
+
+                VectorMessage positionMessage = new VectorMessage(MessageType.OBJECT_POSITION, id, transform.position);
+                server.SendMessageToBothPlayers(positionMessage);
+            }
         }
         //Synchronize position from client
         else
@@ -39,9 +54,15 @@ public class Enemy : NetworkedObject
         }
     }
 
-    private void Move()
+    public IEnumerator Shoot()
     {
-        
+        while(gameObject.activeSelf)
+        {
+            Server server = udpObject as Server;
+            server.InstantiateToAll(projectile, InstanceMessage.InstanceType.ENEMY_BULLET, transform.position - new Vector3(-1.0f, 0.0f, 0.0f), Quaternion.identity);
+
+            yield return new WaitForSeconds(1.0f);
+        }
     }
 
     public override void Die()

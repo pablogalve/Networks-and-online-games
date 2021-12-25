@@ -34,6 +34,7 @@ public class UDPObject : MonoBehaviour
 
     [Header("Instanceable Objects")]
     public GameObject playerProjectilePrefab = null;
+    public GameObject enemyProjectilePrefab = null;
     public GameObject enemyPrefab = null;
 
     public virtual void Start()
@@ -143,12 +144,15 @@ public class UDPObject : MonoBehaviour
         active = false;
     }
 
-    public GameObject GetObjectToInstantiate(InstanceMessage instanceMessage)
+    public GameObject GetObjectToInstantiate(InstanceMessage.InstanceType instanceType)
     {
-        switch (instanceMessage._instanceType)
+        switch (instanceType)
         {
             case InstanceMessage.InstanceType.PLAYER_BULLET:
                 return playerProjectilePrefab;
+
+            case InstanceMessage.InstanceType.ENEMY_BULLET:
+                return enemyProjectilePrefab;
 
             case InstanceMessage.InstanceType.ENEMY:
                 return enemyPrefab;

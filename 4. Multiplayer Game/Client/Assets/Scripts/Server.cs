@@ -19,6 +19,7 @@ public class Server : UDPObject
         public byte id;
         public float lastPing;
     };
+
     public static List<Player> connectedPlayers = new List<Player>(); //id of connected players
     public float maxPingAllowed = 5.0f;
 
@@ -40,7 +41,7 @@ public class Server : UDPObject
     {
         if (IsConnected(0))
         {
-            Debug.Log("Player 1 last ping: " + connectedPlayers[0].lastPing);
+            //Debug.Log("Player 1 last ping: " + connectedPlayers[0].lastPing);
         }
         else
         {
@@ -79,7 +80,7 @@ public class Server : UDPObject
                 {
                     instanceMessage.objectId = Message.GenerateNewGuid().ToString();
                 }
-                //InstantiateObject(instanceMessage.objectId, GetObjectToInstantiate(instanceMessage), instanceMessage.toVector3(instanceMessage._position));
+                InstantiateObject(instanceMessage.objectId, GetObjectToInstantiate(instanceMessage._instanceType), instanceMessage.toVector3(instanceMessage._position), Quaternion.identity);
                 break;
 
             case MessageType.COLLISION:
@@ -114,13 +115,12 @@ public class Server : UDPObject
     //    }
     //}
 
-    public void SpawnEnemies(Vector3 position, Quaternion rotation)
+    public void InstantiateToAll(GameObject objectToInstantiate, InstanceMessage.InstanceType instanceType, Vector3 position, Quaternion rotation)
     {
         string id = InstanceMessage.GenerateNewGuid().ToString();
-        //Vector3 position = new Vector3(UnityEngine.Random.Range(-10.0f, 10.0f), UnityEngine.Random.Range(-10.0f, 10.0f), 0.0f);
-        InstantiateObject(id, enemyPrefab, position, rotation);
+        InstantiateObject(id, GetObjectToInstantiate(instanceType), position, rotation);
 
-        InstanceMessage enemyInstanceMessage = new InstanceMessage(MessageType.INSTANTIATE, id, InstanceMessage.InstanceType.ENEMY, position, 0.0f);
+        InstanceMessage enemyInstanceMessage = new InstanceMessage(MessageType.INSTANTIATE, id, instanceType, position, 0.0f);
         SendMessageToBothPlayers(enemyInstanceMessage);
     }
 
@@ -179,7 +179,7 @@ public class Server : UDPObject
         base.DestroyObject(objectId);
     }
 
-    void SendMessageToBothPlayers(Message message)
+    public void SendMessageToBothPlayers(Message message)
     {
         //TODO: Send to both players
         //messagesToSend.Add(message);

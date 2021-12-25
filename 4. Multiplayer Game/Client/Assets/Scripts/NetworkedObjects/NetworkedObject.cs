@@ -15,9 +15,9 @@ public class NetworkedObject : MonoBehaviour
     public NetworkedObjectType networkedObjectType;
 
     [HideInInspector]
-    public string id;
+    public string id = "-1";
 
-    private float interpolationSpeed  = 2.5f;
+    private float interpolationSpeed  = 5.0f;
     [HideInInspector]
     public Vector3 desiredPosition;
 
@@ -25,7 +25,11 @@ public class NetworkedObject : MonoBehaviour
 
     public void Init()
     {
-        id = "-1";
+        if(id.Length == 0 || id == "-1")
+        {
+            id = Random.Range(0, int.MaxValue).ToString();
+        }
+
         interpolationSpeed = 2.5f;
         desiredPosition = Vector3.zero;
     }

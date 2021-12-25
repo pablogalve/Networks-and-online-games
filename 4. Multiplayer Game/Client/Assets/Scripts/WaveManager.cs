@@ -74,10 +74,10 @@ public class WaveManager : MonoBehaviour
         }
         #endregion pickWave
 
-        for (int i = 0; i < currentWave.Length; i++)
+        for (int i = 0; i < currentWave.Length; ++i)
         {
             //GameObject enemyInstance = Instantiate(enemy, currentWave[i].transform.position, Quaternion.identity);
-            server.SpawnEnemies(currentWave[i].transform.position, currentWave[i].transform.rotation);
+            server.InstantiateToAll(enemy, InstanceMessage.InstanceType.ENEMY, currentWave[i].transform.position, currentWave[i].transform.rotation);
             current_enemies++;
         }
     }

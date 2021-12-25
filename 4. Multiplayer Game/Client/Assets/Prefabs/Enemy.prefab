@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1366760980311141415}
   - component: {fileID: 5769405631829067196}
   - component: {fileID: 1366760980311141435}
+  - component: {fileID: -4942499044291764658}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -132,6 +133,19 @@ MonoBehaviour:
   udpObject: {fileID: 0}
   points: 5
   destroyParticles: {fileID: 6510125619236422602, guid: 6d7b01bdef4c9d44596d7108af762e72, type: 3}
+  projectile: {fileID: 4674900856818266025, guid: c48a9cef9349c0e4d815b25526e52e32, type: 3}
+--- !u!114 &-4942499044291764658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1366760980311141414}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e03213f66f8f8464b85aa15f4bff89fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3507188149630296382
 GameObject:
   m_ObjectHideFlags: 0
