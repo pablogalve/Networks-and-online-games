@@ -59,7 +59,7 @@ public class Enemy : NetworkedObject
         while(gameObject.activeSelf)
         {
             Server server = udpObject as Server;
-            server.InstantiateToAll(projectile, InstanceMessage.InstanceType.ENEMY_BULLET, transform.position - new Vector3(-1.0f, 0.0f, 0.0f), Quaternion.identity);
+            server.InstantiateToAll(projectile, InstanceMessage.InstanceType.ENEMY_BULLET, transform.position - new Vector3(5.0f, 0.0f, 0.0f), Quaternion.identity);
 
             yield return new WaitForSeconds(1.0f);
         }

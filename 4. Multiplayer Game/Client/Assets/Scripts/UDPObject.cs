@@ -174,6 +174,7 @@ public class UDPObject : MonoBehaviour
             {
                 SceneManager.SetActiveScene(SceneManager.GetSceneByName("SampleScene"));
             }
+
             GameObject objectInstance = Instantiate(objectToInstantiate, position, rotation);
             NetworkedObject networkedInstance = objectInstance.GetComponent<NetworkedObject>();
 
@@ -192,7 +193,7 @@ public class UDPObject : MonoBehaviour
             Action destroyAction = () =>
             {
                 networkedObjects[objectId].Die();
-                Destroy(networkedObjects[objectId]);
+                Destroy(networkedObjects[objectId].gameObject);
                 networkedObjects.Remove(objectId);
             };
             functionsToRunInMainThread.Add(destroyAction);

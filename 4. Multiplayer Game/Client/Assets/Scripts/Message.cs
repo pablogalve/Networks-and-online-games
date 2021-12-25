@@ -59,6 +59,10 @@ public class Message
                 InstanceMessage instantiationMessage = JsonUtility.FromJson<InstanceMessage>(json);
                 return instantiationMessage;
 
+            case MessageType.DESTROY:
+                IdMessage destroyMessage = JsonUtility.FromJson<IdMessage>(json);
+                return destroyMessage;
+
             case MessageType.OBJECT_POSITION:
                 VectorMessage playerPositionMessage = JsonUtility.FromJson<VectorMessage>(json);
                 return playerPositionMessage;
@@ -72,6 +76,7 @@ public class Message
                 return ping_pong;
 
             default:
+                Debug.LogWarning("Needs to add new message type");
                 return new Message();
         }
 

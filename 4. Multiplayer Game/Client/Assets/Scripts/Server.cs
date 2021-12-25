@@ -182,7 +182,6 @@ public class Server : UDPObject
     public void SendMessageToBothPlayers(Message message)
     {
         //TODO: Send to both players
-        //messagesToSend.Add(message);
         SendMessage(message);
     }
 }
