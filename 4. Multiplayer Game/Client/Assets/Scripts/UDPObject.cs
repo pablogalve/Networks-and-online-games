@@ -82,8 +82,8 @@ public class UDPObject : MonoBehaviour
                 catch (System.Exception exception)
                 {
                     Debug.LogException(exception);
-                    CloseSocket(socket);
-                    active = false;
+                    //CloseSocket(socket);
+                    //active = false;
                 }
             }
         }
@@ -117,8 +117,8 @@ public class UDPObject : MonoBehaviour
             catch (System.Exception exception)
             {
                 Debug.LogException(exception);
-                active = false;
-                CloseSocket(socket);
+                //active = false;
+                //CloseSocket(socket);
             }
         }
     }
@@ -140,6 +140,7 @@ public class UDPObject : MonoBehaviour
     {
         messagesToSend.Clear();
         CloseSocket(socket);
+        active = false;
     }
 
     public GameObject GetObjectToInstantiate(InstanceMessage instanceMessage)

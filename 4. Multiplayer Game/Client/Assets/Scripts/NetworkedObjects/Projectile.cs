@@ -22,6 +22,8 @@ public class Projectile : NetworkedObject
                 collider.enabled = false;
             }
         }
+
+        Destroy(gameObject, 5.0f);
     }
 
     // Update is called once per frame

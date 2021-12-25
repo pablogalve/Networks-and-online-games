@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 using System.Threading;
 using UnityEngine;
 
@@ -24,18 +25,13 @@ public class Server : UDPObject
     public override void Start()
     {
         //StartCoroutine(SpawnEnemy());
-        socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
         IPEndPoint ipep = new IPEndPoint(IPAddress.Any, port);
+        socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 
         socket.Bind(ipep);
 
         IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
         Remote = sender;
-
-        /*
-        byte[] data = new byte[512];
-        int recv = socket.ReceiveFrom(data, ref Remote);
-        */
 
         base.Start();
     }
@@ -43,7 +39,9 @@ public class Server : UDPObject
     public override void Update()
     {
         if (IsConnected(0))
+        {
             Debug.Log("Player 1 last ping: " + connectedPlayers[0].lastPing);
+        }
         else
         {
             //ConnectPlayer(0);

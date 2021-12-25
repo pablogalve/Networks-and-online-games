@@ -22,8 +22,8 @@ public class Client : UDPObject
 
     public override void Start()
     {
-        socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
         IPEndPoint ipep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), port);
+        socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 
         int sentBytes = socket.SendTo((new ConnectionMessage(playerId)).Serialize(), ipep);
 
