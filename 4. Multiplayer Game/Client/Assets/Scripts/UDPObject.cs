@@ -150,10 +150,13 @@ public class UDPObject : MonoBehaviour
         {
             Action destroyAction = () =>
             {
-                NetworkedObject networkedObject = networkedObjects[objectId];
-                networkedObjects[objectId].Die();
-                Destroy(networkedObjects[objectId].gameObject);
-                networkedObjects.Remove(objectId);
+                if (networkedObjects.ContainsKey(objectId))
+                {
+                    NetworkedObject networkedObject = networkedObjects[objectId];
+                    networkedObjects[objectId].Die();
+                    Destroy(networkedObjects[objectId].gameObject);
+                    networkedObjects.Remove(objectId);
+                }
             };
             functionsToRunInMainThread.Add(destroyAction);
         }
