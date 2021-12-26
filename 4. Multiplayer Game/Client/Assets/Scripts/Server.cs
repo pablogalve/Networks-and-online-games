@@ -11,13 +11,15 @@ public class Server : UDPObject
 {
     public class Player
     {
-        public Player(byte _id, float _lastPing = 0.0f)
+        public Player(byte _id, EndPoint socket, float _lastPing = 0.0f)
         {
             id = _id;
             lastPing = _lastPing;
+            clientSocket = socket;
         }
         public byte id;
         public float lastPing;
+        public EndPoint clientSocket;
     };
 
     public static List<Player> connectedPlayers = new List<Player>(); //id of connected players
@@ -30,9 +32,6 @@ public class Server : UDPObject
         socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 
         socket.Bind(ipep);
-
-        IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
-        Remote = sender;
 
         base.Start();
     }
@@ -48,13 +47,27 @@ public class Server : UDPObject
         }
     }
 
-    public override void ProcessMessage(Message receivedMessage)
+    public override void ProcessMessage(Message receivedMessage, EndPoint clientSocket = null)
     {
         //Debug.Log("Message being processed by server");
         base.ProcessMessage(receivedMessage);
 
         switch (receivedMessage.type)
         {
+
+            case MessageType.CONNECTION:
+                Message connectionMsg = new Message(MessageType.CONNECTION);
+                ConnectPlayer((byte)connectedPlayers.Count, clientSocket);
+
+                //if (IsConnected(receivedMessage.senderId) == false)
+                //{
+                //    ConnectPlayer(receivedMessage.senderId);
+                //}
+                //Player godIsDead = connectedPlayers.Find((player) => player.id == receivedMessage.senderId);
+
+                break;
+
+
             case MessageType.OBJECT_POSITION:
                 VectorMessage objectPositionMessage = (VectorMessage)receivedMessage;
                 SetObjectDesiredPosition(objectPositionMessage.objectId, objectPositionMessage.vector);
@@ -77,10 +90,10 @@ public class Server : UDPObject
 
             case MessageType.PING_PONG:
                 PingReceived(receivedMessage.senderId);
-                if(IsConnected(receivedMessage.senderId) == false)
-                {
-                    ConnectPlayer(receivedMessage.senderId);
-                }
+                //if(IsConnected(receivedMessage.senderId) == false)
+                //{
+                //    ConnectPlayer(receivedMessage.senderId);
+                //}
                 break;
             default:
 
@@ -134,13 +147,20 @@ public class Server : UDPObject
         }
     }
 
-    void ConnectPlayer(byte id)
+    void ConnectPlayer(byte id, EndPoint clientSocket)
     {
         if (connectedPlayers.Count < 2)
         {
-            connectedPlayers.Add(new Player(id, 0.0f));
+            connectedPlayers.Add(new Player(id, clientSocket, 0.0f));
+
+            Message msg = new Message(MessageType.CONNECTION);
+            msg.senderId = id;
+
+            SendMessage(msg);
+
             if(connectedPlayers.Count == 2)
             {
+                //TODO: Send global msg to start the game
                 WaveManager.isntance.StartGame();
             }
             Debug.Log("Player with id: " + id + " has been connected to server successfully");
@@ -187,6 +207,71 @@ public class Server : UDPObject
     public void SendMessageToBothPlayers(Message message)
     {
         //TODO: Send to both players
+        message.senderId = 2;
         SendMessage(message);
+    }
+
+    public override void StartSending()
+    {
+        while (active)
+        {
+            while (messagesToSend.Count > 0)
+            {
+                try
+                {
+                    if (messagesToSend[0] != null)
+                    {
+                        byte[] msg = messagesToSend[0].Serialize();
+
+                        foreach (var item in connectedPlayers)
+                        {
+                            if(messagesToSend[0].senderId == 2 || messagesToSend[0].senderId == item.id) //2 means send to everyone
+                            {
+                                int bytesSent = socket.SendTo(msg, msg.Length, SocketFlags.None, item.clientSocket);
+                            }
+                        }
+
+                        //Debug.Log("Message sent!");
+                        messagesToSend.RemoveAt(0);
+                    }
+                }
+                catch (System.Exception exception)
+                {
+                    Debug.LogException(exception);
+                    //CloseSocket(socket);
+                    //active = false;
+                }
+            }
+        }
+    }
+
+    public override void StartReceiving()
+    {
+        while (active)
+        {
+            try
+            {
+                byte[] msg = new byte[256];
+
+                EndPoint receivedFrom = new IPEndPoint(IPAddress.Any, 0);
+                int recv = socket.ReceiveFrom(msg, ref receivedFrom);
+
+                if (recv > 0)
+                {
+                    Message receivedMessage = Message.Deserialize(msg);
+                    if (receivedMessage != null)
+                    {
+                        ProcessMessage(receivedMessage, receivedFrom);
+                        //Debug.Log("Received message: " + receivedMessage.type.ToString());
+                    }
+                }
+            }
+            catch (System.Exception exception)
+            {
+                Debug.LogException(exception);
+                //active = false;
+                //CloseSocket(socket);
+            }
+        }
     }
 }

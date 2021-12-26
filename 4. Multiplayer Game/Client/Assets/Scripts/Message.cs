@@ -27,6 +27,11 @@ public class Message
     //    set { objectId = value.ToString(); }
     //}
 
+    public Message(MessageType _type)
+    {
+        type = _type;
+    }
+
     public static int GenerateNewGuid()
     {
         return UnityEngine.Random.Range(0, int.MaxValue);
@@ -82,18 +87,9 @@ public class Message
 
             default:
                 Debug.LogWarning("Needs to add new message type");
-                return new Message();
+                return new Message(type);
         }
 
-    }
-}
-
-public class ConnectionMessage : Message
-{
-    public ConnectionMessage(byte sender)
-    {
-        type = MessageType.CONNECTION;
-        senderId = sender;
     }
 }
 
@@ -107,7 +103,7 @@ public class InstanceMessage : Message
         EXPLOSION_PARTICLES
     }
 
-    public InstanceMessage(MessageType messageType, string id, InstanceType instanceType, Vector3 position, float speed)
+    public InstanceMessage(MessageType messageType, string id, InstanceType instanceType, Vector3 position, float speed) : base(messageType)
     {
         type = MessageType.INSTANTIATE;
         objectId = id;
@@ -134,7 +130,7 @@ public class InstanceMessage : Message
 
 public class VectorMessage : Message
 {
-    public VectorMessage(MessageType type, string id, Vector3 vector)
+    public VectorMessage(MessageType type, string id, Vector3 vector) : base(type)
     {
         this.objectId = id;
         this.type = type;
@@ -158,7 +154,7 @@ public class CollisionMessage : Message
     public string colliderObjectId;
     public string collidedObjectId;
 
-    public CollisionMessage(string colliderObjectId, string collidedObjectId)
+    public CollisionMessage(string colliderObjectId, string collidedObjectId) : base(MessageType.COLLISION)
     {
         type = MessageType.COLLISION;
         this.colliderObjectId = colliderObjectId;
@@ -170,7 +166,7 @@ public class IdMessage : Message
 {
     public string objectId;
 
-    public IdMessage(MessageType messageType, string objectToDestroyId)
+    public IdMessage(MessageType messageType, string objectToDestroyId) : base(messageType)
     {
         type = messageType;
         this.objectId = objectToDestroyId; 
@@ -179,16 +175,14 @@ public class IdMessage : Message
 
 public class PingPongMessage : Message
 {
-    public PingPongMessage()
+    public PingPongMessage() : base(MessageType.PING_PONG)
     {
-        type = MessageType.PING_PONG;
     }
 }
 
 public class DisconnectPlayerMessage : Message
 {
-    public DisconnectPlayerMessage()
+    public DisconnectPlayerMessage() : base(MessageType.DISONNECT_PLAYER)
     {
-        type = MessageType.DISONNECT_PLAYER;
     }
 }

@@ -20,14 +20,13 @@ public class UDPObject : MonoBehaviour
     public Dictionary<string, NetworkedObject> networkedObjects;
 
     public Socket socket;
-    public EndPoint Remote;
 
     protected int port = 7777;
 
     public Thread receiveThread;
     public Thread sendThread;
 
-    bool active = true;
+    protected bool active = true;
 
     public List<Message> messagesToSend = new List<Message>();
     public List<Action> functionsToRunInMainThread = new List<Action>();
@@ -40,7 +39,10 @@ public class UDPObject : MonoBehaviour
     public virtual void Start()
     {
         networkedObjects = new Dictionary<string, NetworkedObject>();
+    }
 
+    public void ConnectionConfirmed()
+    {
         receiveThread = new Thread(new ThreadStart(StartReceiving));
         receiveThread.Start();
 
@@ -63,31 +65,9 @@ public class UDPObject : MonoBehaviour
         functionsToRunInMainThread.Add(actionToRun);
     }
 
-    public void StartSending()
+    public virtual void StartSending() 
     {
-        while (active)
-        {
-            while (messagesToSend.Count > 0)
-            {
-                try
-                {
-                    if (messagesToSend[0] != null)
-                    {
-                        byte[] msg = messagesToSend[0].Serialize();
-                        int bytesSent = socket.SendTo(msg, msg.Length, SocketFlags.None, Remote);
 
-                        //Debug.Log("Message sent!");
-                        messagesToSend.RemoveAt(0);
-                    }
-                }
-                catch (System.Exception exception)
-                {
-                    Debug.LogException(exception);
-                    //CloseSocket(socket);
-                    //active = false;
-                }
-            }
-        }
     }
 
     public void SendMessage(Message messageToSend)
@@ -95,37 +75,11 @@ public class UDPObject : MonoBehaviour
         messagesToSend.Add(messageToSend);
     }
 
-    public void StartReceiving()
-    {
-        while (active)
-        {
-            try
-            {
-                byte[] msg = new byte[256];
+    public virtual void StartReceiving()
+    {}
 
-                int recv = socket.ReceiveFrom(msg, ref Remote);
-
-                if (recv > 0)
-                {
-                    Message receivedMessage = Message.Deserialize(msg);
-                    if (receivedMessage != null)
-                    {
-                        ProcessMessage(receivedMessage);
-                        //Debug.Log("Received message: " + receivedMessage.type.ToString());
-                    }
-                }
-            }
-            catch (System.Exception exception)
-            {
-                Debug.LogException(exception);
-                //active = false;
-                //CloseSocket(socket);
-            }
-        }
-    }
-
-    public virtual void ProcessMessage(Message receivedMessage)
-    { }
+    public virtual void ProcessMessage(Message receivedMessage, EndPoint clientSocket = null)
+    {}
 
     private void CloseSocket(Socket socket)
     {

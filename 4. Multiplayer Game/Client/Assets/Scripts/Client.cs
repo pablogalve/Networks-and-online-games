@@ -22,21 +22,32 @@ public class Client : UDPObject
 
     byte playerId = 0;
 
-    public int maxConnectionTries = 5;
+    public int maxConnectionTries = 20;
     private int connectionTries = 0;
 
     public Text connectionDisplayText;
-    public List<Action> unityApiActions = new List<Action>();
+
+    public Thread connectionThread;
+    public EndPoint Remote;
 
     public override void Start()
     {
+
+        Time.timeScale = 0.0f;
+
         IPEndPoint ipep = new IPEndPoint(StaticVariables.userPointIP == null ? IPAddress.Parse("127.0.0.1") : StaticVariables.userPointIP, port);
         socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 
-        int sentBytes = socket.SendTo((new ConnectionMessage(playerId)).Serialize(), ipep);
+        int sentBytes = socket.SendTo(new byte[1], ipep);
 
-        IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
-        Remote = (EndPoint)sender;
+        Remote = (EndPoint)ipep;
+
+        Debug.Log("Penis");
+        socket.SendTo((new Message(MessageType.CONNECTION)).Serialize(), Remote);
+
+        Debug.Log("Penis");
+        connectionThread = new Thread(new ThreadStart(TryConnection));
+        connectionThread.Start();
 
         base.Start();
     }
@@ -46,7 +57,46 @@ public class Client : UDPObject
         connectionTries++;
         if(connectionTries >= maxConnectionTries)
         {
-            SceneManager.LoadSceneAsync(0);
+            functionsToRunInMainThread.Add(() => {
+                SceneManager.LoadSceneAsync(0);
+            });
+        }
+        else
+        {
+            functionsToRunInMainThread.Add(() => {
+                connectionDisplayText.text = connectionTries.ToString() + " / " + maxConnectionTries.ToString() + "\ntrying to connect";
+            });
+        }
+    }
+
+    public void TryConnection()
+    {
+        socket.ReceiveTimeout = 1000;
+        bool connected = false;
+
+        byte[] data = new byte[256];
+        while (connectionTries < maxConnectionTries && connected == false)
+        {
+            try
+            {
+                int sentBytes = socket.ReceiveFrom(data, ref Remote);
+                Message connectionMessage = Message.Deserialize(data);
+
+                if(connectionMessage.type == MessageType.CONNECTION)
+                {
+                    this.playerId = connectionMessage.senderId;
+                    base.ConnectionConfirmed();
+                    connected = true;
+                    functionsToRunInMainThread.Add(() => {
+                        connectionDisplayText.text = "Waiting for player 2";
+                    });
+                }
+
+            }
+            catch (Exception)
+            {
+                AddConnectionTry();
+            }
         }
     }
 
@@ -67,12 +117,6 @@ public class Client : UDPObject
                 currentTimer = secondsBetweenPings;
             }
         }
-
-        foreach (var item in unityApiActions)
-        {
-            item();
-        }
-        unityApiActions.Clear();
     }
 
     public void Send(Message message)
@@ -84,12 +128,18 @@ public class Client : UDPObject
         }
     }
 
-    public override void ProcessMessage(Message receivedMessage)
+    public override void ProcessMessage(Message receivedMessage, EndPoint clientSocket = null)
     {
         base.ProcessMessage(receivedMessage);
 
         switch (receivedMessage.type)
         {
+            //case MessageType.CONNECTION:
+            //    this.playerId = receivedMessage.senderId;
+
+
+            //    break;
+
             case MessageType.INSTANTIATE:
                 InstanceMessage instanceMessage = receivedMessage as InstanceMessage;
                 InstantiateObject(instanceMessage.objectId, GetObjectToInstantiate(instanceMessage._instanceType), instanceMessage.toVector3(instanceMessage._position), Quaternion.identity);
@@ -119,6 +169,62 @@ public class Client : UDPObject
             case MessageType.DISONNECT_PLAYER:
                 Debug.Log("Another player has been disconnected from server.");
                 break;
+        }
+    }
+
+    public override void StartSending()
+    {
+        while (active)
+        {
+            while (messagesToSend.Count > 0)
+            {
+                try
+                {
+                    if (messagesToSend[0] != null)
+                    {
+                        byte[] msg = messagesToSend[0].Serialize();
+                        int bytesSent = socket.SendTo(msg, msg.Length, SocketFlags.None, Remote);
+
+                        //Debug.Log("Message sent!");
+                        messagesToSend.RemoveAt(0);
+                    }
+                }
+                catch (System.Exception exception)
+                {
+                    Debug.LogException(exception);
+                    //CloseSocket(socket);
+                    //active = false;
+                }
+            }
+        }
+    }
+
+    public override void StartReceiving()
+    {
+        while (active)
+        {
+            try
+            {
+                byte[] msg = new byte[256];
+
+                int recv = socket.ReceiveFrom(msg, ref Remote);
+
+                if (recv > 0)
+                {
+                    Message receivedMessage = Message.Deserialize(msg);
+                    if (receivedMessage != null)
+                    {
+                        ProcessMessage(receivedMessage);
+                        //Debug.Log("Received message: " + receivedMessage.type.ToString());
+                    }
+                }
+            }
+            catch (System.Exception exception)
+            {
+                Debug.LogException(exception);
+                //active = false;
+                //CloseSocket(socket);
+            }
         }
     }
 }
