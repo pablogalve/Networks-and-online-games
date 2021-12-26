@@ -16,7 +16,7 @@ public class Player : NetworkedObject
         set
         {
 
-            if (value > liveDisplays.Count)
+            if (value > liveDisplays.Count && isPlayerContolled == true)
             {
                 for (int i = 0; i < value; i++)
                 {
