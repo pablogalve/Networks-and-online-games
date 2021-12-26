@@ -43,8 +43,14 @@ public class NetworkedObject : MonoBehaviour
     }
 
     public virtual void Die()
-    {
+    {}
 
+    public void SpawnParticles(GameObject particlesPrefab)
+    {
+        GameObject particlesInstance = Instantiate(particlesPrefab, transform.position, Quaternion.identity);
+        ParticleSystem particleSystem = particlesInstance.GetComponent<ParticleSystem>();
+        particleSystem.Play();
+        Destroy(particlesInstance, particleSystem.main.duration * 0.8f);
     }
 
     public virtual void OnCollisionEnter(Collision collision)

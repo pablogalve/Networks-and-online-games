@@ -66,9 +66,7 @@ public class UDPObject : MonoBehaviour
     }
 
     public virtual void StartSending() 
-    {
-
-    }
+    {}
 
     public void SendMessage(Message messageToSend)
     {
@@ -146,9 +144,19 @@ public class UDPObject : MonoBehaviour
         {
             Action destroyAction = () =>
             {
-                networkedObjects[objectId].Die();
-                Destroy(networkedObjects[objectId].gameObject);
-                networkedObjects.Remove(objectId);
+                NetworkedObject networkedObject = networkedObjects[objectId];
+                if (networkedObject.networkedObjectType == NetworkedObjectType.PLAYER)
+                {
+                    Player player = networkedObject as Player;
+                    player.DecreaseLives(1);
+
+                }
+                else
+                {
+                    networkedObjects[objectId].Die();
+                    Destroy(networkedObjects[objectId].gameObject);
+                    networkedObjects.Remove(objectId);
+                }
             };
             functionsToRunInMainThread.Add(destroyAction);
         }

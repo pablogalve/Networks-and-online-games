@@ -69,11 +69,7 @@ public class Enemy : NetworkedObject
     {
         base.Die();
 
-        //Spawn paprticles
-        GameObject particlesInstance = Instantiate(destroyParticles, transform.position, Quaternion.identity);
-        ParticleSystem particleSystem = particlesInstance.GetComponent<ParticleSystem>();
-        particleSystem.Play();
-        Destroy(particlesInstance, particleSystem.main.duration * 0.8f);
+        SpawnParticles(destroyParticles);
 
         GameManager.instance.AddScore(points);
         WaveManager.IsWaveDone();

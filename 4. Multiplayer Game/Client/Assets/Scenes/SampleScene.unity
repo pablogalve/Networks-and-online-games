@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44850105, g: 0.49854267, b: 0.5756467, a: 1}
+  m_IndirectSpecularColor: {r: 0.44850147, g: 0.49854308, b: 0.5756467, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1117,7 +1117,7 @@ MonoBehaviour:
   enemyProjectilePrefab: {fileID: 4674900856818266025, guid: c48a9cef9349c0e4d815b25526e52e32, type: 3}
   enemyPrefab: {fileID: 1366760980311141414, guid: 84b0aaecf9a18c549bd474cf6e27cd66, type: 3}
   player1: {fileID: 265504783835719743}
-  player2: {fileID: 1294141849}
+  player2: {fileID: 0}
   secondsBetweenPlayerPositionUpdates: 0.1
   maxConnectionTries: 5
   connectionDisplayText: {fileID: 1492606221}
@@ -1610,6 +1610,85 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: feb130a8adcebe54aa314f58f408c412, type: 3}
+--- !u!1 &1208194080 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1967302699866656585, guid: feb130a8adcebe54aa314f58f408c412, type: 3}
+  m_PrefabInstance: {fileID: 1208194079}
+  m_PrefabAsset: {fileID: 0}
+--- !u!54 &1208194081
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1208194080}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!65 &1208194082
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1208194080}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 0
+  serializedVersion: 2
+  m_Size: {x: 9.271939, y: 2.7247384, z: 12.217751}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1208194083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1208194080}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e66fcdd1465cd948a81e7af64f4b4f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultTimeBetweenShots: 0.1
+  timeBetweenShots: 0
+  shotsTimer: 0
+  projectile: {fileID: 907793732191305706, guid: 3643cf695c219c04fba1c5e7467418da, type: 3}
+  client: {fileID: 655991273}
+--- !u!114 &1208194084
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1208194080}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4ffd489c9976c840a695034793bd9f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  networkedObjectType: 0
+  id: -1
+  desiredPosition: {x: 0, y: 0, z: 0}
+  udpObject: {fileID: 0}
+  destroyParticles: {fileID: 6510125619236422602, guid: 6d7b01bdef4c9d44596d7108af762e72, type: 3}
+  isPlayerContolled: 0
+  playerAttack: {fileID: 0}
+  movementSpeed: 5
+  movementAnimator: {fileID: 0}
+  _collider: {fileID: 0}
+  client: {fileID: 0}
+  liveHolder: {fileID: 0}
+  liveDisplays: []
+  livePrefabs: {fileID: 0}
+  liveActive: {r: 0, g: 0, b: 0, a: 0}
+  liveDisabled: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &1209868739
 GameObject:
   m_ObjectHideFlags: 0
@@ -1687,27 +1766,6 @@ Transform:
   m_Father: {fileID: 411495814}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1294141848 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1967302699866656585, guid: feb130a8adcebe54aa314f58f408c412, type: 3}
-  m_PrefabInstance: {fileID: 1208194079}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1294141849
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1294141848}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9d21aa8a0e7ba2e4caa627327687dfa1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  networkedObjectType: 0
-  id: 
-  desiredPosition: {x: 0, y: 0, z: 0}
-  udpObject: {fileID: 0}
 --- !u!1 &1377963491
 GameObject:
   m_ObjectHideFlags: 0
@@ -7354,6 +7412,18 @@ PrefabInstance:
     - target: {fileID: 265504785059399624, guid: aa4c0abc352002b4bbae2ca619754403, type: 3}
       propertyPath: liveDisabled.r
       value: 0.4528302
+      objectReference: {fileID: 0}
+    - target: {fileID: 265504785059399624, guid: aa4c0abc352002b4bbae2ca619754403, type: 3}
+      propertyPath: destroyParticles
+      value: 
+      objectReference: {fileID: 6510125619236422602, guid: 6d7b01bdef4c9d44596d7108af762e72, type: 3}
+    - target: {fileID: 265504785059399624, guid: aa4c0abc352002b4bbae2ca619754403, type: 3}
+      propertyPath: isPlayerContolled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 265504785059399625, guid: aa4c0abc352002b4bbae2ca619754403, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 265504785059399627, guid: aa4c0abc352002b4bbae2ca619754403, type: 3}
       propertyPath: m_RootOrder

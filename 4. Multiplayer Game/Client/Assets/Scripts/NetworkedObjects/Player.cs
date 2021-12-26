@@ -5,17 +5,19 @@ using UnityEngine.UI;
 
 public class Player : NetworkedObject
 {
+    public GameObject destroyParticles;
+
+    public bool isPlayerContolled = false;
+
     private int maxLives = 5;
-
-
     private int _lives = 5;
     public int lives
     {
         set
         {
 
-            if(value > liveDisplays.Count)
-            {            
+            if (value > liveDisplays.Count)
+            {
                 for (int i = 0; i < value; i++)
                 {
                     GameObject temp = Instantiate(livePrefabs, liveHolder.transform);
@@ -65,7 +67,6 @@ public class Player : NetworkedObject
     public Color liveActive;
     public Color liveDisabled;
 
-
     void Start()
     {
         networkedObjectType = NetworkedObjectType.PLAYER;
@@ -82,76 +83,41 @@ public class Player : NetworkedObject
         //Debug.Log("Center screen is: " + Camera.main.WorldToViewportPoint(_collider.bounds.center));
         //Debug.Log(Camera.main.WorldToViewportPoint(_collider.bounds.center + new Vector3(_collider.size.x, 0.0f, 0.0f)) - Camera.main.WorldToViewportPoint(_collider.bounds.center));
 
-        StartCoroutine(SendCurrentPosition());
+        if (isPlayerContolled)
+        {
+            StartCoroutine(SendCurrentPosition());
+        }
     }
 
     public override void Update()
     {
         base.Update();
 
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
-
-        if (horizontal != 0.0f || vertical != 0.0f)
+        if(isPlayerContolled)
         {
-            movementAnimator.SetFloat("blendTilt", vertical);
+            float horizontal = Input.GetAxis("Horizontal");
+            float vertical = Input.GetAxis("Vertical");
 
-            //backPoint = _collider.bounds.center - new Vector3(_collider.size.x, 0, 0);
-            //frontPoint = _collider.bounds.center + new Vector3(_collider.size.x, 0, 0);
-            //topPoint = _collider.bounds.center + new Vector3(0, _collider.size.y, 0);
-            //downPoint = _collider.bounds.center - new Vector3(0, _collider.size.y, 0);
+            if (horizontal != 0.0f || vertical != 0.0f)
+            {
+                movementAnimator.SetFloat("blendTilt", vertical);
 
+                Vector3 newPosition = transform.position + (new Vector3(horizontal, vertical, 0.0f) * movementSpeed * Time.deltaTime);
+                //Debug.Log(corrX + " // " + corrY);
 
-            //float corrX = 0.0f;
-            //float corrY = 0.0f;
-            //Vector3 finalPosition = transform.position;
-            //if(vertical != 0.0f)
-            //{
-            //    if (CheckVerticalScreenPoint(Camera.main.WorldToViewportPoint(topPoint)))
-            //    {
-            //        finalPosition.y = topPoint.y - _collider.size.y;
-            //        //Debug.Log("top out");
-            //    }
-            //    else if (CheckVerticalScreenPoint(Camera.main.WorldToViewportPoint(downPoint)))
-            //    {
-            //        finalPosition.y = downPoint.y + _collider.size.y;
-            //        //Debug.Log("down out");
-            //    }
-            //    else
-            //    {
-            //        finalPosition.y += vertical * movementSpeed * Time.deltaTime;
-            //    }
-            //}
-            //if(horizontal != 0.0f)
-            //{
-            //    if (CheckHorizontalScreenPoint(Camera.main.WorldToViewportPoint(frontPoint)))
-            //    {
-            //        finalPosition.x = frontPoint.x - _collider.size.x;
-            //        //Debug.Log("front out");
-            //    }
-            //    else if (CheckHorizontalScreenPoint(Camera.main.WorldToViewportPoint(backPoint)))
-            //    {
-            //        finalPosition.x = backPoint.x + _collider.size.x;
-            //        //Debug.Log("back out");
-            //    }
-            //    else
-            //    {
-            //        finalPosition.x += horizontal * movementSpeed * Time.deltaTime;
-            //    }
-            //}
+                float screenFinalPosX = Mathf.Clamp(Camera.main.WorldToViewportPoint(newPosition).x, 0.0f - (colliderScreenSize.x / 4f), 1.0f + (colliderScreenSize.x / 1.5f));
+                float screenFinalPosY = Mathf.Clamp(Camera.main.WorldToViewportPoint(newPosition).y, 0.0f + colliderScreenSize.y * 5.0f, 1.0f - colliderScreenSize.y * 5.0f);
 
-            Vector3 newPosition = transform.position + (new Vector3(horizontal, vertical, 0.0f) * movementSpeed * Time.deltaTime);
-            //Debug.Log(corrX + " // " + corrY);
-
-            float screenFinalPosX = Mathf.Clamp(Camera.main.WorldToViewportPoint(newPosition).x, 0.0f - (colliderScreenSize.x / 4f), 1.0f + (colliderScreenSize.x / 1.5f));
-            float screenFinalPosY = Mathf.Clamp(Camera.main.WorldToViewportPoint(newPosition).y, 0.0f + colliderScreenSize.y * 5.0f, 1.0f - colliderScreenSize.y * 5.0f);
-
-            //Debug.Log(Camera.main.rect);
-            transform.position = new Vector3(Camera.main.ViewportToWorldPoint(new Vector3(screenFinalPosX, 0.0f, 0.0f)).x, Camera.main.ViewportToWorldPoint(new Vector3(0.0f, screenFinalPosY, 0.0f)).y, 0.0f);
-
-            //transform.position.x = Camera.main.ViewportToWorldPoint(new Vector3(screenFinalPosX, 0.0f, 0.0f)).x;
-            //transform.position.y = Camera.main.ViewportToWorldPoint(new vector3(0.0f, screenFinalPosY, 0.0f)).y;
+                //Debug.Log(Camera.main.rect);
+                transform.position = new Vector3(Camera.main.ViewportToWorldPoint(new Vector3(screenFinalPosX, 0.0f, 0.0f)).x, Camera.main.ViewportToWorldPoint(new Vector3(0.0f, screenFinalPosY, 0.0f)).y, 0.0f);
+            }
         }
+    }
+
+    public void ActivatePlayer()
+    {
+        _collider.enabled = true;
+        isPlayerContolled = true;
     }
 
     IEnumerator SendCurrentPosition()
@@ -183,6 +149,26 @@ public class Player : NetworkedObject
     public void DecreaseLives(int amountToDecrease)
     {
         lives = Mathf.Clamp(lives - amountToDecrease, 0, lives);
+
+        if (lives <= 0 && isPlayerContolled)
+        {
+            Die();
+        }
+    }
+
+    public override void Die()
+    {
+        base.Die();
+
+        SpawnParticles(destroyParticles);
+
+        //TODO: Add condition to check if is player
+        if (isPlayerContolled)
+        {
+            Client client = udpObject as Client;
+            IdMessage deathMessage = new IdMessage(MessageType.PLAYER_DEATH, id);
+            client.SendMessage(deathMessage);
+        }
     }
 
     public override void OnCollisionEnter(Collision collision)
