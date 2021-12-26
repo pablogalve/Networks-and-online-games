@@ -7,6 +7,7 @@ using System.Net;
 using System.Threading;
 using System.Text;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Client : UDPObject
 {
@@ -23,6 +24,9 @@ public class Client : UDPObject
 
     public int maxConnectionTries = 5;
     private int connectionTries = 0;
+
+    public Text connectionDisplayText;
+    public List<Action> unityApiActions = new List<Action>();
 
     public override void Start()
     {
@@ -63,6 +67,12 @@ public class Client : UDPObject
                 currentTimer = secondsBetweenPings;
             }
         }
+
+        foreach (var item in unityApiActions)
+        {
+            item();
+        }
+        unityApiActions.Clear();
     }
 
     public void Send(Message message)

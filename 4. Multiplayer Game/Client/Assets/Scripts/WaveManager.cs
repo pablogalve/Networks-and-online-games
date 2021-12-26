@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class WaveManager : MonoBehaviour
 {
+
+    public static WaveManager isntance;
+
     public GameObject enemy;
     public Server server;
 
@@ -44,7 +47,16 @@ public class WaveManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        SpawnWave(waveCount);
+        WaveManager.isntance = this;
+        //SpawnWave(waveCount);
+    }
+
+    public void StartGame()
+    {
+        if(waveCount == 0)
+        {
+            SpawnWave(waveCount);
+        }
     }
 
     // Update is called once per frame

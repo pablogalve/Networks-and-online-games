@@ -139,6 +139,10 @@ public class Server : UDPObject
         if (connectedPlayers.Count < 2)
         {
             connectedPlayers.Add(new Player(id, 0.0f));
+            if(connectedPlayers.Count == 2)
+            {
+                WaveManager.isntance.StartGame();
+            }
             Debug.Log("Player with id: " + id + " has been connected to server successfully");
         }            
         else Debug.Log("Connection rejected. There are already 2 connected players");
