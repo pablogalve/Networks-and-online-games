@@ -56,6 +56,11 @@ public class WaveManager : MonoBehaviour
         if(waveCount == 0)
         {
             SpawnWave(waveCount);
+
+            if (waveCount >= 8)
+            {
+                WaveManager.instance.server.GameOver();
+            }
         }
     }
 
@@ -101,11 +106,6 @@ public class WaveManager : MonoBehaviour
         {
             waveCount++;
             current_enemies = 0;
-
-            if(waveCount >= 8)
-            {
-                WaveManager.instance.server.GameOver();
-            }
         }
     }
 }
