@@ -151,18 +151,9 @@ public class UDPObject : MonoBehaviour
             Action destroyAction = () =>
             {
                 NetworkedObject networkedObject = networkedObjects[objectId];
-                if (networkedObject.networkedObjectType == NetworkedObjectType.PLAYER)
-                {
-                    Player player = networkedObject as Player;
-                    player.DecreaseLives(1);
-
-                }
-                else
-                {
-                    networkedObjects[objectId].Die();
-                    Destroy(networkedObjects[objectId].gameObject);
-                    networkedObjects.Remove(objectId);
-                }
+                networkedObjects[objectId].Die();
+                Destroy(networkedObjects[objectId].gameObject);
+                networkedObjects.Remove(objectId);
             };
             functionsToRunInMainThread.Add(destroyAction);
         }

@@ -9,6 +9,7 @@ public enum MessageType
     CONNECTION,
     INSTANTIATE,
     DESTROY,
+    PLAYER_POSITION,
     OBJECT_POSITION,
     COLLISION,
     PING_PONG,
@@ -80,9 +81,13 @@ public class Message
                 IdMessage destroyMessage = JsonUtility.FromJson<IdMessage>(json);
                 return destroyMessage;
 
-            case MessageType.OBJECT_POSITION:
+            case MessageType.PLAYER_POSITION:
                 VectorMessage playerPositionMessage = JsonUtility.FromJson<VectorMessage>(json);
                 return playerPositionMessage;
+
+            case MessageType.OBJECT_POSITION:
+                VectorMessage objectPositionMessage = JsonUtility.FromJson<VectorMessage>(json);
+                return objectPositionMessage;
 
             case MessageType.COLLISION:
                 CollisionMessage collisionMessage = JsonUtility.FromJson<CollisionMessage>(json);

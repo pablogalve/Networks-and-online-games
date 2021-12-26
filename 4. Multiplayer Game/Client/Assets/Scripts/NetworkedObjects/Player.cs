@@ -126,7 +126,7 @@ public class Player : NetworkedObject
     {
         while (gameObject.activeSelf)
         {
-            VectorMessage positionMessage = new VectorMessage(MessageType.OBJECT_POSITION, this.id.ToString(), transform.position + new Vector3(0.0f, -10.0f, 0.0f));
+            VectorMessage positionMessage = new VectorMessage(MessageType.PLAYER_POSITION, this.id, transform.position + new Vector3(0.0f, -10.0f, 0.0f));
             client.Send(positionMessage);
             yield return new WaitForSeconds(client.secondsBetweenPlayerPositionUpdates);
         }

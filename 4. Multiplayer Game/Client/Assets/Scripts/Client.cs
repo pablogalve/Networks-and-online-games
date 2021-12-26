@@ -32,6 +32,7 @@ public class Client : UDPObject
 
     public override void Start()
     {
+        base.Start();
 
         //Time.timeScale = 0.0f;
         player1.transform.gameObject.SetActive(false);
@@ -47,7 +48,11 @@ public class Client : UDPObject
         connectionThread = new Thread(new ThreadStart(TryConnection));
         connectionThread.Start();
 
-        base.Start();
+        player1.Init();
+        networkedObjects[player1.id] = player1;
+
+        player2.Init();
+        networkedObjects[player2.id] = player2;
     }
 
     void AddConnectionTry()
@@ -77,7 +82,6 @@ public class Client : UDPObject
         {
             try
             {
-
                 socket.SendTo((new Message(MessageType.CONNECTION)).Serialize(), Remote);
                 Debug.Log(connectionTries.ToString());
 
@@ -94,6 +98,18 @@ public class Client : UDPObject
                     functionsToRunInMainThread.Add(() => {
                         connectionDisplayText.text = "Waiting for player 2";
                     });
+
+                    Player player;
+                    if(playerId == 0)
+                    {
+                        player = player1 as Player;
+                    }
+                    else
+                    {
+                        player = player2 as Player;
+                    }
+
+                    player.ActivatePlayer();
                 }
 
             }
@@ -166,12 +182,6 @@ public class Client : UDPObject
             case MessageType.OBJECT_POSITION:
                 VectorMessage objectPositionMessage = (VectorMessage)receivedMessage;
                 SetObjectDesiredPosition(objectPositionMessage.objectId, objectPositionMessage.vector);
-
-                //TODO: Remove this, only for debug
-                //if(objectPositionMessage.objectId == player1.id)
-                //{
-                //    player2.desiredPosition = objectPositionMessage.vector;
-                //}
 
                 break;
 

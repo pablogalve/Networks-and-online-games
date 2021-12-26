@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44850105, g: 0.49854267, b: 0.5756467, a: 1}
+  m_IndirectSpecularColor: {r: 0.44850147, g: 0.49854308, b: 0.5756467, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1117,7 +1117,7 @@ MonoBehaviour:
   enemyProjectilePrefab: {fileID: 4674900856818266025, guid: c48a9cef9349c0e4d815b25526e52e32, type: 3}
   enemyPrefab: {fileID: 1366760980311141414, guid: 84b0aaecf9a18c549bd474cf6e27cd66, type: 3}
   player1: {fileID: 265504783835719743}
-  player2: {fileID: 0}
+  player2: {fileID: 1208194084}
   secondsBetweenPlayerPositionUpdates: 0.1
   maxConnectionTries: 5
   connectionDisplayText: {fileID: 1492606221}

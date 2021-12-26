@@ -28,12 +28,6 @@ public class EnemyMovement : MonoBehaviour
 
     public void Move()
     {
-        if (waitBeforeStart_timer < waitBeforeStart)
-        {
-            waitBeforeStart_timer += Time.deltaTime;
-            return;
-        }
-
         if (goingUp) currPercentageOfAnimation += Time.deltaTime * verticalSpeed;
         else currPercentageOfAnimation -= Time.deltaTime * verticalSpeed;
 

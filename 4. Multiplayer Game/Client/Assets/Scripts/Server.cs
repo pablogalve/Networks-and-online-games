@@ -39,14 +39,14 @@ public class Server : UDPObject
     }
 
     public override void Update()
-    {        
+    {
         base.Update();
         if(Input.GetKeyDown(KeyCode.W) == true)
         {
             GameOver();
         }
         for (int i = 0; i < connectedPlayers.Count; ++i)
-        {            
+        {
             connectedPlayers[i].lastPing += Time.deltaTime;
             if (connectedPlayers[i].lastPing >= maxPingAllowed)
                 DisconnectPlayer(connectedPlayers[i].id);
@@ -85,11 +85,22 @@ public class Server : UDPObject
 
                 break;
 
+            case MessageType.PLAYER_POSITION:
+                if (connectedPlayers.Count == 2)
+                {
+                    VectorMessage playerPosition = receivedMessage as VectorMessage;
+                    playerPosition.senderId = GetOtherPlayer(receivedMessage.senderId).id;
+                    SendMessage(playerPosition);
+                }
+                break;
 
             case MessageType.OBJECT_POSITION:
-                VectorMessage objectPositionMessage = (VectorMessage)receivedMessage;
-                SetObjectDesiredPosition(objectPositionMessage.objectId, objectPositionMessage.vector);
-                //TODO: Send object position to the other player
+                if (connectedPlayers.Count == 2)
+                {
+                    VectorMessage objectPositionMessage = receivedMessage as VectorMessage;
+                    objectPositionMessage.senderId = GetOtherPlayer(receivedMessage.senderId).id;
+                    SetObjectDesiredPosition(objectPositionMessage.objectId, objectPositionMessage.vector);
+                }
                 break;
 
             case MessageType.INSTANTIATE:
@@ -159,7 +170,7 @@ public class Server : UDPObject
         Debug.Log("Ping" + " " + id);
         for (int i = 0; i < connectedPlayers.Count; ++i)
         {
-            if(connectedPlayers[i].id == id)
+            if (connectedPlayers[i].id == id)
             {
                 connectedPlayers[i].lastPing = 0.0f;
             }
@@ -178,20 +189,20 @@ public class Server : UDPObject
             SendMessage(msg);
 
             Debug.Log("Player connected" + connectedPlayers.Count);
-            if(connectedPlayers.Count == 2)
+            if (connectedPlayers.Count == 2)
             {
                 //TODO: Send global msg to start the game
                 Message startMsg = new Message(MessageType.START_GAME);
                 SendMessageToBothPlayers(startMsg);
 
-                functionsToRunInMainThread.Add(()=> 
+                functionsToRunInMainThread.Add(() =>
                 {
                     WaveManager.instance.StartGame();
                 });
                 Debug.Log("Game starting");
             }
             Debug.Log("Player with id: " + (int)id + " has been connected to server successfully");
-        }            
+        }
         else Debug.Log("Connection rejected. There are already 2 connected players");
     }
 
@@ -206,9 +217,10 @@ public class Server : UDPObject
                 lock (connectedPlayers)
                 {
                     connectedPlayers.RemoveAt(i);
-                }
                 Debug.Log("Player disconnected");
                 break;
+                }
+
             }
         }
     }
@@ -216,6 +228,18 @@ public class Server : UDPObject
     void DisconnectAllPlayers()
     {
         connectedPlayers.Clear();
+    }
+
+    Server.Player GetOtherPlayer(byte playerId)
+    {
+        if (connectedPlayers[0].id == playerId)
+        {
+            return connectedPlayers[1];
+        }
+        else
+        {
+            return connectedPlayers[0];
+        }
     }
 
     void SolveCollision(string colliderObejctId, string collidedObjectId)
@@ -256,7 +280,7 @@ public class Server : UDPObject
 
                         foreach (var item in connectedPlayers)
                         {
-                            if(messagesToSend[0].senderId == 2 || messagesToSend[0].senderId == item.id) //2 means send to everyone
+                            if (messagesToSend[0].senderId == 2 || messagesToSend[0].senderId == item.id) //2 means send to everyone
                             {
                                 int bytesSent = socket.SendTo(msg, msg.Length, SocketFlags.None, item.clientSocket);
                             }
