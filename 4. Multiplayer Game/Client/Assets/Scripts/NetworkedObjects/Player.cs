@@ -108,6 +108,8 @@ public class Player : NetworkedObject
 
     public void ActivatePlayer()
     {
+        this.enabled = true;
+        GetComponent<PlayerAttack>().enabled = true;
         _collider.enabled = true;
         isPlayerContolled = true;
 

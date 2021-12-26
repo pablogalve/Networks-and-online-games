@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311992, g: 0.38074034, b: 0.35872713, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -147,7 +147,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 503939820}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 18.35, y: -5.1, z: 0}
+  m_LocalPosition: {x: 18.35, y: -4.837, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1469106968}
@@ -197,36 +197,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &546935596
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 546935597}
-  m_Layer: 0
-  m_Name: enemy5
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &546935597
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 546935596}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 19.57, y: -13.89, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1469106968}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &633648413
 GameObject:
   m_ObjectHideFlags: 0
@@ -263,36 +233,26 @@ MonoBehaviour:
   - {fileID: 2050968999}
   waveEnemies_2:
   - {fileID: 1720772094}
-  - {fileID: 546935596}
-  - {fileID: 503939820}
   waveEnemies_3:
   - {fileID: 1103722457}
   - {fileID: 2050968999}
   - {fileID: 2135651448}
-  - {fileID: 503939820}
   waveEnemies_4:
   - {fileID: 1720772094}
-  - {fileID: 546935596}
-  - {fileID: 2050968999}
   waveEnemies_5:
   - {fileID: 1103722457}
   - {fileID: 503939820}
   - {fileID: 2135651448}
   waveEnemies_6:
-  - {fileID: 503939820}
   - {fileID: 2050968999}
-  - {fileID: 546935596}
   waveEnemies_7:
   - {fileID: 2135651448}
   - {fileID: 1720772094}
   - {fileID: 1103722457}
   waveEnemies_8:
   - {fileID: 2050968999}
-  - {fileID: 1720772094}
-  - {fileID: 546935596}
   waveEnemies_9:
   - {fileID: 503939820}
-  - {fileID: 2050968999}
 --- !u!4 &633648415
 Transform:
   m_ObjectHideFlags: 0
@@ -336,7 +296,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1469106968}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1469106967
 GameObject:
@@ -369,7 +329,6 @@ Transform:
   - {fileID: 2050969000}
   - {fileID: 1720772095}
   - {fileID: 2135651449}
-  - {fileID: 546935597}
   - {fileID: 1103722458}
   m_Father: {fileID: 633648415}
   m_RootOrder: 0
@@ -506,7 +465,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2135651448}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 17.02, y: -12.54, z: 0}
+  m_LocalPosition: {x: 17.02, y: -10.74, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1469106968}

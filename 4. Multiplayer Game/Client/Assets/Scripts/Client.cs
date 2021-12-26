@@ -149,19 +149,24 @@ public class Client : UDPObject
         switch (receivedMessage.type)
         {
             case MessageType.START_GAME:
-                MenuManager.instance.TurnConnectUI_OFF();
 
-                Player player;
-                if (playerId == 0)
-                {
-                    player = player1 as Player;
-                }
-                else
-                {
-                    player = player2 as Player;
-                }
 
-                player.ActivatePlayer();
+                functionsToRunInMainThread.Add(() => 
+                {
+                    MenuManager.instance.TurnConnectUI_OFF();
+
+                    Player player;
+                    if (playerId == 0)
+                    {
+                        player = player1 as Player;
+                    }
+                    else
+                    {
+                        player = player2 as Player;
+                    }
+
+                    player.ActivatePlayer();
+                });
                 break;
 
             case MessageType.GAME_FINISHED:

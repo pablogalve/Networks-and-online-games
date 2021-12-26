@@ -15,7 +15,7 @@ public class WaveManager : MonoBehaviour
     [SerializeField]
     private GameObject[] waveEnemies_1;
 
-        [SerializeField]
+    [SerializeField]
     private GameObject[] waveEnemies_2;
 
     [SerializeField]
