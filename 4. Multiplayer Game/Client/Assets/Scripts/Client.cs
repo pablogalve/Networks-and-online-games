@@ -147,6 +147,12 @@ public class Client : UDPObject
                 player1.transform.gameObject.SetActive(true);
                 break;
 
+            case MessageType.GAME_FINISHED:
+                functionsToRunInMainThread.Add(() => {
+                    SceneManager.LoadSceneAsync(0);
+                });
+                break;
+
             case MessageType.INSTANTIATE:
                 InstanceMessage instanceMessage = receivedMessage as InstanceMessage;
                 InstantiateObject(instanceMessage.objectId, GetObjectToInstantiate(instanceMessage._instanceType), instanceMessage.toVector3(instanceMessage._position), Quaternion.identity);
@@ -174,7 +180,16 @@ public class Client : UDPObject
                 timerActive = true;
                 break;
             case MessageType.DISONNECT_PLAYER:
-                Debug.Log("Another player has been disconnected from server.");
+                if(receivedMessage.senderId == this.playerId)
+                {
+                    functionsToRunInMainThread.Add(() => {
+                        SceneManager.LoadSceneAsync(0);
+                    });
+                }
+                else
+                {
+                    //TODO: Remove player2 mesh or something
+                }
                 break;
         }
     }

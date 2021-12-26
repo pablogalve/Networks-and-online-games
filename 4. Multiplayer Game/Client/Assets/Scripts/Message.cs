@@ -14,7 +14,9 @@ public enum MessageType
     PING_PONG,
     DISONNECT_PLAYER,
     PLAYER_DEATH,
-    START_GAME
+    START_GAME,
+    GAME_FINISHED,
+    EMPTY,
 }
 
 public class Message
@@ -57,6 +59,13 @@ public class Message
         stream.Seek(0, SeekOrigin.Begin);
 
         string json = reader.ReadString();
+
+        if(json.Length == 0)
+        {
+            return new Message(MessageType.EMPTY);
+        }
+
+        Debug.Log(json);
         MessageType type = JsonUtility.FromJson<Message>(json).type;
 
         //Debug.Log(json);
@@ -184,7 +193,8 @@ public class PingPongMessage : Message
 
 public class DisconnectPlayerMessage : Message
 {
-    public DisconnectPlayerMessage() : base(MessageType.DISONNECT_PLAYER)
+    public DisconnectPlayerMessage(byte id) : base(MessageType.DISONNECT_PLAYER)
     {
+        senderId = id;
     }
 }

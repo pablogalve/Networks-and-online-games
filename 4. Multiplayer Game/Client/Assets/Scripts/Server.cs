@@ -41,6 +41,10 @@ public class Server : UDPObject
     public override void Update()
     {        
         base.Update();
+        if(Input.GetKeyDown(KeyCode.W) == true)
+        {
+            GameOver();
+        }
         for (int i = 0; i < connectedPlayers.Count; ++i)
         {            
             connectedPlayers[i].lastPing += Time.deltaTime;
@@ -51,7 +55,13 @@ public class Server : UDPObject
 
     public void GameOver()
     {
-
+        SendMessageToBothPlayers(new Message(MessageType.GAME_FINISHED));
+        foreach (var item in connectedPlayers)
+        {
+            DisconnectPlayerMessage disconnectMessage = new DisconnectPlayerMessage(item.id);
+            SendMessageToBothPlayers(disconnectMessage);
+        }
+        DisconnectAllPlayers();
     }
 
     public override void ProcessMessage(Message receivedMessage, EndPoint clientSocket = null)
@@ -191,13 +201,16 @@ public class Server : UDPObject
         {
             if (connectedPlayers[i].id == id)
             {                
-                connectedPlayers.RemoveAt(i);
+                DisconnectPlayerMessage disconnectMessage = new DisconnectPlayerMessage(connectedPlayers[i].id);
+                SendMessageToBothPlayers(disconnectMessage);
+                lock (connectedPlayers)
+                {
+                    connectedPlayers.RemoveAt(i);
+                }
                 Debug.Log("Player disconnected");
                 break;
             }
         }
-        DisconnectPlayerMessage disconnectMessage = new DisconnectPlayerMessage();
-        SendMessageToBothPlayers(disconnectMessage);
     }
 
     void DisconnectAllPlayers()
