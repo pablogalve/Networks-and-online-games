@@ -18,26 +18,26 @@ public class WaveManager : MonoBehaviour
         [SerializeField]
     private GameObject[] waveEnemies_2;
 
-    //[SerializeField]
-    //private GameObject[] waveEnemies_3;
+    [SerializeField]
+    private GameObject[] waveEnemies_3;
 
-    //[SerializeField]
-    //private GameObject[] waveEnemies_4;
+    [SerializeField]
+    private GameObject[] waveEnemies_4;
 
-    //[SerializeField]
-    //private GameObject[] waveEnemies_5;
+    [SerializeField]
+    private GameObject[] waveEnemies_5;
 
-    //[SerializeField]
-    //private GameObject[] waveEnemies_6;
+    [SerializeField]
+    private GameObject[] waveEnemies_6;
 
-    //[SerializeField]
-    //private GameObject[] waveEnemies_7;
+    [SerializeField]
+    private GameObject[] waveEnemies_7;
 
-    //[SerializeField]
-    //private GameObject[] waveEnemies_8;
+    [SerializeField]
+    private GameObject[] waveEnemies_8;
 
-    //[SerializeField]
-    //private GameObject[] waveEnemies_9;
+    [SerializeField]
+    private GameObject[] waveEnemies_9;
 
 
     static int waveCount = 0;
@@ -82,6 +82,27 @@ public class WaveManager : MonoBehaviour
                 break;
             case 1:
                 currentWave = waveEnemies_2;
+                break;
+            case 2:
+                currentWave = waveEnemies_3;
+                break;
+            case 3:
+                currentWave = waveEnemies_4;
+                break;
+            case 4:
+                currentWave = waveEnemies_5;
+                break;
+            case 5:
+                currentWave = waveEnemies_6;
+                break;
+            case 6:
+                currentWave = waveEnemies_7;
+                break;
+            case 7:
+                currentWave = waveEnemies_8;
+                break;
+            case 8:
+                currentWave = waveEnemies_9;
                 break;
         }
         #endregion pickWave
