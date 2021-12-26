@@ -74,9 +74,11 @@ public class Player : NetworkedObject
         lives = 3;
         playerAttack = GetComponent<PlayerAttack>();
 
-        colliderScreenSize = (Camera.main.WorldToViewportPoint(_collider.bounds.center + _collider.size) - Camera.main.WorldToViewportPoint(_collider.center));
-
-        Debug.Log(colliderScreenSize.x.ToString());
+        if (_collider != null)
+        {
+            colliderScreenSize = (Camera.main.WorldToViewportPoint(_collider.bounds.center + _collider.size) - Camera.main.WorldToViewportPoint(_collider.center));
+            Debug.Log(colliderScreenSize.x.ToString());
+        }
         //Debug.Log("sIZE IS: " + _collider.size + "and " + (_collider.bounds.center + new Vector3(0.0f, _collider.size.y, 0.0f)));
         //Debug.Log("This is stupid " + Camera.main.WorldToViewportPoint((_collider.bounds.center + new Vector3(0.0f, _collider.size.y, 0.0f))));
         //Debug.Log("Screen size is: " + Camera.main.WorldToViewportPoint(_collider.bounds.center + new Vector3(0.0f, _collider.size.y, 0.0f)));
