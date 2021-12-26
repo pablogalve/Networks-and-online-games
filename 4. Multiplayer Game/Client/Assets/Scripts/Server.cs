@@ -46,13 +46,14 @@ public class Server : UDPObject
         {
             GameOver();
         }
+        */
         for (int i = 0; i < connectedPlayers.Count; ++i)
         {
             connectedPlayers[i].lastPing += Time.deltaTime;
             if (connectedPlayers[i].lastPing >= maxPingAllowed)
                 DisconnectPlayer(connectedPlayers[i].id);
         }
-        */
+        
     }
 
     public void GameOver()
@@ -185,7 +186,7 @@ public class Server : UDPObject
         {
             connectedPlayers.Add(new Player(id, clientSocket, 0.0f));
 
-            Message msg = new Message(MessageType.CONNECTION);
+            Message msg = new IdMessage(MessageType.CONNECTION, id.ToString());
             msg.senderId = id;
 
             SendMessage(msg);
@@ -208,7 +209,7 @@ public class Server : UDPObject
         else Debug.Log("Connection rejected. There are already 2 connected players");
     }
 
-    void DisconnectPlayer(byte id)
+    void DisconnectPlayer(int id)
     {
         for (int i = 0; i < connectedPlayers.Count; ++i)
         {

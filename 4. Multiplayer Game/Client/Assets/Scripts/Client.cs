@@ -34,9 +34,6 @@ public class Client : UDPObject
     {
         base.Start();
 
-        //Time.timeScale = 0.0f;
-        player1.transform.gameObject.SetActive(false);
-
         IPEndPoint ipep = new IPEndPoint(StaticVariables.userPointIP == null ? IPAddress.Parse("127.0.0.1") : StaticVariables.userPointIP, port);
         Debug.Log(StaticVariables.userPointIP);
         socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
@@ -50,11 +47,11 @@ public class Client : UDPObject
 
         player1.Init();
         player1.id = "0";
-        networkedObjects[0.ToString()] = player1;
+        networkedObjects["0"] = player1;
 
         player2.Init();
-        player1.id = "1";
-        networkedObjects[1.ToString()] = player2;
+        player2.id = "1";
+        networkedObjects["1"] = player2;
     }
 
     void AddConnectionTry()
@@ -94,7 +91,8 @@ public class Client : UDPObject
                 Message connectionMessage = Message.Deserialize(data);
                 if(connectionMessage.type == MessageType.CONNECTION)
                 {
-                    this.playerId = connectionMessage.senderId;
+                    IdMessage idMessage = connectionMessage as IdMessage;
+                    this.playerId = int.Parse(idMessage.objectId);
                     base.ConnectionConfirmed();
                     connected = true;
                     functionsToRunInMainThread.Add(() => {
@@ -163,7 +161,6 @@ public class Client : UDPObject
                     player = player2 as Player;
                 }
 
-                player.gameObject.SetActive(true);
                 player.ActivatePlayer();
                 break;
 

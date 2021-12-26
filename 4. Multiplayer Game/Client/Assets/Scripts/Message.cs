@@ -73,6 +73,9 @@ public class Message
 
         switch (type)
         {
+            case MessageType.CONNECTION:
+                return JsonUtility.FromJson<IdMessage>(json);
+
             case MessageType.INSTANTIATE:
                 InstanceMessage instantiationMessage = JsonUtility.FromJson<InstanceMessage>(json);
                 return instantiationMessage;
@@ -103,7 +106,7 @@ public class Message
 
             default:
                 Debug.LogWarning("Needs to add new message type");
-                return new Message(type);
+                return JsonUtility.FromJson<Message>(json);
         }
 
     }
