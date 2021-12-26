@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.Net;
 using System.Threading;
 using System.Text;
+using UnityEngine.SceneManagement;
 
 public class Client : UDPObject
 {
@@ -20,9 +21,12 @@ public class Client : UDPObject
 
     byte playerId = 0;
 
+    public int maxConnectionTries = 5;
+    private int connectionTries = 0;
+
     public override void Start()
     {
-        IPEndPoint ipep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), port);
+        IPEndPoint ipep = new IPEndPoint(StaticVariables.userPointIP == null ? IPAddress.Parse("127.0.0.1") : StaticVariables.userPointIP, port);
         socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 
         int sentBytes = socket.SendTo((new ConnectionMessage(playerId)).Serialize(), ipep);
@@ -31,6 +35,15 @@ public class Client : UDPObject
         Remote = (EndPoint)sender;
 
         base.Start();
+    }
+
+    void AddConnectionTry()
+    {
+        connectionTries++;
+        if(connectionTries >= maxConnectionTries)
+        {
+            SceneManager.LoadSceneAsync(0);
+        }
     }
 
     public override void Update()
