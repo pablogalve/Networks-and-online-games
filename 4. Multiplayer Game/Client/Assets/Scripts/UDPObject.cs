@@ -55,14 +55,17 @@ public class UDPObject : MonoBehaviour
         while (functionsToRunInMainThread.Count > 0)
         {
             Action functionToRun = functionsToRunInMainThread[0];
-            functionsToRunInMainThread.RemoveAt(0);
             functionToRun();
+            functionsToRunInMainThread.RemoveAt(0);
         }
     }
 
     public void AddFunctionToRun(Action actionToRun)
-    { 
-        functionsToRunInMainThread.Add(actionToRun);
+    {
+        lock (functionsToRunInMainThread)
+        {
+            functionsToRunInMainThread.Add(actionToRun);
+        }
     }
 
     public virtual void StartSending() 
@@ -70,7 +73,10 @@ public class UDPObject : MonoBehaviour
 
     public void SendMessage(Message messageToSend)
     {
-        messagesToSend.Add(messageToSend);
+        lock (messagesToSend)
+        {
+            messagesToSend.Add(messageToSend);
+        }
     }
 
     public virtual void StartReceiving()

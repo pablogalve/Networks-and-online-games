@@ -13,7 +13,8 @@ public enum MessageType
     COLLISION,
     PING_PONG,
     DISONNECT_PLAYER,
-    PLAYER_DEATH
+    PLAYER_DEATH,
+    START_GAME
 }
 
 public class Message

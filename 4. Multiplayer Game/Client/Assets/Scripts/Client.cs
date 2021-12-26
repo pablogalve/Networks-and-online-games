@@ -33,7 +33,8 @@ public class Client : UDPObject
     public override void Start()
     {
 
-        Time.timeScale = 0.0f;
+        //Time.timeScale = 0.0f;
+        player1.transform.gameObject.SetActive(false);
 
         IPEndPoint ipep = new IPEndPoint(StaticVariables.userPointIP == null ? IPAddress.Parse("127.0.0.1") : StaticVariables.userPointIP, port);
         Debug.Log(StaticVariables.userPointIP);
@@ -111,9 +112,12 @@ public class Client : UDPObject
         if (timerActive)
         {
             if (currentTimer >= 0)
+            {
                 currentTimer -= Time.deltaTime;
+            }
             else
             {
+                Debug.Log("Sending ping");
                 timerActive = false;
                 PingPongMessage msg = new PingPongMessage();
                 Send(msg);
@@ -135,13 +139,13 @@ public class Client : UDPObject
     {
         base.ProcessMessage(receivedMessage);
 
+        Debug.Log(receivedMessage.type.ToString());
         switch (receivedMessage.type)
         {
-            //case MessageType.CONNECTION:
-            //    this.playerId = receivedMessage.senderId;
-
-
-            //    break;
+            case MessageType.START_GAME:
+                MenuManager.instance.TurnConnectUI_OFF();
+                player1.transform.gameObject.SetActive(true);
+                break;
 
             case MessageType.INSTANTIATE:
                 InstanceMessage instanceMessage = receivedMessage as InstanceMessage;

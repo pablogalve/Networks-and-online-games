@@ -141,6 +141,7 @@ public class Server : UDPObject
 
     void PingReceived(byte id)
     {
+        Debug.Log("Ping" + " " + id);
         for (int i = 0; i < connectedPlayers.Count; ++i)
         {
             if(connectedPlayers[i].id == id)
@@ -161,12 +162,20 @@ public class Server : UDPObject
 
             SendMessage(msg);
 
+            Debug.Log("Player connected" + connectedPlayers.Count);
             if(connectedPlayers.Count == 2)
             {
                 //TODO: Send global msg to start the game
-                WaveManager.isntance.StartGame();
+                Message startMsg = new Message(MessageType.START_GAME);
+                SendMessageToBothPlayers(startMsg);
+
+                functionsToRunInMainThread.Add(()=> 
+                {
+                    WaveManager.isntance.StartGame();
+                });
+                Debug.Log("Game starting");
             }
-            Debug.Log("Player with id: " + id + " has been connected to server successfully");
+            Debug.Log("Player with id: " + (int)id + " has been connected to server successfully");
         }            
         else Debug.Log("Connection rejected. There are already 2 connected players");
     }
@@ -178,6 +187,7 @@ public class Server : UDPObject
             if (connectedPlayers[i].id == id)
             {                
                 connectedPlayers.RemoveAt(i);
+                Debug.Log("Player disconnected");
                 break;
             }
         }
