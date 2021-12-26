@@ -33,6 +33,8 @@ public class Server : UDPObject
 
         socket.Bind(ipep);
 
+        ConnectionConfirmed();
+
         base.Start();
     }
 
@@ -56,6 +58,7 @@ public class Server : UDPObject
         {
 
             case MessageType.CONNECTION:
+                Debug.Log("Client connecting");
                 Message connectionMsg = new Message(MessageType.CONNECTION);
                 ConnectPlayer((byte)connectedPlayers.Count, clientSocket);
 
@@ -253,11 +256,12 @@ public class Server : UDPObject
             {
                 byte[] msg = new byte[256];
 
-                EndPoint receivedFrom = new IPEndPoint(IPAddress.Any, 0);
+                EndPoint receivedFrom = (EndPoint)new IPEndPoint(IPAddress.Any, 0);
                 int recv = socket.ReceiveFrom(msg, ref receivedFrom);
 
                 if (recv > 0)
                 {
+                    Debug.Log("Msg received");
                     Message receivedMessage = Message.Deserialize(msg);
                     if (receivedMessage != null)
                     {

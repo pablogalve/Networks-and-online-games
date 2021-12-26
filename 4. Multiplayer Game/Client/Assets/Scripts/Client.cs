@@ -36,16 +36,13 @@ public class Client : UDPObject
         Time.timeScale = 0.0f;
 
         IPEndPoint ipep = new IPEndPoint(StaticVariables.userPointIP == null ? IPAddress.Parse("127.0.0.1") : StaticVariables.userPointIP, port);
+        Debug.Log(StaticVariables.userPointIP);
         socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 
-        int sentBytes = socket.SendTo(new byte[1], ipep);
+        int sentBytes = socket.SendTo(new byte[1], (EndPoint)ipep);
 
         Remote = (EndPoint)ipep;
 
-        Debug.Log("Penis");
-        socket.SendTo((new Message(MessageType.CONNECTION)).Serialize(), Remote);
-
-        Debug.Log("Penis");
         connectionThread = new Thread(new ThreadStart(TryConnection));
         connectionThread.Start();
 
@@ -71,7 +68,7 @@ public class Client : UDPObject
 
     public void TryConnection()
     {
-        socket.ReceiveTimeout = 1000;
+        socket.ReceiveTimeout = 5000;
         bool connected = false;
 
         byte[] data = new byte[256];
@@ -79,9 +76,15 @@ public class Client : UDPObject
         {
             try
             {
-                int sentBytes = socket.ReceiveFrom(data, ref Remote);
-                Message connectionMessage = Message.Deserialize(data);
 
+                socket.SendTo((new Message(MessageType.CONNECTION)).Serialize(), Remote);
+                Debug.Log(connectionTries.ToString());
+
+                EndPoint received = new IPEndPoint(IPAddress.Any, 0);
+                int sentBytes = socket.ReceiveFrom(data, ref received);
+                Debug.Log(connectionTries.ToString());
+
+                Message connectionMessage = Message.Deserialize(data);
                 if(connectionMessage.type == MessageType.CONNECTION)
                 {
                     this.playerId = connectionMessage.senderId;
@@ -155,10 +158,10 @@ public class Client : UDPObject
                 SetObjectDesiredPosition(objectPositionMessage.objectId, objectPositionMessage.vector);
 
                 //TODO: Remove this, only for debug
-                if(objectPositionMessage.objectId == player1.id)
-                {
-                    player2.desiredPosition = objectPositionMessage.vector;
-                }
+                //if(objectPositionMessage.objectId == player1.id)
+                //{
+                //    player2.desiredPosition = objectPositionMessage.vector;
+                //}
 
                 break;
 
@@ -207,7 +210,8 @@ public class Client : UDPObject
             {
                 byte[] msg = new byte[256];
 
-                int recv = socket.ReceiveFrom(msg, ref Remote);
+                EndPoint received = new IPEndPoint(IPAddress.Any, 0);
+                int recv = socket.ReceiveFrom(msg, ref received);
 
                 if (recv > 0)
                 {
