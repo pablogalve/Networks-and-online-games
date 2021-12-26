@@ -5,7 +5,7 @@ using UnityEngine;
 public class WaveManager : MonoBehaviour
 {
 
-    public static WaveManager isntance;
+    public static WaveManager instance;
 
     public GameObject enemy;
     public Server server;
@@ -47,7 +47,7 @@ public class WaveManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        WaveManager.isntance = this;
+        WaveManager.instance = this;
         //SpawnWave(waveCount);
     }
 
@@ -101,6 +101,11 @@ public class WaveManager : MonoBehaviour
         {
             waveCount++;
             current_enemies = 0;
+
+            if(waveCount >= 8)
+            {
+                WaveManager.instance.server.GameOver();
+            }
         }
     }
 }

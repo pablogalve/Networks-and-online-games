@@ -49,6 +49,11 @@ public class Server : UDPObject
         }
     }
 
+    public void GameOver()
+    {
+
+    }
+
     public override void ProcessMessage(Message receivedMessage, EndPoint clientSocket = null)
     {
         //Debug.Log("Message being processed by server");
@@ -171,7 +176,7 @@ public class Server : UDPObject
 
                 functionsToRunInMainThread.Add(()=> 
                 {
-                    WaveManager.isntance.StartGame();
+                    WaveManager.instance.StartGame();
                 });
                 Debug.Log("Game starting");
             }
