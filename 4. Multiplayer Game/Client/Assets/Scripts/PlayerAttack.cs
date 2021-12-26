@@ -32,7 +32,7 @@ public class PlayerAttack : MonoBehaviour
             shotsTimer -= Time.deltaTime;
         }
 
-        if (Input.GetKeyDown(KeyCode.Space) && shotsTimer <= 0.0f)
+        if (Input.GetKeyDown(KeyCode.Space) && shotsTimer <= 0.0f && player.isPlayerContolled)
         {
             Projectile projectileInstance = Instantiate(projectile, gameObject.transform.position + new Vector3(1.0f, 0.0f, 0.0f), Quaternion.identity).GetComponent<Projectile>();
             projectileInstance.udpObject = player.udpObject;

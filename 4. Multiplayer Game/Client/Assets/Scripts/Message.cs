@@ -22,7 +22,7 @@ public enum MessageType
 
 public class Message
 {
-    public byte senderId = 0; 
+    public int senderId = 0; 
     //public string objectId = "-1";
     public MessageType type;
 
@@ -39,7 +39,7 @@ public class Message
 
     public static int GenerateNewGuid()
     {
-        return UnityEngine.Random.Range(0, int.MaxValue);
+        return UnityEngine.Random.Range(2, int.MaxValue);
     }
 
     public virtual byte[] Serialize()
@@ -198,7 +198,7 @@ public class PingPongMessage : Message
 
 public class DisconnectPlayerMessage : Message
 {
-    public DisconnectPlayerMessage(byte id) : base(MessageType.DISONNECT_PLAYER)
+    public DisconnectPlayerMessage(int id) : base(MessageType.DISONNECT_PLAYER)
     {
         senderId = id;
     }

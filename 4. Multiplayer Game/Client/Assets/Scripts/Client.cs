@@ -20,7 +20,7 @@ public class Client : UDPObject
     private float currentTimer = 0.5f;
     private bool timerActive = true;
 
-    byte playerId = 0;
+    int playerId = 0;
 
     public int maxConnectionTries = 20;
     private int connectionTries = 0;
@@ -49,10 +49,12 @@ public class Client : UDPObject
         connectionThread.Start();
 
         player1.Init();
-        networkedObjects[player1.id] = player1;
+        player1.id = "0";
+        networkedObjects[0.ToString()] = player1;
 
         player2.Init();
-        networkedObjects[player2.id] = player2;
+        player1.id = "1";
+        networkedObjects[1.ToString()] = player2;
     }
 
     void AddConnectionTry()
@@ -99,17 +101,7 @@ public class Client : UDPObject
                         connectionDisplayText.text = "Waiting for player 2";
                     });
 
-                    Player player;
-                    if(playerId == 0)
-                    {
-                        player = player1 as Player;
-                    }
-                    else
-                    {
-                        player = player2 as Player;
-                    }
-
-                    player.ActivatePlayer();
+                    
                 }
 
             }
@@ -160,7 +152,19 @@ public class Client : UDPObject
         {
             case MessageType.START_GAME:
                 MenuManager.instance.TurnConnectUI_OFF();
-                player1.transform.gameObject.SetActive(true);
+
+                Player player;
+                if (playerId == 0)
+                {
+                    player = player1 as Player;
+                }
+                else
+                {
+                    player = player2 as Player;
+                }
+
+                player.gameObject.SetActive(true);
+                player.ActivatePlayer();
                 break;
 
             case MessageType.GAME_FINISHED:

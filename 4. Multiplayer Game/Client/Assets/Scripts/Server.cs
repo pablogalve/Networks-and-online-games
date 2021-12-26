@@ -11,13 +11,13 @@ public class Server : UDPObject
 {
     public class Player
     {
-        public Player(byte _id, EndPoint socket, float _lastPing = 0.0f)
+        public Player(int _id, EndPoint socket, float _lastPing = 0.0f)
         {
             id = _id;
             lastPing = _lastPing;
             clientSocket = socket;
         }
-        public byte id;
+        public int id;
         public float lastPing;
         public EndPoint clientSocket;
     };
@@ -41,6 +41,7 @@ public class Server : UDPObject
     public override void Update()
     {
         base.Update();
+        /*
         if(Input.GetKeyDown(KeyCode.W) == true)
         {
             GameOver();
@@ -51,6 +52,7 @@ public class Server : UDPObject
             if (connectedPlayers[i].lastPing >= maxPingAllowed)
                 DisconnectPlayer(connectedPlayers[i].id);
         }
+        */
     }
 
     public void GameOver()
@@ -75,7 +77,7 @@ public class Server : UDPObject
             case MessageType.CONNECTION:
                 Debug.Log("Client connecting");
                 Message connectionMsg = new Message(MessageType.CONNECTION);
-                ConnectPlayer((byte)connectedPlayers.Count, clientSocket);
+                ConnectPlayer(connectedPlayers.Count, clientSocket);
 
                 //if (IsConnected(receivedMessage.senderId) == false)
                 //{
@@ -165,7 +167,7 @@ public class Server : UDPObject
         return false;
     }
 
-    void PingReceived(byte id)
+    void PingReceived(int id)
     {
         Debug.Log("Ping" + " " + id);
         for (int i = 0; i < connectedPlayers.Count; ++i)
@@ -177,7 +179,7 @@ public class Server : UDPObject
         }
     }
 
-    void ConnectPlayer(byte id, EndPoint clientSocket)
+    void ConnectPlayer(int id, EndPoint clientSocket)
     {
         if (connectedPlayers.Count < 2)
         {
@@ -230,7 +232,7 @@ public class Server : UDPObject
         connectedPlayers.Clear();
     }
 
-    Server.Player GetOtherPlayer(byte playerId)
+    Server.Player GetOtherPlayer(int playerId)
     {
         if (connectedPlayers[0].id == playerId)
         {

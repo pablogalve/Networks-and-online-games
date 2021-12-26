@@ -27,7 +27,7 @@ public class NetworkedObject : MonoBehaviour
     {
         if(id.Length == 0 || id == "-1")
         {
-            id = Random.Range(0, int.MaxValue).ToString();
+            id = Random.Range(2, int.MaxValue).ToString();
         }
 
         interpolationSpeed = 2.5f;

@@ -79,16 +79,6 @@ public class Player : NetworkedObject
             colliderScreenSize = (Camera.main.WorldToViewportPoint(_collider.bounds.center + _collider.size) - Camera.main.WorldToViewportPoint(_collider.center));
             Debug.Log(colliderScreenSize.x.ToString());
         }
-        //Debug.Log("sIZE IS: " + _collider.size + "and " + (_collider.bounds.center + new Vector3(0.0f, _collider.size.y, 0.0f)));
-        //Debug.Log("This is stupid " + Camera.main.WorldToViewportPoint((_collider.bounds.center + new Vector3(0.0f, _collider.size.y, 0.0f))));
-        //Debug.Log("Screen size is: " + Camera.main.WorldToViewportPoint(_collider.bounds.center + new Vector3(0.0f, _collider.size.y, 0.0f)));
-        //Debug.Log("Center screen is: " + Camera.main.WorldToViewportPoint(_collider.bounds.center));
-        //Debug.Log(Camera.main.WorldToViewportPoint(_collider.bounds.center + new Vector3(_collider.size.x, 0.0f, 0.0f)) - Camera.main.WorldToViewportPoint(_collider.bounds.center));
-
-        if (isPlayerContolled)
-        {
-            StartCoroutine(SendCurrentPosition());
-        }
     }
 
     public override void Update()
@@ -120,6 +110,8 @@ public class Player : NetworkedObject
     {
         _collider.enabled = true;
         isPlayerContolled = true;
+
+        StartCoroutine(SendCurrentPosition());
     }
 
     IEnumerator SendCurrentPosition()
