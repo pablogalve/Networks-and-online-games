@@ -1,12 +1,18 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour
 {
+    PhotonView view;
+
     public float defaultTimeBetweenShots;
 
     private Player player;
+
+    [SerializeField]
+    private GameObject shootPoint;
 
     [HideInInspector]
     public float timeBetweenShots;
@@ -16,25 +22,27 @@ public class PlayerAttack : MonoBehaviour
 
     public GameObject projectile;
 
-    [SerializeField]
-    private Client client;
-
     void Start()
     {
         timeBetweenShots = defaultTimeBetweenShots;
         player = GetComponent<Player>();
+
+        view = GetComponent<PhotonView>();
     }
 
     void Update()
     {
-        if (shotsTimer > 0.0f)
+        if(view.IsMine)
         {
-            shotsTimer -= Time.deltaTime;
-        }
+            if (shotsTimer > 0.0f)
+            {
+                shotsTimer -= Time.deltaTime;
+            }
 
-        if (Input.GetKeyDown(KeyCode.Space) && shotsTimer <= 0.0f)
-        {
-           
+            if (Input.GetKeyDown(KeyCode.Space) && shotsTimer <= 0.0f)
+            {
+                PhotonNetwork.Instantiate(projectile.name, shootPoint.transform.position, Quaternion.identity);
+            }
         }
     }
 }
