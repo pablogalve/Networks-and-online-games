@@ -7,8 +7,19 @@ using System.Text;
 using System.Threading;
 using UnityEngine;
 
-public class Server : UDPObject
+public class Server : MonoBehaviour
 {
+    private void Start()
+    {
+        
+    }
+
+    private void Update()
+    {
+        
+    }
+
+    /*
     public class Player
     {
         public Player(int _id, EndPoint socket, float _lastPing = 0.0f)
@@ -27,33 +38,12 @@ public class Server : UDPObject
 
     public override void Start()
     {
-        //StartCoroutine(SpawnEnemy());
-        IPEndPoint ipep = new IPEndPoint(IPAddress.Any, port);
-        socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-
-        socket.Bind(ipep);
-
-        ConnectionConfirmed();
-
-        base.Start();
+        WaveManager.instance.StartGame();
     }
 
     public override void Update()
     {
-        base.Update();
-        /*
-        if(Input.GetKeyDown(KeyCode.W) == true)
-        {
-            GameOver();
-        }
-        */
-        for (int i = 0; i < connectedPlayers.Count; ++i)
-        {
-            connectedPlayers[i].lastPing += Time.deltaTime;
-            if (connectedPlayers[i].lastPing >= maxPingAllowed)
-                DisconnectPlayer(connectedPlayers[i].id);
-        }
-        
+             
     }
 
     public void GameOver()
@@ -200,7 +190,6 @@ public class Server : UDPObject
 
                 functionsToRunInMainThread.Add(() =>
                 {
-                    WaveManager.instance.StartGame();
                 });
                 Debug.Log("Game starting");
             }
@@ -333,4 +322,5 @@ public class Server : UDPObject
             }
         }
     }
+    */
 }

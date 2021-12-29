@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : NetworkedObject
+public class Enemy : MonoBehaviour
 {
     [SerializeField]
     private int points = 5;
@@ -15,71 +15,50 @@ public class Enemy : NetworkedObject
 
     void Start()
     {
-        base.Init();
-        networkedObjectType = NetworkedObjectType.ENEMY;
-
         enemyMovement = GetComponent<EnemyMovement>();
 
-        if(udpObject.connectionType == ConnectionType.SERVER)
-        {
-            StartCoroutine(Shoot());
+        StartCoroutine(Shoot());
 
-            Collider collider = GetComponent<Collider>();
-            if(collider != null)
-            {
-                //TODO: Uncomment
-                collider.enabled = false;
-            }
+        Collider collider = GetComponent<Collider>();
+        if (collider != null)
+        {
+            //TODO: Uncomment
+            collider.enabled = false;
         }
+
     }
 
-    public override void Update()
+    public void Update()
     {
         //Move on server
-        if (udpObject.connectionType == ConnectionType.SERVER)
-        {
-            if(enemyMovement != null)
-            {
-                enemyMovement.Move();
-                Server server = udpObject as Server;
 
-                VectorMessage positionMessage = new VectorMessage(MessageType.OBJECT_POSITION, id, transform.position);
-                server.SendMessageToBothPlayers(positionMessage);
-            }
-        }
-        //Synchronize position from client
-        else
+        if (enemyMovement != null)
         {
-            base.Update();
+            enemyMovement.Move();
+
         }
     }
+
 
     public IEnumerator Shoot()
     {
-        while(gameObject.activeSelf)
+        while (gameObject.activeSelf)
         {
-            Server server = udpObject as Server;
-            server.InstantiateToAll(projectile, InstanceMessage.InstanceType.ENEMY_BULLET, transform.position - new Vector3(5.0f, 0.0f, 0.0f), Quaternion.identity);
 
             yield return new WaitForSeconds(1.0f);
         }
     }
 
-    public override void Die()
+    public void Die()
     {
-        base.Die();
-
-        SpawnParticles(destroyParticles);
-
         GameManager.instance.AddScore(points);
         WaveManager.IsWaveDone();
     }
 
-    public override void OnCollisionEnter(Collision collision)
+    public void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Projectile"))
         {
-            base.OnCollisionEnter(collision);
         }
     }
 }

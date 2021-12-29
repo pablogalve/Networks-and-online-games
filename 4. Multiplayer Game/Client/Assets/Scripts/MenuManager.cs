@@ -18,12 +18,12 @@ public class MenuManager : MonoBehaviour
 
     public void TurnConnectUI_ON()
     {
-        connectUI.SetActive(true);
+        //connectUI.SetActive(true);
     }
 
     public void TurnConnectUI_OFF()
     {
-        connectUI.SetActive(false);
+        //connectUI.SetActive(false);
     }
 
 

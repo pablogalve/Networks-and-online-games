@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Photon.Pun;
 
-public class Player : NetworkedObject
+public class Player : MonoBehaviour
 {
-    public GameObject destroyParticles;
+    PhotonView view;
 
-    public bool isPlayerContolled = false;
+    public GameObject destroyParticles;
 
     private int maxLives = 5;
     private int _lives = 5;
@@ -16,12 +17,12 @@ public class Player : NetworkedObject
         set
         {
 
-            if (value > liveDisplays.Count && isPlayerContolled == true)
+            if (value > liveDisplays.Count)
             {
                 for (int i = 0; i < value; i++)
                 {
-                    GameObject temp = Instantiate(livePrefabs, liveHolder.transform);
-                    liveDisplays.Add(temp.GetComponent<Image>());
+                    //GameObject temp = Instantiate(livePrefabs, liveHolder.transform);
+                    //liveDisplays.Add(temp.GetComponent<Image>());
                 }
             }
 
@@ -56,11 +57,8 @@ public class Player : NetworkedObject
 
     Vector2 colliderScreenSize;
 
-    [SerializeField]
-    private Client client;
-
     [Header("UI")]
-    public GameObject liveHolder;
+    //public GameObject liveHolder;
     public List<Image> liveDisplays;
     public GameObject livePrefabs;
 
@@ -69,10 +67,10 @@ public class Player : NetworkedObject
 
     void Start()
     {
-        networkedObjectType = NetworkedObjectType.PLAYER;
-
         lives = 3;
         playerAttack = GetComponent<PlayerAttack>();
+
+        view = GetComponent<PhotonView>();
 
         if (_collider != null)
         {
@@ -81,11 +79,9 @@ public class Player : NetworkedObject
         }
     }
 
-    public override void Update()
+    public void Update()
     {
-        base.Update();
-
-        if(isPlayerContolled)
+        if(view.IsMine)
         {
             float horizontal = Input.GetAxis("Horizontal");
             float vertical = Input.GetAxis("Vertical");
@@ -103,26 +99,6 @@ public class Player : NetworkedObject
                 //Debug.Log(Camera.main.rect);
                 transform.position = new Vector3(Camera.main.ViewportToWorldPoint(new Vector3(screenFinalPosX, 0.0f, 0.0f)).x, Camera.main.ViewportToWorldPoint(new Vector3(0.0f, screenFinalPosY, 0.0f)).y, 0.0f);
             }
-        }
-    }
-
-    public void ActivatePlayer()
-    {
-        this.enabled = true;
-        GetComponent<PlayerAttack>().enabled = true;
-        _collider.enabled = true;
-        isPlayerContolled = true;
-
-        StartCoroutine(SendCurrentPosition());
-    }
-
-    IEnumerator SendCurrentPosition()
-    {
-        while (gameObject.activeSelf)
-        {
-            VectorMessage positionMessage = new VectorMessage(MessageType.PLAYER_POSITION, this.id, transform.position);
-            client.Send(positionMessage);
-            yield return new WaitForSeconds(client.secondsBetweenPlayerPositionUpdates);
         }
     }
 
@@ -146,32 +122,21 @@ public class Player : NetworkedObject
     {
         lives = Mathf.Clamp(lives - amountToDecrease, 0, lives);
 
-        if (lives <= 0 && isPlayerContolled)
+        if (lives <= 0)
         {
             Die();
         }
     }
 
-    public override void Die()
+    public void Die()
     {
-        base.Die();
-
-        SpawnParticles(destroyParticles);
-
-        //TODO: Add condition to check if is player
-        if (isPlayerContolled)
-        {
-            Client client = udpObject as Client;
-            IdMessage deathMessage = new IdMessage(MessageType.PLAYER_DEATH, id);
-            client.SendMessage(deathMessage);
-        }
+     
     }
 
-    public override void OnCollisionEnter(Collision collision)
+    public  void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Projectile") || collision.gameObject.CompareTag("PowerUp"))
         {
-            base.OnCollisionEnter(collision);
         }
     }
 }

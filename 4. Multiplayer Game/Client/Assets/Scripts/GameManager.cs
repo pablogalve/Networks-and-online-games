@@ -21,19 +21,4 @@ public class GameManager : MonoBehaviour
         score += scoreToAdd;
         Debug.Log(score);
     }
-
-    public void OnObjectCollided(GameObject colliderObject, GameObject collidedObject)
-    {
-        if (udpObject.connectionType == ConnectionType.CLIENT)
-        {
-            Client client = udpObject as Client;
-
-            NetworkedObject networkedCollider = colliderObject.GetComponent<NetworkedObject>();
-            NetworkedObject networkedCollided = collidedObject.GetComponent<NetworkedObject>();
-
-
-            CollisionMessage collisionMessage = new CollisionMessage(networkedCollider.id, networkedCollided.id);
-            client.Send(collisionMessage);
-        }
-    }
 }

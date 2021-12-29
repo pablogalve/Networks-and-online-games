@@ -32,18 +32,9 @@ public class PlayerAttack : MonoBehaviour
             shotsTimer -= Time.deltaTime;
         }
 
-        if (Input.GetKeyDown(KeyCode.Space) && shotsTimer <= 0.0f && player.isPlayerContolled)
+        if (Input.GetKeyDown(KeyCode.Space) && shotsTimer <= 0.0f)
         {
-            Projectile projectileInstance = Instantiate(projectile, gameObject.transform.position + new Vector3(1.0f, 0.0f, 0.0f), Quaternion.identity).GetComponent<Projectile>();
-            projectileInstance.udpObject = player.udpObject;
-
-            shotsTimer = timeBetweenShots;
-            
-            if(client != null)
-            {
-                InstanceMessage projectileInstanceMessage = new InstanceMessage(MessageType.INSTANTIATE, projectileInstance.id, InstanceMessage.InstanceType.PLAYER_BULLET, projectileInstance.transform.position + new Vector3(0.0f, -10.0f, 0.0f), projectileInstance.speed);
-                client.Send(projectileInstanceMessage);
-            }
+           
         }
     }
 }

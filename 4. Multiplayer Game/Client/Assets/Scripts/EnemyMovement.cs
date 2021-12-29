@@ -15,10 +15,6 @@ public class EnemyMovement : MonoBehaviour
     private float currRotation = 0.0f;
     private float maxRotation;
 
-    //Randomness
-    private float waitBeforeStart = 0.0f;
-    private float waitBeforeStart_timer = 0.0f;
-
     public void Start()
     {
         initialPos = gameObject.transform.localPosition;
@@ -80,6 +76,5 @@ public class EnemyMovement : MonoBehaviour
 
     private void SetRandomInitialValues()
     {
-        waitBeforeStart = GetRandomValue(0.0f, maxHeight / verticalSpeed);
     }
 }

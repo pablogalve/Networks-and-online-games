@@ -110,7 +110,7 @@ public class WaveManager : MonoBehaviour
         for (int i = 0; i < currentWave.Length; ++i)
         {
             //GameObject enemyInstance = Instantiate(enemy, currentWave[i].transform.position, Quaternion.identity);
-            server.InstantiateToAll(enemy, InstanceMessage.InstanceType.ENEMY, currentWave[i].transform.position, Quaternion.Euler(new Vector3(0.0f, -0.0f, 0.0f)));
+            //server.InstantiateToAll(enemy, InstanceMessage.InstanceType.ENEMY, currentWave[i].transform.position, Quaternion.Euler(new Vector3(0.0f, -0.0f, 0.0f)));
             current_enemies++;
         }
     }
@@ -125,7 +125,7 @@ public class WaveManager : MonoBehaviour
 
             if(waveCount >= 8)
             {
-                WaveManager.instance.server.GameOver();
+               // WaveManager.instance.server.GameOver();
             }
         }
     }

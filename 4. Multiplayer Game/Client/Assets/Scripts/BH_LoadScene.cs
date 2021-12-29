@@ -12,7 +12,6 @@ public static class StaticVariables
 
     public static void CleanUp()
     {
-        //StaticVariables.userName = string.Empty;
         StaticVariables.userPointIP = null;
     }
 }
