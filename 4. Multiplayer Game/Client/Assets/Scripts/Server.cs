@@ -6,12 +6,23 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using UnityEngine;
+using Photon.Pun;
 
 public class Server : MonoBehaviour
 {
+    public GameObject waveManagerPrefab;
+
+    public void Init()
+    {
+        GameObject waveManagerObject = PhotonNetwork.Instantiate(waveManagerPrefab.name, transform.position, transform.rotation);
+        
+        WaveManager waveManager = waveManagerObject.GetComponent<WaveManager>();
+        waveManager.StartGame();
+    }
+
     private void Start()
     {
-        
+    
     }
 
     private void Update()
@@ -38,7 +49,7 @@ public class Server : MonoBehaviour
 
     public override void Start()
     {
-        WaveManager.instance.StartGame();
+
     }
 
     public override void Update()

@@ -1,11 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class Enemy : MonoBehaviour
 {
     [SerializeField]
     private int points = 5;
+
+    public float timeBetweenShots = 1.0f;
+
+    public GameObject shootPoint;
 
     public GameObject destroyParticles;
 
@@ -44,8 +49,8 @@ public class Enemy : MonoBehaviour
     {
         while (gameObject.activeSelf)
         {
-
-            yield return new WaitForSeconds(1.0f);
+            PhotonNetwork.Instantiate(projectile.name, shootPoint.transform.position, Quaternion.identity);
+            yield return new WaitForSeconds(timeBetweenShots);
         }
     }
 

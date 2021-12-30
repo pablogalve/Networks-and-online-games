@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class Projectile : MonoBehaviour
 {
@@ -9,7 +10,13 @@ public class Projectile : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Destroy(gameObject, 5.0f);
+        StartCoroutine(DelayedDestroy(5.0f));
+    }
+
+    IEnumerator DelayedDestroy(float time)
+    {
+        yield return new WaitForSeconds(time);
+        PhotonNetwork.Destroy(gameObject);
     }
 
     // Update is called once per frame
@@ -22,7 +29,7 @@ public class Projectile : MonoBehaviour
     {
         if(collision.gameObject.CompareTag("Destroy"))
         {
-            Destroy(gameObject);
+            PhotonNetwork.Destroy(gameObject);
         }
     }
 }

@@ -75,7 +75,7 @@ public class Player : MonoBehaviour
         if (_collider != null)
         {
             colliderScreenSize = (Camera.main.WorldToViewportPoint(_collider.bounds.center + _collider.size) - Camera.main.WorldToViewportPoint(_collider.center));
-            Debug.Log(colliderScreenSize.x.ToString());
+            //Debug.Log(colliderScreenSize.x.ToString());
         }
     }
 
