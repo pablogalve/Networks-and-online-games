@@ -19,7 +19,6 @@ public class EnemyMovement : MonoBehaviour
     {
         initialPos = gameObject.transform.localPosition;
         SetVehicleProperties();
-        SetRandomInitialValues();
     }
 
     public void Move()
@@ -35,13 +34,6 @@ public class EnemyMovement : MonoBehaviour
     }
 
     public float ParametricBlend(float t) => ((t * t) / (2.0f * ((t * t) - t) + 1.0f));
-
-    private float GetRandomValue(float min, float max)
-    {
-        System.Random random = new System.Random();
-        double val = (random.NextDouble() * (max - min) + min);
-        return (float)val;
-    }
 
     private void VehicleRotation()
     {
@@ -72,9 +64,5 @@ public class EnemyMovement : MonoBehaviour
         maxHeight = 5.0f;
         verticalSpeed = 0.5f;
         maxRotation = 0.05f;                
-    }
-
-    private void SetRandomInitialValues()
-    {
     }
 }

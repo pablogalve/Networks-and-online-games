@@ -133,7 +133,7 @@ MonoBehaviour:
   points: 5
   timeBetweenShots: 1
   shootPoint: {fileID: 3097008248570012651}
-  destroyParticles: {fileID: 6510125619236422602, guid: 6d7b01bdef4c9d44596d7108af762e72, type: 3}
+  destroyParticles: {fileID: 421911138779928910, guid: d6a26ca5249d42a4a87a9eba66f7518d, type: 3}
   projectile: {fileID: 4674900856818266025, guid: c48a9cef9349c0e4d815b25526e52e32, type: 3}
 --- !u!114 &-4942499044291764658
 MonoBehaviour:
@@ -194,7 +194,7 @@ MonoBehaviour:
     ExtrapolateIncludingRoundTripTime: 1
     ExtrapolateNumberOfStoredPositions: 1
   m_RotationModel:
-    SynchronizeEnabled: 0
+    SynchronizeEnabled: 1
     InterpolateOption: 1
     InterpolateRotateTowardsSpeed: 180
     InterpolateLerpSpeed: 5

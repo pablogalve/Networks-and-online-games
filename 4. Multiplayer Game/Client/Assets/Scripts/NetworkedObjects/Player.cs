@@ -137,6 +137,7 @@ public class Player : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Projectile") || collision.gameObject.CompareTag("PowerUp"))
         {
+            Die();
         }
     }
 }

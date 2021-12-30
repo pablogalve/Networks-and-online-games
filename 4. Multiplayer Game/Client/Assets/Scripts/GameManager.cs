@@ -24,6 +24,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        //Debug.Log("Ping: " + PhotonNetwork.GetPing().ToString());
+    }
+
     public void AddScore(int scoreToAdd)
     {
         score += scoreToAdd;

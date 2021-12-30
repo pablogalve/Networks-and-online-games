@@ -9,7 +9,6 @@ public class Enemy : MonoBehaviour
     private int points = 5;
 
     public float timeBetweenShots = 1.0f;
-
     public GameObject shootPoint;
 
     public GameObject destroyParticles;
@@ -23,24 +22,14 @@ public class Enemy : MonoBehaviour
         enemyMovement = GetComponent<EnemyMovement>();
 
         StartCoroutine(Shoot());
-
-        Collider collider = GetComponent<Collider>();
-        if (collider != null)
-        {
-            //TODO: Uncomment
-            collider.enabled = false;
-        }
-
     }
 
     public void Update()
     {
         //Move on server
-
         if (enemyMovement != null)
         {
             enemyMovement.Move();
-
         }
     }
 
@@ -58,12 +47,17 @@ public class Enemy : MonoBehaviour
     {
         GameManager.instance.AddScore(points);
         WaveManager.IsWaveDone();
+
+        PhotonNetwork.Instantiate(destroyParticles.name, transform.position, Quaternion.identity);
+
+        PhotonNetwork.Destroy(gameObject);
     }
 
     public void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Projectile"))
         {
+            Die();
         }
     }
 }
