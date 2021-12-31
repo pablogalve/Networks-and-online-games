@@ -5988,6 +5988,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lives: 5
+  timerBetweenAttacks: 5
+  timerBetweenShots: 1
+  totalShotsPerAttack: 5
 --- !u!1 &8014920207100868864
 GameObject:
   m_ObjectHideFlags: 0

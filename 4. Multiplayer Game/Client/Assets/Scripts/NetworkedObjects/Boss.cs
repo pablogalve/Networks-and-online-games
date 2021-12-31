@@ -6,6 +6,10 @@ public class Boss : MonoBehaviour
 {
     public int lives = 5;
 
+    public float timerBetweenAttacks = 5.0f;
+    public float timerBetweenShots = 1.0f;
+    public int totalShotsPerAttack = 5;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -25,34 +29,34 @@ public class Boss : MonoBehaviour
     IEnumerator AttackCycle()
     {
         // Attack 1
-        for(int i = 0; i < 5; ++i)
+        for(int i = 0; i < totalShotsPerAttack; ++i)
         {
             Attack1();
-            yield return new WaitForSeconds(1.0f);
+            yield return new WaitForSeconds(timerBetweenShots);
         }
 
         // Wait between attacks
-        yield return new WaitForSeconds(5.0f);
+        yield return new WaitForSeconds(timerBetweenAttacks);
 
         // Attack 2
-        for (int i = 0; i < 5; ++i)
+        for (int i = 0; i < totalShotsPerAttack; ++i)
         {
             Attack2();
-            yield return new WaitForSeconds(1.0f);
+            yield return new WaitForSeconds(timerBetweenShots);
         }
 
         // Wait between attacks
-        yield return new WaitForSeconds(5.0f);
+        yield return new WaitForSeconds(timerBetweenAttacks);
 
         // Attack 3
-        for (int i = 0; i < 5; ++i)
+        for (int i = 0; i < totalShotsPerAttack; ++i)
         {
             Attack3();
-            yield return new WaitForSeconds(1.0f);
+            yield return new WaitForSeconds(timerBetweenShots);
         }
 
         // Wait between attacks
-        yield return new WaitForSeconds(5.0f);
+        yield return new WaitForSeconds(timerBetweenAttacks);
 
         // Start the attack cycle again recursively
         StopAllCoroutines();
@@ -79,6 +83,6 @@ public class Boss : MonoBehaviour
 
     void Die()
     {
-
+        Debug.Log("Enemy died");
     }
 }
