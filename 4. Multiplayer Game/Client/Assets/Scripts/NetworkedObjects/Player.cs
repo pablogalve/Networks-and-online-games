@@ -118,6 +118,14 @@ public class Player : MonoBehaviour
         Debug.Log("Current lives amount: " + lives.ToString());
     }
 
+    public void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Projectile"))
+        {
+            DecreaseLives(1);
+        }
+    }
+
     public void DecreaseLives(int amountToDecrease)
     {
         lives = Mathf.Clamp(lives - amountToDecrease, 0, lives);
@@ -130,14 +138,10 @@ public class Player : MonoBehaviour
 
     public void Die()
     {
-     
+        PhotonNetwork.Instantiate(destroyParticles.name, transform.position, Quaternion.identity);
+
+        //Peta al quedarse sin client
+        PhotonNetwork.Destroy(gameObject);
     }
 
-    public  void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Projectile") || collision.gameObject.CompareTag("PowerUp"))
-        {
-            Die();
-        }
-    }
 }
