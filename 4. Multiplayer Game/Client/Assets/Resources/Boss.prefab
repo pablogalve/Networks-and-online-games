@@ -658,7 +658,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5844833462591827793}
   m_Layer: 0
-  m_Name: ShootPoint (1)
+  m_Name: ShootPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -672,7 +672,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4238697996391832275}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7.03, y: 0.11, z: 12.04}
+  m_LocalPosition: {x: -7.75, y: 0.11, z: 12.04}
   m_LocalScale: {x: 0.344551, y: 0.344551, z: 0.344551}
   m_Children: []
   m_Father: {fileID: 2895809414460952073}
@@ -5991,6 +5991,10 @@ MonoBehaviour:
   timerBetweenAttacks: 5
   timerBetweenShots: 1
   totalShotsPerAttack: 5
+  destroyParticles: {fileID: 421911138779928910, guid: d6a26ca5249d42a4a87a9eba66f7518d, type: 3}
+  points: 25
+  shootPoint: {fileID: 4238697996391832275}
+  projectile: {fileID: 4674900856818266025, guid: c48a9cef9349c0e4d815b25526e52e32, type: 3}
 --- !u!1 &8014920207100868864
 GameObject:
   m_ObjectHideFlags: 0

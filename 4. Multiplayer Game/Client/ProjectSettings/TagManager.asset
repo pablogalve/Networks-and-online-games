@@ -8,6 +8,7 @@ TagManager:
   - Projectile
   - PowerUp
   - Destroy
+  - PlayerProjectile
   layers:
   - Default
   - TransparentFX
