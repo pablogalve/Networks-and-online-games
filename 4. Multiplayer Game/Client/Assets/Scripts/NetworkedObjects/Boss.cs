@@ -96,7 +96,7 @@ public class Boss : MonoBehaviour
     void Die()
     {
         GameManager.instance.AddScore(points);
-        WaveManager.IsWaveDone();
+        WaveManager.instance.IsWaveDone();
 
         PhotonNetwork.Instantiate(destroyParticles.name, transform.position, Quaternion.identity);
 

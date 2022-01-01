@@ -7,39 +7,32 @@ public class WaveManager : MonoBehaviour
 {
     public static WaveManager instance;
 
-    public GameObject enemy;
+    public GameObject enemyPrefab;
+    public GameObject bossPrefab;
 
-    private GameObject[] currentWave;
+    private int currentWave = 0;
+
+    [System.Serializable]
+    public class ListWrapper
+    {
+        public List<GameObject> myList;
+
+        public int Count()
+        {
+            return myList.Count;
+        }
+
+        public GameObject this[int index]
+        {
+            get => myList[index];
+            set => myList[index] = value;
+        }
+    }
+
 
     [SerializeField]
-    private GameObject[] waveEnemies_1;
+    public List<ListWrapper> waves;
 
-    [SerializeField]
-    private GameObject[] waveEnemies_2;
-
-    [SerializeField]
-    private GameObject[] waveEnemies_3;
-
-    [SerializeField]
-    private GameObject[] waveEnemies_4;
-
-    [SerializeField]
-    private GameObject[] waveEnemies_5;
-
-    [SerializeField]
-    private GameObject[] waveEnemies_6;
-
-    [SerializeField]
-    private GameObject[] waveEnemies_7;
-
-    [SerializeField]
-    private GameObject[] waveEnemies_8;
-
-    [SerializeField]
-    private GameObject[] waveEnemies_9;
-
-
-    static int waveCount = 0;
     int oldWaveCount = 0;
     static int current_enemies = 0;
 
@@ -52,81 +45,38 @@ public class WaveManager : MonoBehaviour
 
     public void StartGame()
     {
-        if(waveCount == 0)
-        {
-            SpawnWave(waveCount);
-        }
+        //SpawnBoss();
+
+        SpawnWave(currentWave);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if(waveCount!=oldWaveCount)
-        {
-            SpawnWave(waveCount);
-            oldWaveCount = waveCount;
 
-        }
-    }
-
-   void SpawnWave(int wave_num)
+    void SpawnWave(int wave_num)
     {
         Debug.Log("Wave:" + wave_num);
 
-        #region pickWave
-        switch(wave_num)
+        for (int i = 0; i < waves[currentWave].Count(); ++i)
         {
-            case 0:
-                currentWave = waveEnemies_1;
-                break;
-            case 1:
-                currentWave = waveEnemies_2;
-                break;
-            case 2:
-                currentWave = waveEnemies_3;
-                break;
-            case 3:
-                currentWave = waveEnemies_4;
-                break;
-            case 4:
-                currentWave = waveEnemies_5;
-                break;
-            case 5:
-                currentWave = waveEnemies_6;
-                break;
-            case 6:
-                currentWave = waveEnemies_7;
-                break;
-            case 7:
-                currentWave = waveEnemies_8;
-                break;
-            case 8:
-                currentWave = waveEnemies_9;
-                break;
-        }
-        #endregion pickWave
-
-        for (int i = 0; i < currentWave.Length; ++i)
-        {
-            PhotonNetwork.Instantiate(enemy.name, currentWave[i].transform.position, Quaternion.identity);
-
-            //GameObject enemyInstance = Instantiate(enemy, currentWave[i].transform.position, Quaternion.identity);
-            //server.InstantiateToAll(enemy, InstanceMessage.InstanceType.ENEMY, currentWave[i].transform.position, Quaternion.Euler(new Vector3(0.0f, -0.0f, 0.0f)));
+            PhotonNetwork.Instantiate(enemyPrefab.name, waves[currentWave][i].transform.position, Quaternion.identity);
             current_enemies++;
         }
     }
 
-    public static void IsWaveDone()
+    void SpawnBoss()
+    {
+        Vector3 startPosition = new Vector3(26.79f, -0.6f, -35f);
+        PhotonNetwork.Instantiate(bossPrefab.name, startPosition, Quaternion.identity);
+    }
+
+    public void IsWaveDone()
     {
         current_enemies--;
-        if(current_enemies==0)
+        if (current_enemies == 0)
         {
-            waveCount++;
-            current_enemies = 0;
-
-            if(waveCount >= 8)
+            currentWave++;
+            if (currentWave > waves.Count)
             {
-               //WaveManager.instance.server.GameOver();
+                SpawnBoss();
             }
         }
     }

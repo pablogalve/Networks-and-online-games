@@ -7,12 +7,13 @@ using System.Text;
 using System.Threading;
 using UnityEngine;
 using Photon.Pun;
+using Photon.Realtime;
 
-public class Server : MonoBehaviour
+public class Server : MonoBehaviourPunCallbacks
 {
     public GameObject waveManagerPrefab;
 
-    public void Init()
+    public void StartGame()
     {
         GameObject waveManagerObject = PhotonNetwork.Instantiate(waveManagerPrefab.name, transform.position, transform.rotation);
         
@@ -20,14 +21,14 @@ public class Server : MonoBehaviour
         waveManager.StartGame();
     }
 
-    private void Start()
+    public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
     {
-    
-    }
+        base.OnPlayerEnteredRoom(newPlayer);
 
-    private void Update()
-    {
-        
+        if(PhotonNetwork.CurrentRoom.PlayerCount == 3)
+        {
+            StartGame();    
+        }
     }
 
     /*
