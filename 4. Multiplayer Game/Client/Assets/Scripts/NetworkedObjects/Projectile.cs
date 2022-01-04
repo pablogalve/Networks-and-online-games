@@ -6,17 +6,22 @@ using Photon.Pun;
 public class Projectile : MonoBehaviour
 {
     public float speed = 5.0f;
+    PhotonView view;
 
     // Start is called before the first frame update
     void Start()
     {
+        view = GetComponent<PhotonView>();
         StartCoroutine(DelayedDestroy(5.0f));
     }
 
     IEnumerator DelayedDestroy(float time)
     {
-        yield return new WaitForSeconds(time);
-        PhotonNetwork.Destroy(gameObject);
+        if (view.IsMine)
+        {
+            yield return new WaitForSeconds(time);
+            PhotonNetwork.Destroy(gameObject);
+        }
     }
 
     // Update is called once per frame
@@ -27,7 +32,13 @@ public class Projectile : MonoBehaviour
 
     public void OnCollisionEnter(Collision collision)
     {
-        PhotonNetwork.Destroy(gameObject);
+        Debug.Log("Projectile collision with: " + collision.gameObject.tag);
+
+        if (view != null && view.IsMine && (collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Enemy")))
+        {
+            StartCoroutine(DelayedDestroy(0.1f));
+            //PhotonNetwork.Destroy(gameObject);
+        }
     }
 
 }

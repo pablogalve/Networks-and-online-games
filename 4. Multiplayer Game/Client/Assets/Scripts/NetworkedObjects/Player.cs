@@ -8,6 +8,8 @@ public class Player : MonoBehaviour
 {
     PhotonView view;
 
+    private Vector3 startPosition;
+
     public GameObject destroyParticles;
 
     private int maxLives = 5;
@@ -67,6 +69,8 @@ public class Player : MonoBehaviour
 
     void Start()
     {
+        startPosition = transform.position;
+
         lives = 3;
         playerAttack = GetComponent<PlayerAttack>();
 
@@ -81,7 +85,7 @@ public class Player : MonoBehaviour
 
     public void Update()
     {
-        if(view.IsMine)
+        if (view.IsMine)
         {
             float horizontal = Input.GetAxis("Horizontal");
             float vertical = Input.GetAxis("Vertical");
@@ -138,10 +142,12 @@ public class Player : MonoBehaviour
 
     public void Die()
     {
-        PhotonNetwork.Instantiate(destroyParticles.name, transform.position, Quaternion.identity);
-
-        //Peta al quedarse sin client
-        PhotonNetwork.Destroy(gameObject);
+        if (view != null && view.IsMine)
+        {
+            PhotonNetwork.Instantiate(destroyParticles.name, transform.position, Quaternion.identity);
+            transform.position = startPosition;
+            //PhotonNetwork.Destroy(gameObject);
+        }
     }
 
 }

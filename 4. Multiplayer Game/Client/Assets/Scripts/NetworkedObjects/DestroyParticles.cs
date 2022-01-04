@@ -5,7 +5,7 @@ using Photon.Pun;
 
 public class DestroyParticles : MonoBehaviour
 {
-    private new ParticleSystem particleSystem;
+    private ParticleSystem particleSystem;
     public float destroyTime = 4.5f;
 
     void Start()

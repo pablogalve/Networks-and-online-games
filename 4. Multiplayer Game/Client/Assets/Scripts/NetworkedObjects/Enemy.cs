@@ -17,11 +17,14 @@ public class Enemy : MonoBehaviour
 
     public GameObject projectile;
 
+    PhotonView view;
+
     void Start()
     {
+        view = GetComponent<PhotonView>();
         enemyMovement = GetComponent<EnemyMovement>();
 
-        StartCoroutine(Shoot());
+        //StartCoroutine(Shoot());
     }
 
     public void Update()
@@ -45,17 +48,20 @@ public class Enemy : MonoBehaviour
 
     public void Die()
     {
-        GameManager.instance.AddScore(points);
-        WaveManager.instance.IsWaveDone();
+        if (view != null && view.IsMine)
+        {
+            GameManager.instance.AddScore(points);
+            WaveManager.instance.IsWaveDone();
 
-        PhotonNetwork.Instantiate(destroyParticles.name, transform.position, Quaternion.identity);
-
-        PhotonNetwork.Destroy(gameObject);
+            PhotonNetwork.Instantiate(destroyParticles.name, transform.position, Quaternion.identity);
+            PhotonNetwork.Destroy(gameObject);
+        }
     }
 
     public void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Projectile"))
+        Debug.Log("Enemy collision");
+        if (collision.gameObject.CompareTag("PlayerProjectile"))
         {
             Die();
         }

@@ -12,6 +12,8 @@ using Photon.Realtime;
 public class Server : MonoBehaviourPunCallbacks
 {
     public GameObject waveManagerPrefab;
+    public int neededClients = 1;
+
 
     public void StartGame()
     {
@@ -25,8 +27,12 @@ public class Server : MonoBehaviourPunCallbacks
     {
         base.OnPlayerEnteredRoom(newPlayer);
 
-        if(PhotonNetwork.CurrentRoom.PlayerCount == 3)
+        Debug.Log("Player entered room");
+
+        //TODO: Change to 3 for 2 players needed
+        if(PhotonNetwork.CurrentRoom.PlayerCount == neededClients + 1)
         {
+            Debug.Log("Starting game");
             StartGame();    
         }
     }

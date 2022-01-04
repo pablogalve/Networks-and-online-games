@@ -33,7 +33,6 @@ public class WaveManager : MonoBehaviour
     [SerializeField]
     public List<ListWrapper> waves;
 
-    int oldWaveCount = 0;
     static int current_enemies = 0;
 
     // Start is called before the first frame update
