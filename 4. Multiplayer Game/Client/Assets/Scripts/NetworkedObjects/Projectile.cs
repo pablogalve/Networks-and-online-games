@@ -13,7 +13,7 @@ public class Projectile : MonoBehaviour
     }
     public ProjectileDirection projectileDirection;
     public float speed = 5.0f;
-    PhotonView view;
+    private PhotonView view;
 
     // Start is called before the first frame update
     void Start()
@@ -61,7 +61,7 @@ public class Projectile : MonoBehaviour
 
     public void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("Projectile collision with: " + collision.gameObject.tag);
+        //Debug.Log("Projectile collision with: " + collision.gameObject.tag);
 
         if (view != null && view.IsMine && (collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Enemy")))
         {

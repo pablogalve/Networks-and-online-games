@@ -10,6 +10,7 @@ public class PlayerAttack : MonoBehaviour
     public float defaultTimeBetweenShots;
 
     private Player player;
+   
 
     [SerializeField]
     private GameObject shootPoint;
@@ -25,8 +26,8 @@ public class PlayerAttack : MonoBehaviour
     void Start()
     {
         timeBetweenShots = defaultTimeBetweenShots;
+        
         player = GetComponent<Player>();
-
         view = GetComponent<PhotonView>();
     }
 

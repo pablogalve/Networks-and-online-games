@@ -13,17 +13,16 @@ public class Enemy : MonoBehaviour
 
     public GameObject destroyParticles;
 
-    EnemyMovement enemyMovement;
+    private EnemyMovement enemyMovement;
 
     public GameObject projectile;
 
-    PhotonView view;
+    private PhotonView view;
 
     void Start()
     {
         view = GetComponent<PhotonView>();
         enemyMovement = GetComponent<EnemyMovement>();
-
         //StartCoroutine(Shoot());
     }
 
@@ -48,6 +47,7 @@ public class Enemy : MonoBehaviour
             {
                 projScript.SetDirection(Projectile.ProjectileDirection.LEFT_STRAIGHT);
             }
+
             yield return new WaitForSeconds(timeBetweenShots);
         }
     }

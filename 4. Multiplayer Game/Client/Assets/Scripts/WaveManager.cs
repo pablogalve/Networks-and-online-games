@@ -44,15 +44,15 @@ public class WaveManager : MonoBehaviour
 
     public void StartGame()
     {
-        //SpawnBoss();
-
-        SpawnWave(currentWave);
+        StartCoroutine(SpawnWave(currentWave, 0.0f));
     }
 
 
-    void SpawnWave(int wave_num)
+    IEnumerator SpawnWave(int wave_num, float delayBeforeWave)
     {
         Debug.Log("Wave:" + wave_num);
+
+        yield return new WaitForSeconds(delayBeforeWave);
 
         for (int i = 0; i < waves[currentWave].Count(); ++i)
         {
@@ -70,10 +70,17 @@ public class WaveManager : MonoBehaviour
     public void IsWaveDone()
     {
         current_enemies--;
+
+        Debug.Log("Current enemies: " + current_enemies.ToString());
+
         if (current_enemies == 0)
         {
             currentWave++;
-            if (currentWave > waves.Count)
+            if (currentWave < waves.Count)
+            {
+                StartCoroutine(SpawnWave(currentWave, 2.0f));
+            }
+            else
             {
                 SpawnBoss();
             }

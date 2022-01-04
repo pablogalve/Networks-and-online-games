@@ -71,9 +71,8 @@ public class Player : MonoBehaviour
     {
         startPosition = transform.position;
 
-        playerAttack = GetComponent<PlayerAttack>();
-
         view = GetComponent<PhotonView>();
+        playerAttack = GetComponent<PlayerAttack>();
 
         if (_collider != null)
         {
