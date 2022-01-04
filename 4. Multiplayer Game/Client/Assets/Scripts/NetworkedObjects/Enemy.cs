@@ -19,6 +19,8 @@ public class Enemy : MonoBehaviour
 
     private PhotonView view;
 
+    public List<GameObject> powerUps;
+
     void Start()
     {
         view = GetComponent<PhotonView>();
@@ -60,6 +62,15 @@ public class Enemy : MonoBehaviour
             WaveManager.instance.IsWaveDone();
 
             PhotonNetwork.Instantiate(destroyParticles.name, transform.position, Quaternion.identity);
+
+            //50% probabilities
+            int random = Random.Range(0, 2);
+            if(random == 0)
+            {
+                int randomPowerUp = Random.Range(0, powerUps.Count);
+                PhotonNetwork.Instantiate(powerUps[randomPowerUp].name, transform.position, Quaternion.identity);
+            }
+
             PhotonNetwork.Destroy(gameObject);
         }
     }
