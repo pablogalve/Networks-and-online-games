@@ -130,6 +130,7 @@ MonoBehaviour:
   movementSpeed: 20
   movementAnimator: {fileID: 6212047090154033354}
   _collider: {fileID: 265504785059399625}
+  liveHolder: {fileID: 0}
   liveDisplays: []
   livePrefabs: {fileID: 2129246308151673451, guid: fd06cd23c237d9b4fb7937660f95a952, type: 3}
   liveActive: {r: 0.86411566, g: 0.9716981, b: 0.13200422, a: 1}
@@ -159,7 +160,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 265504785059399630}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 3.7630465, y: 1.1585238, z: 4.862911}

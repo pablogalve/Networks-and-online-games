@@ -19,12 +19,12 @@ public class Player : MonoBehaviour
         set
         {
 
-            if (value > liveDisplays.Count)
+            if (value > liveDisplays.Count && liveHolder != null)
             {
                 for (int i = 0; i < value; i++)
                 {
-                    //GameObject temp = Instantiate(livePrefabs, liveHolder.transform);
-                    //liveDisplays.Add(temp.GetComponent<Image>());
+                    GameObject temp = Instantiate(livePrefabs, liveHolder.transform);
+                    liveDisplays.Add(temp.GetComponent<Image>());
                 }
             }
 
@@ -60,7 +60,7 @@ public class Player : MonoBehaviour
     Vector2 colliderScreenSize;
 
     [Header("UI")]
-    //public GameObject liveHolder;
+    public GameObject liveHolder;
     public List<Image> liveDisplays;
     public GameObject livePrefabs;
 
@@ -71,7 +71,6 @@ public class Player : MonoBehaviour
     {
         startPosition = transform.position;
 
-        lives = 3;
         playerAttack = GetComponent<PlayerAttack>();
 
         view = GetComponent<PhotonView>();
@@ -81,6 +80,13 @@ public class Player : MonoBehaviour
             colliderScreenSize = (Camera.main.WorldToViewportPoint(_collider.bounds.center + _collider.size) - Camera.main.WorldToViewportPoint(_collider.center));
             //Debug.Log(colliderScreenSize.x.ToString());
         }
+
+        if (view.IsMine)
+        {
+           liveHolder = MenuManager.instance.liveHolder;
+           MenuManager.instance.TurnConnectUI_ON();
+        }
+        lives = 3;
     }
 
     public void Update()
