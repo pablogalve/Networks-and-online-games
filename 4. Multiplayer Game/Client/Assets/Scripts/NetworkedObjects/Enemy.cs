@@ -41,7 +41,13 @@ public class Enemy : MonoBehaviour
     {
         while (gameObject.activeSelf)
         {
-            PhotonNetwork.Instantiate(projectile.name, shootPoint.transform.position, Quaternion.identity);
+            GameObject GO = PhotonNetwork.Instantiate(projectile.name, shootPoint.transform.position, Quaternion.identity); // Create projectile
+            Projectile projScript = GO.GetComponent<Projectile>(); // Access script of projectile and set direction
+            // Set projectile direction
+            if (projScript != null)
+            {
+                projScript.SetDirection(Projectile.ProjectileDirection.LEFT_STRAIGHT);
+            }
             yield return new WaitForSeconds(timeBetweenShots);
         }
     }

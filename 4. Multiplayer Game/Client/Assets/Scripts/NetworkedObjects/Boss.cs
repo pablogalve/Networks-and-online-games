@@ -19,9 +19,12 @@ public class Boss : MonoBehaviour
     public GameObject shootPoint;
     public GameObject projectile;
 
+    PhotonView view;
+
     // Start is called before the first frame update
     void Start()
     {
+        view = GetComponent<PhotonView>();
         StartCoroutine("AttackCycle");
     }
 
@@ -73,23 +76,51 @@ public class Boss : MonoBehaviour
     }
 
     void Attack1()
-    {
-        //PhotonNetwork.Instantiate(projectile.name, shootPoint.transform.position, Quaternion.Euler(0, 0, -15.0f));
-        PhotonNetwork.Instantiate(projectile.name, shootPoint.transform.position, Quaternion.identity);
-        //PhotonNetwork.Instantiate(projectile.name, shootPoint.transform.position, Quaternion.Euler(0, 0, 15.0f));
-        Debug.Log("Attack 1");
-        // Shoot
+    {        
+        /*The idea of Attack1 is that the boss will shoot bursts of 3 projectiles each
+        Direction of the projectiles is the following
+        1st one: Left and diagonally up
+        2nd one: Left and straight
+        3rd one: Left and diagonally down
+         */
+
+        // Create projectiles
+        if (view.IsMine) {
+            GameObject projectile1 = PhotonNetwork.Instantiate(projectile.name, shootPoint.transform.position + new Vector3(0.0f, 1.0f, 0.0f), Quaternion.Euler(0, 0, -15.0f));
+            GameObject projectile2 = PhotonNetwork.Instantiate(projectile.name, shootPoint.transform.position, Quaternion.identity);
+            GameObject projectile3 = PhotonNetwork.Instantiate(projectile.name, shootPoint.transform.position + new Vector3(0.0f, -1.0f, 0.0f), Quaternion.Euler(0, 0, 15.0f));
+
+            // Access script of projectile and set direction
+            Projectile proj1Script = projectile1.GetComponent<Projectile>();
+            Projectile proj2Script = projectile2.GetComponent<Projectile>();
+            Projectile proj3Script = projectile3.GetComponent<Projectile>();
+
+            // Set projectile directions
+            if (proj1Script != null)
+            {
+                proj1Script.SetDirection(Projectile.ProjectileDirection.DIAGONAL_UP);
+            }
+            if (proj2Script != null)
+            {
+                proj2Script.SetDirection(Projectile.ProjectileDirection.LEFT_STRAIGHT);
+            }
+            if (proj3Script != null)
+            {
+                proj3Script.SetDirection(Projectile.ProjectileDirection.DIAGONAL_DOWN);
+            }
+        }
+        Debug.Log("Boss: Attack 1");
     }
 
     void Attack2()
     {
-        Debug.Log("Attack 2");
+        Debug.Log("Boss: Attack 2");
         // Shoot
     }
 
     void Attack3()
     {
-        Debug.Log("Attack 3");
+        Debug.Log("Boss: Attack 3");
         // Shoot
     }
 
