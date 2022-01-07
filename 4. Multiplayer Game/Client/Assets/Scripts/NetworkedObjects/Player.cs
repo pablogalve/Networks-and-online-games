@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -70,9 +71,9 @@ public class Player : MonoBehaviour
     void Start()
     {
         startPosition = transform.position;
+        playerAttack = GetComponent<PlayerAttack>();
 
         view = GetComponent<PhotonView>();
-        playerAttack = GetComponent<PlayerAttack>();
 
         if (_collider != null)
         {
@@ -155,4 +156,13 @@ public class Player : MonoBehaviour
         }
     }
 
+    [PunRPC]
+    void OnGameEnded(GameResult gameResult, PhotonMessageInfo info)
+    {
+        if(view != null && view.IsMine)
+        {
+            Debug.Log("End game");
+            SceneManager.LoadScene("MainMenu");
+        }
+    }
 }

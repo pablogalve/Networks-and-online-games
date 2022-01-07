@@ -47,6 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyPrefab: {fileID: 1366760980311141414, guid: 84b0aaecf9a18c549bd474cf6e27cd66, type: 3}
   bossPrefab: {fileID: 7054318258301744264, guid: d404c470315cdf24ea9eb769b0d12c18, type: 3}
+  server: {fileID: 0}
   waves:
   - myList:
     - {fileID: 3563637896734347491}

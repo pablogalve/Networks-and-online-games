@@ -35,7 +35,7 @@ public class Boss : MonoBehaviour
         {
             StopAllCoroutines();
             Die();
-        }            
+        }
     }
 
     IEnumerator AttackCycle()
@@ -68,7 +68,7 @@ public class Boss : MonoBehaviour
         {
             Attack3();
             yield return new WaitForSeconds(timerBetweenShots);
-        }        
+        }
 
         // Start the attack cycle again recursively
         StopAllCoroutines();
@@ -76,7 +76,7 @@ public class Boss : MonoBehaviour
     }
 
     void Attack1()
-    {        
+    {
         /*The idea of Attack1 is that the boss will shoot bursts of 3 projectiles each
         Direction of the projectiles is the following
         1st one: Left and diagonally up
@@ -85,7 +85,8 @@ public class Boss : MonoBehaviour
          */
 
         // Create projectiles
-        if (view.IsMine) {
+        if (view.IsMine)
+        {
             GameObject projectile1 = PhotonNetwork.Instantiate(projectile.name, shootPoint.transform.position + new Vector3(0.0f, 1.0f, 0.0f), Quaternion.Euler(0, 0, -15.0f));
             GameObject projectile2 = PhotonNetwork.Instantiate(projectile.name, shootPoint.transform.position, Quaternion.identity);
             GameObject projectile3 = PhotonNetwork.Instantiate(projectile.name, shootPoint.transform.position + new Vector3(0.0f, -1.0f, 0.0f), Quaternion.Euler(0, 0, 15.0f));
@@ -127,11 +128,13 @@ public class Boss : MonoBehaviour
     void Die()
     {
         GameManager.instance.AddScore(points);
-        WaveManager.instance.IsWaveDone();
 
-        PhotonNetwork.Instantiate(destroyParticles.name, transform.position, Quaternion.identity);
-
-        PhotonNetwork.Destroy(gameObject);
+        if (view.IsMine)
+        {
+            WaveManager.instance.OnBossKilled();
+            PhotonNetwork.Instantiate(destroyParticles.name, transform.position, Quaternion.identity);
+            PhotonNetwork.Destroy(gameObject);
+        }
     }
 
     public void OnCollisionEnter(Collision collision)

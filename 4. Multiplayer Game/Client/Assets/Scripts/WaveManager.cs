@@ -12,6 +12,8 @@ public class WaveManager : MonoBehaviour
 
     private int currentWave = 0;
 
+    public Server server;
+
     [System.Serializable]
     public class ListWrapper
     {
@@ -85,5 +87,10 @@ public class WaveManager : MonoBehaviour
                 SpawnBoss();
             }
         }
+    }
+
+    public void OnBossKilled()
+    {
+        server.EndGame(GameResult.VICTORY);
     }
 }
