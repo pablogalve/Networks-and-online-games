@@ -28,7 +28,7 @@ public class Missile : MonoBehaviour
     // Update is called once per frame
     public void Update()
     {
-        transform.Translate(new Vector3(1.0f, 0.0f, 0.0f) * speed * Time.deltaTime, Space.World);
+        transform.Translate(new Vector3(-1.0f, 0.0f, 0.0f) * speed * Time.deltaTime, Space.World);
     }
 
     public void OnCollisionEnter(Collision collision)

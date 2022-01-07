@@ -121,7 +121,7 @@ public class Boss : MonoBehaviour
         Debug.Log("Boss: Attack 3");
         // Shoot
 
-        if (view.IsMine)
+        //if (view.IsMine)
         {
             GameObject missile = PhotonNetwork.Instantiate(missilePrefab.name, shootPoint.transform.position, Quaternion.identity);
 
