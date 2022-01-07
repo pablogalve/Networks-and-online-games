@@ -8,7 +8,7 @@ using System.Threading;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
-
+using UnityEngine.SceneManagement;
 public enum GameResult
 {
     VICTORY,
@@ -40,7 +40,7 @@ public class Server : MonoBehaviourPunCallbacks
         view = GetComponent<PhotonView>();
 
         GameObject waveManagerObject = PhotonNetwork.Instantiate(waveManagerPrefab.name, transform.position, transform.rotation);
-        
+
         WaveManager waveManager = waveManagerObject.GetComponent<WaveManager>();
         waveManager.server = this;
         waveManager.StartGame();
@@ -60,7 +60,17 @@ public class Server : MonoBehaviourPunCallbacks
             }
 
             PhotonNetwork.CurrentRoom.IsOpen = false;
-            view.RPC("OnGameEnded", RpcTarget.All, gameResult);
+            view.RPC("OnGameEnded", RpcTarget.Others, gameResult);
+
+            PhotonNetwork.LeaveRoom();
+            SceneManager.LoadScene("ServerMenu");
         }
+    }
+
+    [PunRPC]
+    void OnGameEnded(GameResult gameResult, PhotonMessageInfo info)
+    {
+        Debug.Log("End game");
+        SceneManager.LoadScene("MainMenu");
     }
 }

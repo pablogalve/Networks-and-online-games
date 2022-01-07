@@ -58,8 +58,8 @@ public class Enemy : MonoBehaviour
     {
         if (view != null && view.IsMine)
         {
-            GameManager.instance.AddScore(points);
             WaveManager.instance.IsWaveDone();
+            GameManager.instance.AddScore(points);
 
             PhotonNetwork.Instantiate(destroyParticles.name, transform.position, Quaternion.identity);
 
@@ -77,7 +77,7 @@ public class Enemy : MonoBehaviour
 
     public void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("Enemy collision");
+        //Debug.Log("Enemy collision");
         if (collision.gameObject.CompareTag("PlayerProjectile"))
         {
             Die();
