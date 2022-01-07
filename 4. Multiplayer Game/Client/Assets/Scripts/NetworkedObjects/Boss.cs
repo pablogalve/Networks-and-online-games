@@ -18,6 +18,7 @@ public class Boss : MonoBehaviour
 
     public GameObject shootPoint;
     public GameObject projectile;
+    public GameObject missilePrefab;
 
     PhotonView view;
 
@@ -64,11 +65,7 @@ public class Boss : MonoBehaviour
         yield return new WaitForSeconds(timerBetweenAttacks);
 
         // Attack 3
-        for (int i = 0; i < totalShotsPerAttack; ++i)
-        {
-            Attack3();
-            yield return new WaitForSeconds(timerBetweenShots);
-        }
+        Attack3();
 
         // Start the attack cycle again recursively
         StopAllCoroutines();
@@ -123,6 +120,20 @@ public class Boss : MonoBehaviour
     {
         Debug.Log("Boss: Attack 3");
         // Shoot
+
+        if (view.IsMine)
+        {
+            GameObject missile = PhotonNetwork.Instantiate(missilePrefab.name, shootPoint.transform.position, Quaternion.identity);
+
+            // Access script of projectile and set direction
+            /*Missile missileScript = missile.GetComponent<Missile>();
+
+            // Set projectile directions
+            if (missileScript != null)
+            {
+                
+            }   */         
+        }
     }
 
     void Die()

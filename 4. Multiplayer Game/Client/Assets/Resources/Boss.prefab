@@ -5995,6 +5995,7 @@ MonoBehaviour:
   points: 25
   shootPoint: {fileID: 4238697996391832275}
   projectile: {fileID: 4674900856818266025, guid: c48a9cef9349c0e4d815b25526e52e32, type: 3}
+  missilePrefab: {fileID: 4765671205848811590, guid: b132a93b17b38344685ec8e8ee52011b, type: 3}
 --- !u!1 &8014920207100868864
 GameObject:
   m_ObjectHideFlags: 0
