@@ -5868,7 +5868,7 @@ GameObject:
   - component: {fileID: 1639128931893886145}
   - component: {fileID: 8016077674640564289}
   - component: {fileID: 8303382501712424908}
-  - component: {fileID: 8776652287621603623}
+  - component: {fileID: 1426618307028018172}
   - component: {fileID: 6523931273055901935}
   m_Layer: 0
   m_Name: Boss
@@ -5931,7 +5931,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_PositionModel:
     SynchronizeEnabled: 1
-    TeleportEnabled: 1
+    TeleportEnabled: 0
     TeleportIfDistanceGreaterThan: 3
     InterpolateOption: 2
     InterpolateMoveTowardsSpeed: 1
@@ -5942,8 +5942,8 @@ MonoBehaviour:
     ExtrapolateNumberOfStoredPositions: 1
   m_RotationModel:
     SynchronizeEnabled: 1
-    InterpolateOption: 1
-    InterpolateRotateTowardsSpeed: 180
+    InterpolateOption: 2
+    InterpolateRotateTowardsSpeed: 360
     InterpolateLerpSpeed: 5
   m_ScaleModel:
     SynchronizeEnabled: 0
@@ -5963,7 +5963,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 9.97, y: 3.79, z: 8.06}
   m_Center: {x: -1.1, y: 0, z: 11.6}
---- !u!114 &8776652287621603623
+--- !u!114 &1426618307028018172
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5972,7 +5972,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7054318258301744264}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e03213f66f8f8464b85aa15f4bff89fa, type: 3}
+  m_Script: {fileID: 11500000, guid: 5e9790f1a2a586145b4d52e141e7ff45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &6523931273055901935

@@ -13,6 +13,8 @@ public class Boss : MonoBehaviour
 
     public GameObject destroyParticles;
 
+    private BossMovement bossMovement;
+
     [SerializeField]
     private int points = 25;
 
@@ -26,17 +28,23 @@ public class Boss : MonoBehaviour
     void Start()
     {
         view = GetComponent<PhotonView>();
+        bossMovement = GetComponent<BossMovement>();
         StartCoroutine("AttackCycle");
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (bossMovement != null)
+        {
+            bossMovement.Move();
+        }
         if (lives <= 0)
         {
             StopAllCoroutines();
             Die();
         }
+        
     }
 
     IEnumerator AttackCycle()

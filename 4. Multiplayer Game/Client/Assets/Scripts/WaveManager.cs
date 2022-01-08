@@ -72,7 +72,8 @@ public class WaveManager : MonoBehaviour
 
     void SpawnBoss()
     {
-        Vector3 startPosition = new Vector3(26.79f, -0.6f, -35f);
+        Vector3 startPosition = new Vector3(26.79f, -7f, -35f);
+
         PhotonNetwork.Instantiate(bossPrefab.name, startPosition, Quaternion.identity);
     }
 
