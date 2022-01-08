@@ -9,6 +9,7 @@ TagManager:
   - PowerUp
   - Destroy
   - PlayerProjectile
+  - Missile
   layers:
   - Default
   - TransparentFX
