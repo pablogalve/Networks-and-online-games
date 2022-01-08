@@ -125,7 +125,7 @@ public class Player : MonoBehaviour
     public void IncreaseLives(int amountToIncrease)
     {
         lives = Mathf.Clamp(lives + amountToIncrease, lives, maxLives);
-        Debug.Log("Current lives amount: " + lives.ToString());
+        //Debug.Log("Current lives amount: " + lives.ToString());
     }
 
     public void OnCollisionEnter(Collision collision)
@@ -153,16 +153,6 @@ public class Player : MonoBehaviour
             PhotonNetwork.Instantiate(destroyParticles.name, transform.position, Quaternion.identity);
             transform.position = startPosition;
             //PhotonNetwork.Destroy(gameObject);
-        }
-    }
-
-    [PunRPC]
-    void OnGameEnded(GameResult gameResult, PhotonMessageInfo info)
-    {
-        if(view != null && view.IsMine)
-        {
-            Debug.Log("End game");
-            SceneManager.LoadScene("MainMenu");
         }
     }
 }

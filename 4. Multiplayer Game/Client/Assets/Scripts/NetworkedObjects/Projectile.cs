@@ -24,7 +24,7 @@ public class Projectile : MonoBehaviour
 
     IEnumerator DelayedDestroy(float time)
     {
-        if (view.IsMine)
+        if (view != null && view.IsMine)
         {
             yield return new WaitForSeconds(time);
             PhotonNetwork.Destroy(gameObject);

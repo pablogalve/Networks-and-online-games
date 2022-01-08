@@ -14,6 +14,8 @@ public class WaveManager : MonoBehaviour
 
     public Server server;
 
+    private PhotonView view;
+
     [System.Serializable]
     public class ListWrapper
     {
@@ -46,7 +48,12 @@ public class WaveManager : MonoBehaviour
 
     public void StartGame()
     {
-        StartCoroutine(SpawnWave(currentWave, 0.0f));
+        view = GetComponent<PhotonView>();
+
+        if (view != null && view.IsMine)
+        {
+            StartCoroutine(SpawnWave(currentWave, 0.0f));
+        }
     }
 
 
@@ -71,26 +78,32 @@ public class WaveManager : MonoBehaviour
 
     public void IsWaveDone()
     {
-        current_enemies--;
-
-        Debug.Log("Current enemies: " + current_enemies.ToString());
-
-        if (current_enemies == 0)
+        if (view != null && view.IsMine)
         {
-            currentWave++;
-            if (currentWave < waves.Count)
+            current_enemies--;
+
+            Debug.Log("Current enemies: " + current_enemies.ToString());
+
+            if (current_enemies == 0)
             {
-                StartCoroutine(SpawnWave(currentWave, 2.0f));
-            }
-            else
-            {
-                SpawnBoss();
+                currentWave++;
+                if (currentWave < waves.Count)
+                {
+                    StartCoroutine(SpawnWave(currentWave, 2.0f));
+                }
+                else
+                {
+                    SpawnBoss();
+                }
             }
         }
     }
 
     public void OnBossKilled()
     {
-        server.EndGame(GameResult.VICTORY);
+        if (view != null && view.IsMine)
+        {
+            server.EndGame(GameResult.VICTORY);
+        }
     }
 }
