@@ -5,11 +5,11 @@ using UnityEngine;
 
 public class Boss : MonoBehaviour
 {
-    public int lives = 5;
+    public int lives = 100;
 
-    public float timerBetweenAttacks = 5.0f;
-    public float timerBetweenShots = 1.0f;
-    public int totalShotsPerAttack = 5;
+    public float timerBetweenAttacks = 1.0f;
+    public float timerBetweenShots = 0.5f;
+    public int totalShotsPerAttack = 10;
 
     public GameObject destroyParticles;
 
@@ -22,11 +22,23 @@ public class Boss : MonoBehaviour
     public GameObject projectile;
     public GameObject missilePrefab;
 
+    public MeshRenderer bossModular_piece1;
+    public MeshRenderer bossModular_piece2;
+    public MeshRenderer bossModular_piece3;
+    public MeshRenderer bossModular_piece4;
+    public MeshRenderer bossModular_piece5;
+    public MeshRenderer bossModular_piece6;
+    public MeshRenderer bossModular_piece7;
+    public MeshRenderer bossModular_piece8;
+    public MeshRenderer bossModular_piece9;
+
+    Color originalColor;
     PhotonView view;
 
     // Start is called before the first frame update
     void Start()
     {
+        originalColor = bossModular_piece1.material.color;
         view = GetComponent<PhotonView>();
         bossMovement = GetComponent<BossMovement>();
         StartCoroutine("AttackCycle");
@@ -76,7 +88,7 @@ public class Boss : MonoBehaviour
         Attack3();
 
         // Start the attack cycle again recursively
-        StopAllCoroutines();
+        StopCoroutine("AttackCycle");
         StartCoroutine("AttackCycle");
     }
 
@@ -156,11 +168,64 @@ public class Boss : MonoBehaviour
         }
     }
 
-    public void OnCollisionEnter(Collision collision)
+    //public void OnCollisionEnter(Collision collision)
+    //{
+    //    StartCoroutine("FlashRed");
+    //    if (collision.gameObject.CompareTag("PlayerProjectile"))
+    //    {
+    //        lives--;
+    //    }
+    //}
+
+    public void OnTriggerEnter(Collider collision)
     {
+        StartCoroutine("FlashRed");
         if (collision.gameObject.CompareTag("PlayerProjectile"))
         {
             lives--;
         }
+    }
+
+    public IEnumerator FlashRed()
+    {
+        bossModular_piece1.material.color = Color.red;
+        bossModular_piece2.material.color = Color.red;
+        bossModular_piece3.material.color = Color.red;
+        bossModular_piece4.material.color = Color.red;
+        bossModular_piece5.material.color = Color.red;
+        bossModular_piece6.material.color = Color.red;
+        bossModular_piece7.material.color = Color.red;
+        bossModular_piece8.material.color = Color.red;
+        bossModular_piece9.material.color = Color.red;
+
+        yield return new WaitForSeconds(0.05f);
+        StartCoroutine("FlashWhite");
+    }
+    public IEnumerator FlashWhite()
+    {
+        bossModular_piece1.material.color = Color.white;
+        bossModular_piece2.material.color = Color.white;
+        bossModular_piece3.material.color = Color.white;
+        bossModular_piece4.material.color = Color.white;
+        bossModular_piece5.material.color = Color.white;
+        bossModular_piece6.material.color = Color.white;
+        bossModular_piece7.material.color = Color.white;
+        bossModular_piece8.material.color = Color.white;
+        bossModular_piece9.material.color = Color.white;
+        yield return new WaitForSeconds(0.05f);
+        StartCoroutine("ResetColor");
+    }
+    public IEnumerator ResetColor()
+    {
+        bossModular_piece1.material.color = originalColor;
+        bossModular_piece2.material.color = originalColor;
+        bossModular_piece3.material.color = originalColor;
+        bossModular_piece4.material.color = originalColor;
+        bossModular_piece5.material.color = originalColor;
+        bossModular_piece6.material.color = originalColor;
+        bossModular_piece7.material.color = originalColor;
+        bossModular_piece8.material.color = originalColor;
+        bossModular_piece9.material.color = originalColor;
+        yield return new WaitForSeconds(0.05f);
     }
 }

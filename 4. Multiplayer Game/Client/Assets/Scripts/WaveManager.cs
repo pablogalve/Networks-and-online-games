@@ -72,7 +72,7 @@ public class WaveManager : MonoBehaviour
 
     void SpawnBoss()
     {
-        Vector3 startPosition = new Vector3(26.79f, -7f, -35f);
+        Vector3 startPosition = new Vector3(28.79f, -6.5f, -35f);
 
         PhotonNetwork.Instantiate(bossPrefab.name, startPosition, Quaternion.identity);
     }
@@ -104,7 +104,13 @@ public class WaveManager : MonoBehaviour
     {
         if (view != null && view.IsMine)
         {
-            server.EndGame(GameResult.VICTORY);
+            StartCoroutine("ClosServerDelay");
         }
+    }
+
+    public IEnumerator ClosServerDelay()
+    {
+        yield return new WaitForSeconds(2.0f);
+        server.EndGame(GameResult.VICTORY);
     }
 }

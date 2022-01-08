@@ -25,7 +25,7 @@ public class Enemy : MonoBehaviour
     {
         view = GetComponent<PhotonView>();
         enemyMovement = GetComponent<EnemyMovement>();
-        //StartCoroutine(Shoot());
+        StartCoroutine(Shoot());
     }
 
     public void Update()
@@ -75,7 +75,15 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    public void OnCollisionEnter(Collision collision)
+    //public void OnCollisionEnter(Collision collision)
+    //{
+    //    //Debug.Log("Enemy collision");
+    //    if (collision.gameObject.CompareTag("PlayerProjectile"))
+    //    {
+    //        Die();
+    //    }
+    //}
+    public void OnTriggerEnter(Collider collision)
     {
         //Debug.Log("Enemy collision");
         if (collision.gameObject.CompareTag("PlayerProjectile"))
@@ -83,4 +91,5 @@ public class Enemy : MonoBehaviour
             Die();
         }
     }
+
 }

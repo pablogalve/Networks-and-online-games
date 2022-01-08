@@ -128,13 +128,22 @@ public class Player : MonoBehaviour
         //Debug.Log("Current lives amount: " + lives.ToString());
     }
 
-    public void OnCollisionEnter(Collision collision)
+    //public void OnCollisionEnter(Collision collision)
+    //{
+    //    if (collision.gameObject.CompareTag("Projectile"))
+    //    {
+    //        //DecreaseLives(1);
+    //    }
+    //}
+
+    public void OnTriggerEnter(Collider collision)
     {
         if (collision.gameObject.CompareTag("Projectile"))
         {
-            DecreaseLives(1);
+            //DecreaseLives(1);
         }
     }
+
 
     public void DecreaseLives(int amountToDecrease)
     {

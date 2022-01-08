@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 8714244274982309047}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.11279, y: 0.11279, z: 0.11279}
   m_Children: []
   m_Father: {fileID: 8714244275622671901}
   m_RootOrder: 0
@@ -4829,7 +4829,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: a1bc200c72ac7ee4cb0e1e043e5411a4, type: 2}
-  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4902,7 +4901,7 @@ Transform:
   m_GameObject: {fileID: 8714244275310105619}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.11279, y: 0.11279, z: 0.11279}
   m_Children: []
   m_Father: {fileID: 8714244276621214661}
   m_RootOrder: 1
@@ -9646,7 +9645,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: da51c40235f7fcc47812a1e6f2c6df0a, type: 2}
-  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -9704,7 +9702,7 @@ GameObject:
   - component: {fileID: 8714244275622671898}
   - component: {fileID: 8714244275622671899}
   - component: {fileID: -3957747631958875468}
-  - component: {fileID: -3677603621187612954}
+  - component: {fileID: 7804366045058160471}
   m_Layer: 0
   m_Name: SmokeyExplosion
   m_TagString: Untagged
@@ -9984,7 +9982,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.22
+      scalar: 0.05
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -14593,12 +14591,11 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents:
-  - {fileID: -3677603621187612954}
+  ObservedComponents: []
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &-3677603621187612954
+--- !u!114 &7804366045058160471
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -14607,30 +14604,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 8714244275622671896}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8efc6b1d64977384eb3405357896c656, type: 3}
+  m_Script: {fileID: 11500000, guid: 3a20a78f808e4b9419292a25086537fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_PositionModel:
-    SynchronizeEnabled: 1
-    TeleportEnabled: 1
-    TeleportIfDistanceGreaterThan: 3
-    InterpolateOption: 2
-    InterpolateMoveTowardsSpeed: 1
-    InterpolateLerpSpeed: 1
-    ExtrapolateOption: 0
-    ExtrapolateSpeed: 1
-    ExtrapolateIncludingRoundTripTime: 1
-    ExtrapolateNumberOfStoredPositions: 1
-  m_RotationModel:
-    SynchronizeEnabled: 0
-    InterpolateOption: 1
-    InterpolateRotateTowardsSpeed: 180
-    InterpolateLerpSpeed: 5
-  m_ScaleModel:
-    SynchronizeEnabled: 0
-    InterpolateOption: 0
-    InterpolateMoveTowardsSpeed: 1
-    InterpolateLerpSpeed: 0
+  destroyTime: 4.5
 --- !u!1 &8714244275726771928
 GameObject:
   m_ObjectHideFlags: 0
@@ -14658,7 +14635,7 @@ Transform:
   m_GameObject: {fileID: 8714244275726771928}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.11279, y: 0.11279, z: 0.11279}
   m_Children: []
   m_Father: {fileID: 8714244275622671901}
   m_RootOrder: 4
@@ -19460,7 +19437,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: b0fbc06b85f4fa3428dfd6d37843048d, type: 2}
-  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -19533,7 +19509,7 @@ Transform:
   m_GameObject: {fileID: 8714244275996283151}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.11279, y: 0.11279, z: 0.11279}
   m_Children: []
   m_Father: {fileID: 8714244276621214661}
   m_RootOrder: 2
@@ -24335,7 +24311,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: b0fbc06b85f4fa3428dfd6d37843048d, type: 2}
-  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -24408,7 +24383,7 @@ Transform:
   m_GameObject: {fileID: 8714244276197082532}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.11279, y: 0.11279, z: 0.11279}
   m_Children: []
   m_Father: {fileID: 8714244275622671901}
   m_RootOrder: 3
@@ -29210,7 +29185,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: da51c40235f7fcc47812a1e6f2c6df0a, type: 2}
-  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -29283,7 +29257,7 @@ Transform:
   m_GameObject: {fileID: 8714244276621214658}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.11279, y: 0.11279, z: 0.11279}
   m_Children:
   - {fileID: 8714244276850020427}
   - {fileID: 8714244275310105618}
@@ -34098,7 +34072,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 63c277894672e024897840a609c424ca, type: 2}
-  - {fileID: 2100000, guid: e279735d9325f4448a64c0e82a79952f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -34171,7 +34144,7 @@ Transform:
   m_GameObject: {fileID: 8714244276850020424}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.11279, y: 0.11279, z: 0.11279}
   m_Children: []
   m_Father: {fileID: 8714244276621214661}
   m_RootOrder: 0
@@ -38973,7 +38946,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: a1bc200c72ac7ee4cb0e1e043e5411a4, type: 2}
-  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -39046,7 +39018,7 @@ Transform:
   m_GameObject: {fileID: 8714244276912386624}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.11279, y: 0.11279, z: 0.11279}
   m_Children: []
   m_Father: {fileID: 8714244275622671901}
   m_RootOrder: 5
@@ -43848,7 +43820,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: a1bc200c72ac7ee4cb0e1e043e5411a4, type: 2}
-  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -43921,7 +43892,7 @@ Transform:
   m_GameObject: {fileID: 8714244276948819928}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.11279, y: 0.11279, z: 0.11279}
   m_Children: []
   m_Father: {fileID: 8714244275622671901}
   m_RootOrder: 2
@@ -48723,7 +48694,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: ec065deaf058a3945b6e5b0e9beb45df, type: 2}
-  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
