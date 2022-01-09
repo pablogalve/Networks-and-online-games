@@ -25,13 +25,17 @@ public class Enemy : MonoBehaviour
     {
         view = GetComponent<PhotonView>();
         enemyMovement = GetComponent<EnemyMovement>();
-        StartCoroutine(Shoot());
+
+        if (view != null && view.IsMine)
+        {
+            StartCoroutine(Shoot());
+        }
     }
 
     public void Update()
     {
         //Move on server
-        if (enemyMovement != null)
+        if (view != null && view.IsMine && enemyMovement != null)
         {
             enemyMovement.Move();
         }
