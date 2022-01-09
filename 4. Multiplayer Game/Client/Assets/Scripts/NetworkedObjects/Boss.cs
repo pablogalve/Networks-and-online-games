@@ -88,7 +88,6 @@ public class Boss : MonoBehaviour
         Attack3();
 
         // Start the attack cycle again recursively
-        StopCoroutine("AttackCycle");
         StartCoroutine("AttackCycle");
     }
 
@@ -141,18 +140,10 @@ public class Boss : MonoBehaviour
         Debug.Log("Boss: Attack 3");
         // Shoot
 
-        //if (view.IsMine)
+        if (view.IsMine)
         {
-            GameObject missile = PhotonNetwork.Instantiate(missilePrefab.name, shootPoint.transform.position, Quaternion.identity);
-
-            // Access script of projectile and set direction
-            /*Missile missileScript = missile.GetComponent<Missile>();
-
-            // Set projectile directions
-            if (missileScript != null)
-            {
-                
-            }   */         
+             GameObject missile = PhotonNetwork.Instantiate(missilePrefab.name, shootPoint.transform.position,missilePrefab.transform.rotation);
+              
         }
     }
 
@@ -167,15 +158,6 @@ public class Boss : MonoBehaviour
             PhotonNetwork.Destroy(gameObject);
         }
     }
-
-    //public void OnCollisionEnter(Collision collision)
-    //{
-    //    StartCoroutine("FlashRed");
-    //    if (collision.gameObject.CompareTag("PlayerProjectile"))
-    //    {
-    //        lives--;
-    //    }
-    //}
 
     public void OnTriggerEnter(Collider collision)
     {

@@ -20,7 +20,7 @@ public class Projectile : MonoBehaviour
     void Start()
     {
         view = GetComponent<PhotonView>();
-        //StartCoroutine(DelayedDestroy(5.0f));
+        StartCoroutine(DelayedDestroy(6.0f));
     }
 
     IEnumerator DelayedDestroy(float time)
@@ -62,29 +62,12 @@ public class Projectile : MonoBehaviour
         projectileDirection = newDirection;
     }
 
-    //public void OnCollisionEnter(Collision collision)
-    //{
-    //    //debug.log("projectile collision with: " + collision.gameobject.tag);
-
-    //    if (view != null && view.IsMine && (collision.gameObject.CompareTag("Player")))
-    //    {
-    //        //StartCoroutine(DelayedDestroy(0.1f));
-    //    }
-    //    else if (view != null && view.IsMine && (collision.gameObject.CompareTag("Boss") || collision.gameObject.CompareTag("Enemy")))
-    //    {
-    //        //StartCoroutine(DelayedDestroy(0.1f));
-    //    }
-    //}
 
     public void OnTriggerEnter(Collider collision)
     {
         //debug.log("projectile collision with: " + collision.gameobject.tag);
 
-        if (view != null && view.IsMine && (collision.gameObject.CompareTag("Player")))
-        {
-            //StartCoroutine(DelayedDestroy(0.1f));
-        }
-        else if (view != null && view.IsMine && (collision.gameObject.CompareTag("Boss") || collision.gameObject.CompareTag("Enemy")))
+        if (view != null && view.IsMine && (collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Boss") || collision.gameObject.CompareTag("Enemy")))
         {
             StartCoroutine(DelayedDestroy(0.1f));
         }

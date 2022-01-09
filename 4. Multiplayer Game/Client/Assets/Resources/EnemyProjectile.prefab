@@ -11,12 +11,12 @@ GameObject:
   - component: {fileID: 4674900856818266021}
   - component: {fileID: 4674900856818266020}
   - component: {fileID: 4674900856818266023}
-  - component: {fileID: 4674900856818266022}
   - component: {fileID: 781700153130336182}
   - component: {fileID: 3661218092960112634}
   - component: {fileID: -5878050694870187935}
   - component: {fileID: -5989343544250018070}
   - component: {fileID: 338651643929840654}
+  - component: {fileID: 6665803960051137803}
   m_Layer: 0
   m_Name: EnemyProjectile
   m_TagString: Projectile
@@ -87,19 +87,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &4674900856818266022
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4674900856818266025}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &781700153130336182
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -283,3 +270,16 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!65 &6665803960051137803
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4674900856818266025}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.84, y: 0.99, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
