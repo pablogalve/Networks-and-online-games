@@ -75,14 +75,6 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    //public void OnCollisionEnter(Collision collision)
-    //{
-    //    //Debug.Log("Enemy collision");
-    //    if (collision.gameObject.CompareTag("PlayerProjectile"))
-    //    {
-    //        Die();
-    //    }
-    //}
     public void OnTriggerEnter(Collider collision)
     {
         //Debug.Log("Enemy collision");

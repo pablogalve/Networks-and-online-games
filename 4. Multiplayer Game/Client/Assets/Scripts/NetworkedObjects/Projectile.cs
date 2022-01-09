@@ -67,7 +67,7 @@ public class Projectile : MonoBehaviour
     {
         //debug.log("projectile collision with: " + collision.gameobject.tag);
 
-        if (view != null && view.IsMine && (collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Boss") || collision.gameObject.CompareTag("Enemy")))
+        if (view != null && view.IsMine && (collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Boss") || collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Missile")))
         {
             StartCoroutine(DelayedDestroy(0.1f));
         }

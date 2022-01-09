@@ -9,9 +9,14 @@ public class Missile : MonoBehaviour
     public float speed = 10.0f;
     private PhotonView view;
 
+    public List<GameObject> powerUps;
+    public MeshRenderer meshRenderer;
+    Color originalColor;
+
     // Start is called before the first frame update
     void Start()
     {
+        originalColor = meshRenderer.material.color;
         view = GetComponent<PhotonView>();
         StartCoroutine(DelayedDestroy(10.0f));
     }
@@ -21,6 +26,10 @@ public class Missile : MonoBehaviour
         if (view.IsMine)
         {
             yield return new WaitForSeconds(time);
+
+            int randomPowerUp = Random.Range(0, powerUps.Count);
+            PhotonNetwork.Instantiate(powerUps[randomPowerUp].name, transform.position, Quaternion.identity);
+            
             PhotonNetwork.Destroy(gameObject);
         }
     }
@@ -31,19 +40,9 @@ public class Missile : MonoBehaviour
         transform.Translate(new Vector3(-1.0f, 0.0f, 0.0f) * speed * Time.deltaTime, Space.World);
     }
 
-    //public void OnCollisionEnter(Collision collision)
-    //{
-    //    if (view != null && view.IsMine && collision.gameObject.CompareTag("PlayerProjectile"))
-    //    {
-    //        lives--;
-    //        if(lives <= 0)
-    //        {
-    //            StartCoroutine(DelayedDestroy(0.1f));
-    //        }
-    //    }
-    //}
     public void OnTriggerEnter(Collider collision)
     {
+        StartCoroutine("FlashRed");
         if (view != null && view.IsMine && collision.gameObject.CompareTag("PlayerProjectile"))
         {
             lives--;
@@ -52,5 +51,23 @@ public class Missile : MonoBehaviour
                 StartCoroutine(DelayedDestroy(0.1f));
             }
         }
+    }
+
+    public IEnumerator FlashRed()
+    {
+        meshRenderer.material.color = Color.red;
+        yield return new WaitForSeconds(0.1f);
+        StartCoroutine("FlashWhite");
+    }
+    public IEnumerator FlashWhite()
+    {
+        meshRenderer.material.color = Color.white;
+        yield return new WaitForSeconds(0.1f);
+        StartCoroutine("ResetColor");
+    }
+    public IEnumerator ResetColor()
+    {
+        meshRenderer.material.color = originalColor;
+        yield return new WaitForSeconds(0.1f);
     }
 }

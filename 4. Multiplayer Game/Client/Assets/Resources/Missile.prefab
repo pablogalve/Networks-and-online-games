@@ -101,6 +101,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lives: 10
   speed: 10
+  powerUps:
+  - {fileID: 1571106444526395991, guid: b90f5af9c7502ad42bad9e2aeb66eba4, type: 3}
+  - {fileID: 564706923641661189, guid: 9fdc8ca1128d5e04a8de28141725da42, type: 3}
+  meshRenderer: {fileID: 4788518691735314080}
 --- !u!114 &3816299210888744577
 MonoBehaviour:
   m_ObjectHideFlags: 0
