@@ -40,8 +40,15 @@ public class Server : MonoBehaviourPunCallbacks
     public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
     {
         base.OnPlayerLeftRoom(otherPlayer);
-        
-        //Maybe we need to check this case
+
+        if (view != null && view.IsMine)
+        {
+            if (PhotonNetwork.CurrentRoom.PlayerCount <= 1)
+            {
+                PhotonNetwork.LeaveRoom();
+                SceneManager.LoadScene("ServerMenu");
+            }
+        }
     }
 
     public void StartGame()
