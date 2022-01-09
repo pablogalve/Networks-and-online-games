@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 781700153130336182}
   - component: {fileID: 3661218092960112634}
   - component: {fileID: -5878050694870187935}
-  - component: {fileID: -5989343544250018070}
+  - component: {fileID: -1477940811121481524}
   - component: {fileID: 338651643929840654}
   - component: {fileID: 6665803960051137803}
   m_Layer: 0
@@ -137,11 +137,11 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents:
-  - {fileID: -5989343544250018070}
+  - {fileID: -1477940811121481524}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &-5989343544250018070
+--- !u!114 &-1477940811121481524
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -159,14 +159,14 @@ MonoBehaviour:
     TeleportIfDistanceGreaterThan: 3
     InterpolateOption: 4
     InterpolateMoveTowardsSpeed: 1
-    InterpolateLerpSpeed: 1
-    ExtrapolateOption: 0
+    InterpolateLerpSpeed: 5
+    ExtrapolateOption: 1
     ExtrapolateSpeed: 1
     ExtrapolateIncludingRoundTripTime: 1
     ExtrapolateNumberOfStoredPositions: 1
   m_RotationModel:
-    SynchronizeEnabled: 1
-    InterpolateOption: 2
+    SynchronizeEnabled: 0
+    InterpolateOption: 1
     InterpolateRotateTowardsSpeed: 180
     InterpolateLerpSpeed: 5
   m_ScaleModel:
