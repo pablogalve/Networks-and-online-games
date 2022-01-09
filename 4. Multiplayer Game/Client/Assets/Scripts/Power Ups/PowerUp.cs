@@ -8,7 +8,7 @@ public class PowerUp : MonoBehaviour
     public float movementSpeed = 5.0f;
     public float rotationSpeed = 2.0f;
 
-    private float autoDestroyTime = 25.0f;
+    private float autoDestroyTime = 12.5f;
 
     public float activeTime = 5.0f;
     private float deactivationTimer = 0.0f;

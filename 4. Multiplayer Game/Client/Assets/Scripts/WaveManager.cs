@@ -110,7 +110,7 @@ public class WaveManager : MonoBehaviour
 
     public IEnumerator ClosServerDelay()
     {
-        yield return new WaitForSeconds(5.0f);
+        yield return new WaitForSeconds(0.0f);
         server.EndGame(GameResult.VICTORY);
     }
 }

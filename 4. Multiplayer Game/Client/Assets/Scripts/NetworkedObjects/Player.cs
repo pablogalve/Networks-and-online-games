@@ -15,6 +15,9 @@ public class Player : MonoBehaviour
 
     private int maxLives = 5;
     private int _lives = 5;
+
+    public bool canMove = true;
+
     public int lives
     {
         set
@@ -91,7 +94,7 @@ public class Player : MonoBehaviour
 
     public void Update()
     {
-        if (view.IsMine)
+        if (view.IsMine && canMove)
         {
             float horizontal = Input.GetAxis("Horizontal");
             float vertical = Input.GetAxis("Vertical");
@@ -128,22 +131,16 @@ public class Player : MonoBehaviour
         //Debug.Log("Current lives amount: " + lives.ToString());
     }
 
-    //public void OnCollisionEnter(Collision collision)
-    //{
-    //    if (collision.gameObject.CompareTag("Projectile"))
-    //    {
-    //        //DecreaseLives(1);
-    //    }
-    //}
-
     public void OnTriggerEnter(Collider collision)
     {
         if (collision.gameObject.CompareTag("Projectile"))
         {
-            //DecreaseLives(1);
+            if(view != null && view.IsMine)
+            {
+                DecreaseLives(1);
+            }
         }
     }
-
 
     public void DecreaseLives(int amountToDecrease)
     {
@@ -161,7 +158,6 @@ public class Player : MonoBehaviour
         {
             PhotonNetwork.Instantiate(destroyParticles.name, transform.position, Quaternion.identity);
             transform.position = startPosition;
-            //PhotonNetwork.Destroy(gameObject);
         }
     }
 }

@@ -22,6 +22,20 @@ public class Server : MonoBehaviourPunCallbacks
     private PhotonView view;
 
     private bool gameStarted = false;
+    private bool gameFinished = false;
+
+    private Player localPlayer;
+
+    private void Start()
+    {
+        view = GetComponent<PhotonView>();
+
+        if (view != null && !view.IsMine)
+        {
+            SpawnPlayers spawnPlayers = GameObject.FindObjectOfType<SpawnPlayers>();
+            localPlayer = spawnPlayers.player;
+        }
+    }
 
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
     {
@@ -43,7 +57,7 @@ public class Server : MonoBehaviourPunCallbacks
 
         if (view != null && view.IsMine)
         {
-            if (PhotonNetwork.CurrentRoom.PlayerCount <= 1)
+            if (!gameFinished && PhotonNetwork.CurrentRoom.PlayerCount <= 1)
             {
                 PhotonNetwork.LeaveRoom();
                 SceneManager.LoadScene("ServerMenu");
@@ -54,8 +68,7 @@ public class Server : MonoBehaviourPunCallbacks
     public void StartGame()
     {
         gameStarted = true;
-
-        view = GetComponent<PhotonView>();
+        gameFinished = false;
 
         GameObject waveManagerObject = PhotonNetwork.Instantiate(waveManagerPrefab.name, transform.position, transform.rotation);
 
@@ -66,6 +79,8 @@ public class Server : MonoBehaviourPunCallbacks
 
     public void EndGame(GameResult gameResult)
     {
+        gameFinished = true;
+
         if (view != null && view.IsMine)
         {
             if (gameResult == GameResult.VICTORY)
@@ -78,19 +93,29 @@ public class Server : MonoBehaviourPunCallbacks
             }
 
             PhotonNetwork.CurrentRoom.IsOpen = false;
-            view.RPC("OnGameEnded", RpcTarget.Others, gameResult);
 
-            gameStarted = false;
-
-            PhotonNetwork.LeaveRoom();
-            SceneManager.LoadScene("ServerMenu");
+            StartCoroutine(DelayedRoomClose(15.0f, gameResult));
         }
+    }
+
+    IEnumerator DelayedRoomClose(float time, GameResult gameResult)
+    {
+        view.RPC("OnGameEnded", RpcTarget.Others, gameResult);
+
+        yield return new WaitForSeconds(time);
+
+        PhotonNetwork.LeaveRoom();
+        SceneManager.LoadScene("ServerMenu");
+
+        gameStarted = false;
     }
 
     [PunRPC]
     void OnGameEnded(GameResult gameResult, PhotonMessageInfo info)
     {
         //Debug.Log("End game");
+
+        localPlayer.canMove = false;
 
         PhotonNetwork.LeaveRoom();
         SceneManager.LoadScene("MainMenu");

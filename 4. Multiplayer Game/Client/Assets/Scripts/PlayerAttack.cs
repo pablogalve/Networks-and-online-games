@@ -40,7 +40,7 @@ public class PlayerAttack : MonoBehaviour
                 shotsTimer -= Time.deltaTime;
             }
 
-            if (Input.GetKeyDown(KeyCode.Space) && shotsTimer <= 0.0f)
+            if (player.canMove && Input.GetKeyDown(KeyCode.Space) && shotsTimer <= 0.0f)
             {
                 PhotonNetwork.Instantiate(projectile.name, shootPoint.transform.position, Quaternion.identity);
             }

@@ -127,6 +127,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   destroyParticles: {fileID: 8714244275622671896, guid: abf8d5b763621654486813c5c8af8234, type: 3}
+  canMove: 1
   playerAttack: {fileID: 0}
   movementSpeed: 20
   movementAnimator: {fileID: 6212047090154033354}
