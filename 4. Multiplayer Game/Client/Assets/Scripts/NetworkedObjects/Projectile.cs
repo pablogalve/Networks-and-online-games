@@ -13,7 +13,8 @@ public class Projectile : MonoBehaviour
     }
     public ProjectileDirection projectileDirection;
     public float speed = 5.0f;
-    public GameObject destroyParticles;
+    public GameObject hitParticles;
+    public GameObject playerRef;
     private PhotonView view;
 
     // Start is called before the first frame update
@@ -28,9 +29,12 @@ public class Projectile : MonoBehaviour
         if (view != null && view.IsMine)
         {
             yield return new WaitForSeconds(time);
-
+            if (this.gameObject.CompareTag("PlayerProjectile"))
+            {
+                PhotonNetwork.Instantiate(hitParticles.name, transform.position, Quaternion.identity);
+            }
             PhotonNetwork.Destroy(gameObject);
-            PhotonNetwork.Instantiate(destroyParticles.name, transform.position, Quaternion.identity);
+            
         }
     }
 
@@ -65,12 +69,20 @@ public class Projectile : MonoBehaviour
 
     public void OnTriggerEnter(Collider collision)
     {
-        //debug.log("projectile collision with: " + collision.gameobject.tag);
-
-        if (view != null && view.IsMine && (collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Boss") || collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Missile")))
+        if (view != null && view.IsMine && (collision.gameObject.CompareTag("Player")))
         {
-            StartCoroutine(DelayedDestroy(0.1f));
+            if (this.gameObject.CompareTag("Projectile"))
+            {
+                bool ret = playerRef.GetComponent<Player>().WasPlayerHit();
+                if (ret)
+                {
+                    StartCoroutine(DelayedDestroy(0.1f));
+                }
+            }
+        }
+        else if(view != null && view.IsMine && collision.gameObject.CompareTag("Boss") || collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Missile"))
+        {
+           StartCoroutine(DelayedDestroy(0.1f));
         }
     }
-
 }
