@@ -167,7 +167,6 @@ public class Player : MonoBehaviour, IPunObservable
     {
         if (collision.gameObject.CompareTag("Projectile") || collision.gameObject.CompareTag("Missile"))
         {
-            collision.gameObject.GetComponent<Projectile>().PlayerHit();
             //PhotonNetwork.Instantiate(hitParticles.name, transform.position, Quaternion.identity);
             if (view != null && view.IsMine)
             {
