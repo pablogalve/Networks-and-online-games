@@ -165,7 +165,7 @@ public class Player : MonoBehaviour, IPunObservable
 
     public void OnTriggerEnter(Collider collision)
     {
-        if (collision.gameObject.CompareTag("Projectile"))
+        if (collision.gameObject.CompareTag("Projectile") || collision.gameObject.CompareTag("Missile"))
         {
             if (view != null && view.IsMine)
             {

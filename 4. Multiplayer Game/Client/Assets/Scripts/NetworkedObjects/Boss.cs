@@ -75,17 +75,7 @@ public class Boss : MonoBehaviour
         yield return new WaitForSeconds(timerBetweenAttacks);
 
         // Attack 2
-        for (int i = 0; i < totalShotsPerAttack; ++i)
-        {
-            Attack2();
-            yield return new WaitForSeconds(timerBetweenShots);
-        }
-
-        // Wait between attacks
-        yield return new WaitForSeconds(timerBetweenAttacks);
-
-        // Attack 3
-        Attack3();
+        Attack2();
 
         // Start the attack cycle again recursively
         StartCoroutine("AttackCycle");
@@ -132,18 +122,11 @@ public class Boss : MonoBehaviour
     void Attack2()
     {
         Debug.Log("Boss: Attack 2");
-        // Shoot
-    }
-
-    void Attack3()
-    {
-        Debug.Log("Boss: Attack 3");
-        // Shoot
+        // Shoot a missile towards the player
 
         if (view.IsMine)
         {
-             GameObject missile = PhotonNetwork.Instantiate(missilePrefab.name, shootPoint.transform.position,missilePrefab.transform.rotation);
-              
+             GameObject missile = PhotonNetwork.Instantiate(missilePrefab.name, shootPoint.transform.position,missilePrefab.transform.rotation); 
         }
     }
 
