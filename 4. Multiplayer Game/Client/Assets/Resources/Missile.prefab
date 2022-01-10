@@ -100,7 +100,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lives: 10
-  speed: 10
+  speed: 0.1
   powerUps:
   - {fileID: 1571106444526395991, guid: b90f5af9c7502ad42bad9e2aeb66eba4, type: 3}
   - {fileID: 564706923641661189, guid: 9fdc8ca1128d5e04a8de28141725da42, type: 3}
