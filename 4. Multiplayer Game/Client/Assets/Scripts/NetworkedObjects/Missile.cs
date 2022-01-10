@@ -15,6 +15,8 @@ public class Missile : MonoBehaviour
 
     GameObject[] players;
 
+    public GameObject destroyParticles;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -73,14 +75,22 @@ public class Missile : MonoBehaviour
     public void OnTriggerEnter(Collider collision)
     {
         StartCoroutine("FlashRed");
-        if (view != null && view.IsMine && collision.gameObject.CompareTag("PlayerProjectile"))
+        if (view != null && view.IsMine)
         {
-            lives--;
-            if (lives <= 0)
+            if (collision.gameObject.CompareTag("PlayerProjectile"))
             {
-                StartCoroutine(DelayedDestroy(0.1f));
+                lives--;
+                if (lives <= 0)
+                {
+                    StartCoroutine(DelayedDestroy(0.1f));
+                }
             }
-        }
+            if (collision.gameObject.CompareTag("Player"))
+            {
+                PhotonNetwork.Instantiate(destroyParticles.name, transform.position, Quaternion.identity);
+                PhotonNetwork.Destroy(gameObject);
+            }
+        }        
     }
 
     public IEnumerator FlashRed()
