@@ -165,8 +165,18 @@ public class Player : MonoBehaviour, IPunObservable
 
     public void OnTriggerEnter(Collider collision)
     {
-        if (collision.gameObject.CompareTag("Projectile") || collision.gameObject.CompareTag("Missile"))
+        if (collision.gameObject.CompareTag("Projectile"))
         {
+            collision.gameObject.GetComponent<Projectile>().PlayerHit();
+            //PhotonNetwork.Instantiate(hitParticles.name, transform.position, Quaternion.identity);
+            if (view != null && view.IsMine)
+            {
+                //DecreaseLives(1);
+            }
+        }
+        if (collision.gameObject.CompareTag("Missile"))
+        {
+            collision.gameObject.GetComponent<Missile>().PlayerHit();
             //PhotonNetwork.Instantiate(hitParticles.name, transform.position, Quaternion.identity);
             if (view != null && view.IsMine)
             {

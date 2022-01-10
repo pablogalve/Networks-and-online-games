@@ -110,4 +110,9 @@ public class Missile : MonoBehaviour
         meshRenderer.material.color = originalColor;
         yield return new WaitForSeconds(0.1f);
     }
+
+    public void PlayerHit()
+    {
+        StartCoroutine(DelayedDestroy(0.1f));
+    }
 }
