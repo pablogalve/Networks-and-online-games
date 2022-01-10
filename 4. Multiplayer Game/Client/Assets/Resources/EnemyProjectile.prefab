@@ -14,8 +14,8 @@ GameObject:
   - component: {fileID: 3661218092960112634}
   - component: {fileID: -5878050694870187935}
   - component: {fileID: 338651643929840654}
-  - component: {fileID: 6665803960051137803}
   - component: {fileID: -3789488934906522859}
+  - component: {fileID: 7208223987170916257}
   m_Layer: 0
   m_Name: EnemyProjectile
   m_TagString: Projectile
@@ -101,7 +101,6 @@ MonoBehaviour:
   projectileDirection: 0
   speed: -20
   hitParticles: {fileID: 8714244275622671896, guid: abf8d5b763621654486813c5c8af8234, type: 3}
-  playerRef: {fileID: 265504785059399630, guid: aa4c0abc352002b4bbae2ca619754403, type: 3}
 --- !u!114 &-5878050694870187935
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -221,19 +220,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!65 &6665803960051137803
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4674900856818266025}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.84, y: 0.99, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &-3789488934906522859
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -250,3 +236,16 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
+--- !u!135 &7208223987170916257
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4674900856818266025}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
