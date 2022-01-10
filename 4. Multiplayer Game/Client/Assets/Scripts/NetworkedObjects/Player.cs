@@ -138,13 +138,13 @@ public class Player : MonoBehaviour, IPunObservable
 
                 transform.position = new Vector3(Camera.main.ViewportToWorldPoint(new Vector3(screenFinalPosX, 0.0f, 0.0f)).x, Camera.main.ViewportToWorldPoint(new Vector3(0.0f, screenFinalPosY, 0.0f)).y, 0.0f);
             }
-            movement = (transform.position - oldPos).normalized;
+            //movement = (transform.position - oldPos).normalized;
         }
-        else if(!view.IsMine)
-        {
-            transform.position = Vector3.MoveTowards(transform.position, networkPosition, Time.deltaTime * movementSpeed);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, networkRotation, Time.deltaTime * 100);
-        }
+        //else if(!view.IsMine)
+        //{
+        //    transform.position = Vector3.MoveTowards(transform.position, networkPosition, Time.deltaTime * movementSpeed);
+        //    transform.rotation = Quaternion.RotateTowards(transform.rotation, networkRotation, Time.deltaTime * 100);
+        //}
     }
 
     public bool CheckVerticalScreenPoint(Vector2 point)
