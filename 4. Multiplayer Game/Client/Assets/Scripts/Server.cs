@@ -12,7 +12,8 @@ using UnityEngine.SceneManagement;
 public enum GameResult
 {
     VICTORY,
-    DEFEAT
+    DEFEAT,
+    DISCONNECTION
 }
 
 public class Server : MonoBehaviourPunCallbacks
@@ -122,7 +123,15 @@ public class Server : MonoBehaviourPunCallbacks
     {
         //Debug.Log("End game");
 
-        GameManager.instance.OnGameEnded();
+        GameManager.instance.OnGameEnded(gameResult);
         PhotonNetwork.LeaveRoom();
+    }
+
+    public override void OnMasterClientSwitched(Photon.Realtime.Player newMasterClient)
+    {
+        if (view != null && !view.IsMine)
+        {
+            GameManager.instance.OnGameEnded(GameResult.DISCONNECTION);
+        }
     }
 }

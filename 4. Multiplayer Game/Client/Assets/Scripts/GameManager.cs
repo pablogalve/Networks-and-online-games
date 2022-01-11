@@ -13,14 +13,18 @@ public class GameManager : MonoBehaviour
 
     public GameResultMenu gameResultMenu;
 
+    public float timePassed = 0.0f;
+
     void Start()
     {
         instance = this;
+        timePassed = 0.0f;
     }
 
     private void Update()
     {
         //Debug.Log("Ping: " + PhotonNetwork.GetPing().ToString());
+        timePassed += Time.deltaTime;
     }
 
     public void AddScore(int scoreToAdd)
@@ -29,8 +33,14 @@ public class GameManager : MonoBehaviour
         //Debug.Log(score);
     }
 
-    public void OnGameEnded()
+    public int GetScore()
+    {
+        return score;
+    }
+
+    public void OnGameEnded(GameResult gameResult)
     {
         gameResultMenu.gameObject.SetActive(true);
+        gameResultMenu.SetLabels(gameResult);
     }
 }
