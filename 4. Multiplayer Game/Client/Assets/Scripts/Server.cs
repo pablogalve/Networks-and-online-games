@@ -24,8 +24,6 @@ public class Server : MonoBehaviourPunCallbacks
     private bool gameStarted = false;
     private bool gameFinished = false;
 
-    private Player localPlayer;
-
     private void Start()
     {
         view = GetComponent<PhotonView>();
@@ -33,7 +31,6 @@ public class Server : MonoBehaviourPunCallbacks
         if (view != null && !view.IsMine)
         {
             SpawnPlayers spawnPlayers = GameObject.FindObjectOfType<SpawnPlayers>();
-            localPlayer = spawnPlayers.player;
         }
     }
 
@@ -98,6 +95,16 @@ public class Server : MonoBehaviourPunCallbacks
         }
     }
 
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        base.OnDisconnected(cause);
+    }
+
+    public override void OnLeftRoom()
+    {
+        base.OnLeftRoom();
+    }
+
     IEnumerator DelayedRoomClose(float time, GameResult gameResult)
     {
         view.RPC("OnGameEnded", RpcTarget.Others, gameResult);
@@ -115,9 +122,7 @@ public class Server : MonoBehaviourPunCallbacks
     {
         //Debug.Log("End game");
 
-        localPlayer.canMove = false;
-
+        GameManager.instance.OnGameEnded();
         PhotonNetwork.LeaveRoom();
-        SceneManager.LoadScene("MainMenu");
     }
 }

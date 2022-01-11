@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour
 
     private int score = 0;
 
+    public GameResultMenu gameResultMenu;
+
     void Start()
     {
         instance = this;
@@ -25,5 +27,10 @@ public class GameManager : MonoBehaviour
     {
         score += scoreToAdd;
         //Debug.Log(score);
+    }
+
+    public void OnGameEnded()
+    {
+        gameResultMenu.gameObject.SetActive(true);
     }
 }

@@ -8,6 +8,7 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
 {
     public InputField createInput;
     public InputField joinInput;
+    public Text errorText;
 
     public void CreateRoom()
     {
@@ -17,11 +18,28 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
 
     public void JoinRoom()
     {
-        PhotonNetwork.JoinRoom(joinInput.text); 
+        PhotonNetwork.JoinRoom(joinInput.text);
+
+        if (errorText != null)
+        {
+            errorText.text = "";
+        }
     }
 
     public override void OnJoinedRoom()
     {
         PhotonNetwork.LoadLevel("Game");
+    }
+
+    public override void OnJoinRoomFailed(short returnCode, string message)
+    {
+        base.OnJoinRoomFailed(returnCode, message);
+        string errorMessage = returnCode.ToString() + ": " + message;
+        Debug.LogError(errorMessage);
+
+        if(errorText != null)
+        {
+            errorText.text = errorMessage;
+        }
     }
 }
