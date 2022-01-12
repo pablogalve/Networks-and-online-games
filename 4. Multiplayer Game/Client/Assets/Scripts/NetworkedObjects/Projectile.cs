@@ -30,9 +30,9 @@ public class Projectile : MonoBehaviour
             yield return new WaitForSeconds(time);
 
             //PhotonNetwork.Instantiate(hitParticles.name, transform.position, Quaternion.identity);
-            
+
             PhotonNetwork.Destroy(gameObject);
-            
+
         }
     }
 
@@ -61,7 +61,7 @@ public class Projectile : MonoBehaviour
 
     public void BulletMovement()
     {
-       
+
     }
 
     public void SetDirection(ProjectileDirection newDirection)
@@ -71,10 +71,17 @@ public class Projectile : MonoBehaviour
 
 
     public void OnTriggerEnter(Collider collision)
-    {               
-        if(view != null && view.IsMine && collision.gameObject.CompareTag("Boss") || collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Missile"))
+    {
+        if (view != null && view.IsMine)
         {
-           StartCoroutine(DelayedDestroy(0.1f));
+            if (collision.gameObject.CompareTag("Player"))
+            {
+                PlayerHit();
+            }
+            else
+            {
+                StartCoroutine(DelayedDestroy(0.1f));
+            }
         }
     }
 

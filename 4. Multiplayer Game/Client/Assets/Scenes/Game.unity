@@ -670,9 +670,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92dd6c2eea76a31438a88240b84467e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  serverPrefab: {fileID: 4352700822102828003, guid: eee4b034d3438c0499a2600dbf30bbd2, type: 3}
+  server: {fileID: 0}
   gameResultMenu: {fileID: 1193610702}
   timePassed: 0
+  replicableObjects:
+  - {fileID: 907793732191305706, guid: 3643cf695c219c04fba1c5e7467418da, type: 3}
+  - {fileID: 4674900856818266025, guid: c48a9cef9349c0e4d815b25526e52e32, type: 3}
 --- !u!4 &307240042
 Transform:
   m_ObjectHideFlags: 0

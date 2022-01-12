@@ -6,7 +6,7 @@ using Photon.Pun;
 public class DestroyParticles : MonoBehaviour
 {
     private AudioSource explosionSource;
-    private ParticleSystem particleSystem;
+    private ParticleSystem particles = null;
     public float destroyTime = 4.5f;
 
     private PhotonView view;
@@ -14,7 +14,7 @@ public class DestroyParticles : MonoBehaviour
     void Start()
     {
         explosionSource = GetComponent<AudioSource>();
-        particleSystem = GetComponent<ParticleSystem>();
+        particles = GetComponent<ParticleSystem>();
 
         view = GetComponent<PhotonView>();
 

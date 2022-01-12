@@ -25,14 +25,12 @@ public class Server : MonoBehaviourPunCallbacks
     private bool gameStarted = false;
     private bool gameFinished = false;
 
+    int alivePlayersCount = 0;
+
     private void Start()
     {
         view = GetComponent<PhotonView>();
-
-        if (view != null && !view.IsMine)
-        {
-            SpawnPlayers spawnPlayers = GameObject.FindObjectOfType<SpawnPlayers>();
-        }
+        GameManager.instance.server = this;
     }
 
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
@@ -40,6 +38,7 @@ public class Server : MonoBehaviourPunCallbacks
         base.OnPlayerEnteredRoom(newPlayer);
 
         Debug.Log("Player entered room");
+        alivePlayersCount++;
 
         //TODO: Change to 3 for 2 players needed
         if (!gameStarted && PhotonNetwork.CurrentRoom.PlayerCount == neededClients + 1)
@@ -81,15 +80,6 @@ public class Server : MonoBehaviourPunCallbacks
 
         if (view != null && view.IsMine)
         {
-            if (gameResult == GameResult.VICTORY)
-            {
-
-            }
-            else
-            {
-
-            }
-
             PhotonNetwork.CurrentRoom.IsOpen = false;
 
             StartCoroutine(DelayedRoomClose(15.0f, gameResult));
@@ -133,5 +123,12 @@ public class Server : MonoBehaviourPunCallbacks
         {
             GameManager.instance.OnGameEnded(GameResult.DISCONNECTION);
         }
+    }
+
+    [PunRPC]
+    public void InstantiatePrefab(string prefabName, DateTime instantationTime, Vector3 position)
+    {
+        GameObject prefab = GameManager.instance.GetReplicableObjectByName(prefabName);
+        Instantiate(prefab, position, Quaternion.identity);
     }
 }

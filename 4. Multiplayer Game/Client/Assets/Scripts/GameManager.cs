@@ -7,13 +7,15 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
-    public Server serverPrefab;
+    public Server server;
 
     private int score = 0;
 
     public GameResultMenu gameResultMenu;
 
     public float timePassed = 0.0f;
+
+    public List<GameObject> replicableObjects = new List<GameObject>();
 
     void Start()
     {
@@ -42,5 +44,18 @@ public class GameManager : MonoBehaviour
     {
         gameResultMenu.gameObject.SetActive(true);
         gameResultMenu.SetLabels(gameResult);
+    }
+
+    public GameObject GetReplicableObjectByName(string objectName)
+    {
+        for(int i = 0; i < replicableObjects.Count; ++i)
+        {
+            if(replicableObjects[i].name == objectName)
+            {
+                return replicableObjects[i];
+            }
+        }
+
+        return null;
     }
 }
