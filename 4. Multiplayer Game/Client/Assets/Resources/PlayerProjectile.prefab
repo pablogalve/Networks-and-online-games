@@ -33,7 +33,7 @@ Transform:
   m_GameObject: {fileID: 907793732191305706}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 9.040738, y: 1.4937924, z: 1.2337787}
-  m_LocalScale: {x: 0.792057, y: 0.2492967, z: 0.47551}
+  m_LocalScale: {x: 0.792057, y: 0.25, z: 0.25}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -65,7 +65,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0734df0e2132e9f4d8579f9d763a2283, type: 2}
+  - {fileID: 2100000, guid: 32a76832b79e84347ad9df08b12709c3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -128,7 +128,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 523379ccfb1e3b04eaa8dfe297c5f1a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectileDirection: 0
   speed: 20
   hitParticles: {fileID: 8714244275622671896, guid: abf8d5b763621654486813c5c8af8234, type: 3}
 --- !u!114 &7152819774512703564
