@@ -22,15 +22,8 @@ public class Boss : MonoBehaviour
     public GameObject projectile;
     public GameObject missilePrefab;
 
-    public MeshRenderer bossModular_piece1;
-    public MeshRenderer bossModular_piece2;
-    public MeshRenderer bossModular_piece3;
-    public MeshRenderer bossModular_piece4;
-    public MeshRenderer bossModular_piece5;
-    public MeshRenderer bossModular_piece6;
-    public MeshRenderer bossModular_piece7;
-    public MeshRenderer bossModular_piece8;
-    public MeshRenderer bossModular_piece9;
+    public List<MeshRenderer> meshRenderes = new List<MeshRenderer>();
+
 
     Color originalColor;
     PhotonView view;
@@ -38,7 +31,7 @@ public class Boss : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        originalColor = bossModular_piece1.material.color;
+        originalColor = meshRenderes[0].material.color;
         view = GetComponent<PhotonView>();
         bossMovement = GetComponent<BossMovement>();
         StartCoroutine("AttackCycle");
@@ -143,53 +136,25 @@ public class Boss : MonoBehaviour
 
     public void OnTriggerEnter(Collider collision)
     {
-        StartCoroutine("FlashRed");
         if (collision.gameObject.CompareTag("PlayerProjectile"))
         {
+            StartCoroutine("Blink");
             lives--;
         }
     }
 
-    public IEnumerator FlashRed()
+    public IEnumerator Blink()
     {
-        bossModular_piece1.material.color = Color.red;
-        bossModular_piece2.material.color = Color.red;
-        bossModular_piece3.material.color = Color.red;
-        bossModular_piece4.material.color = Color.red;
-        bossModular_piece5.material.color = Color.red;
-        bossModular_piece6.material.color = Color.red;
-        bossModular_piece7.material.color = Color.red;
-        bossModular_piece8.material.color = Color.red;
-        bossModular_piece9.material.color = Color.red;
+        Color[] colors = { Color.red, Color.white, originalColor };
 
-        yield return new WaitForSeconds(0.05f);
-        StartCoroutine("FlashWhite");
-    }
-    public IEnumerator FlashWhite()
-    {
-        bossModular_piece1.material.color = Color.white;
-        bossModular_piece2.material.color = Color.white;
-        bossModular_piece3.material.color = Color.white;
-        bossModular_piece4.material.color = Color.white;
-        bossModular_piece5.material.color = Color.white;
-        bossModular_piece6.material.color = Color.white;
-        bossModular_piece7.material.color = Color.white;
-        bossModular_piece8.material.color = Color.white;
-        bossModular_piece9.material.color = Color.white;
-        yield return new WaitForSeconds(0.05f);
-        StartCoroutine("ResetColor");
-    }
-    public IEnumerator ResetColor()
-    {
-        bossModular_piece1.material.color = originalColor;
-        bossModular_piece2.material.color = originalColor;
-        bossModular_piece3.material.color = originalColor;
-        bossModular_piece4.material.color = originalColor;
-        bossModular_piece5.material.color = originalColor;
-        bossModular_piece6.material.color = originalColor;
-        bossModular_piece7.material.color = originalColor;
-        bossModular_piece8.material.color = originalColor;
-        bossModular_piece9.material.color = originalColor;
-        yield return new WaitForSeconds(0.05f);
+        for (int j = 0; j < 3; j++)
+        {
+            for (int i = 0; i < meshRenderes.Count; i++)
+            {
+                meshRenderes[i].material.color = colors[j];
+            }
+            yield return new WaitForSeconds(0.05f);
+        }
+
     }
 }
