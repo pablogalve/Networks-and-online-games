@@ -39,6 +39,7 @@ MonoBehaviour:
   - EndGame
   - OnGameEnded
   - InstantiatePrefab
+  - OnPlayerDead
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

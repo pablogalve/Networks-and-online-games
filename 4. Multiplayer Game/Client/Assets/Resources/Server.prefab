@@ -47,6 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   waveManagerPrefab: {fileID: 3563637895765272338, guid: fb2dec983f9037d4886d801d6d12dab1, type: 3}
   neededClients: 1
+  view: {fileID: 0}
 --- !u!114 &2919064270561025878
 MonoBehaviour:
   m_ObjectHideFlags: 0

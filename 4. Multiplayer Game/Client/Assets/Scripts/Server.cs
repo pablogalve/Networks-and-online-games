@@ -20,7 +20,7 @@ public class Server : MonoBehaviourPunCallbacks
 {
     public GameObject waveManagerPrefab;
     public int neededClients = 1;
-    private PhotonView view;
+    public PhotonView view;
 
     private bool gameStarted = false;
     private bool gameFinished = false;
@@ -106,6 +106,16 @@ public class Server : MonoBehaviourPunCallbacks
         SceneManager.LoadScene("ServerMenu");
 
         gameStarted = false;
+    }
+
+    [PunRPC]
+    public void OnPlayerDead()
+    {
+        alivePlayersCount--;
+        if(alivePlayersCount <= 0)
+        {
+            EndGame(GameResult.DEFEAT);
+        }
     }
 
     [PunRPC]

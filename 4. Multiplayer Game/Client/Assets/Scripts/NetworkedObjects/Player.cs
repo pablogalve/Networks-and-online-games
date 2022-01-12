@@ -10,7 +10,6 @@ public class Player : MonoBehaviour, IPunObservable
     PhotonView view;
 
     private Vector3 startPosition;
-    private bool isHit = false;
 
     public GameObject destroyParticles;
     public GameObject hitParticles;
@@ -165,18 +164,8 @@ public class Player : MonoBehaviour, IPunObservable
 
     public void OnTriggerEnter(Collider collision)
     {
-        if (collision.gameObject.CompareTag("Projectile"))
+        if (collision.gameObject.CompareTag("Projectile") || collision.gameObject.CompareTag("Missile"))
         {
-            //collision.gameObject.GetComponent<Projectile>().PlayerHit();
-            PhotonNetwork.Instantiate(hitParticles.name, transform.position, Quaternion.identity);
-            if (view != null && view.IsMine)
-            {
-                DecreaseLives(1);
-            }
-        }
-        if (collision.gameObject.CompareTag("Missile"))
-        {
-            //collision.gameObject.GetComponent<Missile>().PlayerHit();
             PhotonNetwork.Instantiate(hitParticles.name, transform.position, Quaternion.identity);
             if (view != null && view.IsMine)
             {
@@ -200,14 +189,9 @@ public class Player : MonoBehaviour, IPunObservable
         if (view != null && view.IsMine)
         {
             PhotonNetwork.Instantiate(destroyParticles.name, transform.position, Quaternion.identity);
-            transform.position = startPosition;
+            //transform.position = startPosition;
+            GameManager.instance.server.view.RPC("OnPlayerDead", RpcTarget.MasterClient);
+            gameObject.SetActive(false);
         }
-    }
-
-    public bool WasPlayerHit()
-    {
-        bool ret = isHit;
-        isHit = false;
-        return ret;
     }
 }
