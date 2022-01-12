@@ -3468,6 +3468,7 @@ MonoBehaviour:
   mainPlayerHUD: {fileID: 1595831991}
   liveHolder: {fileID: 220537335}
   healthDisplay: {fileID: 220537337}
+  bossHealth: {fileID: 442249738}
 --- !u!1 &1777513596
 GameObject:
   m_ObjectHideFlags: 0

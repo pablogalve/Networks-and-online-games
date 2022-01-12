@@ -34,6 +34,11 @@ public class Boss : MonoBehaviour
         originalColor = meshRenderes[0].material.color;
         view = GetComponent<PhotonView>();
         bossMovement = GetComponent<BossMovement>();
+
+        MenuManager.instance.bossHealth.gameObject.SetActive(true);
+        MenuManager.instance.bossHealth.maxValue = lives;
+        MenuManager.instance.bossHealth.value = lives;
+
         StartCoroutine("AttackCycle");
     }
 
@@ -140,6 +145,7 @@ public class Boss : MonoBehaviour
         {
             StartCoroutine("Blink");
             lives--;
+            MenuManager.instance.bossHealth.value = lives;
         }
     }
 

@@ -10,9 +10,12 @@ public class MenuManager : MonoBehaviour
     public GameObject liveHolder;
     public Slider healthDisplay;
 
+    public Slider bossHealth;
+
     public void Start()
     {
         MenuManager.instance = this;
+        bossHealth.gameObject.SetActive(false);
         //TurnConnectUI_ON();
     }
 
