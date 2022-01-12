@@ -150,7 +150,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e66fcdd1465cd948a81e7af64f4b4f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultTimeBetweenShots: 0.1
+  defaultTimeBetweenShots: 0.65
   shootPoint: {fileID: 2115133613947525443}
   timeBetweenShots: 0
   shotsTimer: 0
