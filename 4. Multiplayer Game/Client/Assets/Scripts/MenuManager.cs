@@ -9,6 +9,7 @@ public class MenuManager : MonoBehaviour
     public static MenuManager instance;
     public GameObject mainPlayerHUD;
     public GameObject liveHolder;
+    public Slider healthDisplay;
 
     public void Start()
     {

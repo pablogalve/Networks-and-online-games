@@ -23,28 +23,21 @@ public class Player : MonoBehaviour, IPunObservable
     {
         set
         {
-
-            if (value > liveDisplays.Count && liveHolder != null)
+            if (value > maxHealth)
             {
-                for (int i = 0; i < value; i++)
+                maxHealth = value;
+
+                if (view.IsMine && MenuManager.instance.healthDisplay)
                 {
-                    GameObject temp = Instantiate(livePrefabs, liveHolder.transform);
-                    liveDisplays.Add(temp.GetComponent<Image>());
+                    MenuManager.instance.healthDisplay.maxValue = value;
                 }
             }
 
             _lives = value;
 
-            for (int i = 0; i < liveDisplays.Count; i++)
+            if (view.IsMine && MenuManager.instance.healthDisplay)
             {
-                if (i < _lives)
-                {
-                    liveDisplays[i].color = liveActive;
-                }
-                else
-                {
-                    liveDisplays[i].color = liveDisabled;
-                }
+                MenuManager.instance.healthDisplay.value = _lives;
             }
         }
 
@@ -65,12 +58,7 @@ public class Player : MonoBehaviour, IPunObservable
     Vector2 colliderScreenSize;
 
     [Header("UI")]
-    public GameObject liveHolder;
-    public List<Image> liveDisplays;
-    public GameObject livePrefabs;
-
-    public Color liveActive;
-    public Color liveDisabled;
+    int maxHealth = 0;
 
     private Vector3 networkPosition;
     private Quaternion networkRotation;
@@ -91,7 +79,6 @@ public class Player : MonoBehaviour, IPunObservable
 
         if (view.IsMine)
         {
-           liveHolder = MenuManager.instance.liveHolder;
            MenuManager.instance.TurnConnectUI_ON();
         }
         lives = 3;
