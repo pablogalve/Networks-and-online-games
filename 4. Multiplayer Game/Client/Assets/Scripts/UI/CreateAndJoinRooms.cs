@@ -15,7 +15,6 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
         PhotonNetwork.CreateRoom(createInput.text);
     }
 
-
     public void JoinRoom()
     {
         PhotonNetwork.JoinRoom(joinInput.text);
@@ -37,7 +36,7 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
         string errorMessage = returnCode.ToString() + ": " + message;
         Debug.LogError(errorMessage);
 
-        if(errorText != null)
+        if (errorText != null)
         {
             errorText.text = errorMessage;
         }

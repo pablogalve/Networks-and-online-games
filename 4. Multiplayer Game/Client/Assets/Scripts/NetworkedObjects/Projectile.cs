@@ -59,11 +59,6 @@ public class Projectile : MonoBehaviour
         }
     }
 
-    public void BulletMovement()
-    {
-
-    }
-
     public void SetDirection(ProjectileDirection newDirection)
     {
         projectileDirection = newDirection;

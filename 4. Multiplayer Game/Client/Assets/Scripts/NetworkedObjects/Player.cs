@@ -191,7 +191,7 @@ public class Player : MonoBehaviour, IPunObservable
             PhotonNetwork.Instantiate(destroyParticles.name, transform.position, Quaternion.identity);
             //transform.position = startPosition;
             GameManager.instance.server.view.RPC("OnPlayerDead", RpcTarget.MasterClient);
-            gameObject.SetActive(false);
+            PhotonNetwork.Destroy(gameObject);
         }
     }
 }
