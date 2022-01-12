@@ -133,11 +133,6 @@ MonoBehaviour:
   movementSpeed: 20
   movementAnimator: {fileID: 6212047090154033354}
   _collider: {fileID: 265504785059399625}
-  liveHolder: {fileID: 0}
-  liveDisplays: []
-  livePrefabs: {fileID: 2129246308151673451, guid: fd06cd23c237d9b4fb7937660f95a952, type: 3}
-  liveActive: {r: 0.86411566, g: 0.9716981, b: 0.13200422, a: 1}
-  liveDisabled: {r: 0.4528302, g: 0.4528302, b: 0.4528302, a: 0.7372549}
 --- !u!114 &265504785059399631
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10066,6 +10061,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 23649099192709106, guid: f805c7b2f982faf43833878e4f22ae2a, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: d215bd3bb42e9764da6cb4f2e19fe1fc, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f805c7b2f982faf43833878e4f22ae2a, type: 3}
 --- !u!4 &261353450644100079 stripped
