@@ -67,11 +67,14 @@ public class Server : MonoBehaviourPunCallbacks
         gameStarted = true;
         gameFinished = false;
 
-        GameObject waveManagerObject = PhotonNetwork.Instantiate(waveManagerPrefab.name, transform.position, transform.rotation);
+        if(view != null && view.IsMine)
+        {
+            GameObject waveManagerObject = PhotonNetwork.Instantiate(waveManagerPrefab.name, transform.position, transform.rotation);
 
-        WaveManager waveManager = waveManagerObject.GetComponent<WaveManager>();
-        waveManager.server = this;
-        waveManager.StartGame();
+            WaveManager waveManager = waveManagerObject.GetComponent<WaveManager>();
+            waveManager.server = this;
+            waveManager.StartGame();
+        }
     }
 
     public void EndGame(GameResult gameResult)
