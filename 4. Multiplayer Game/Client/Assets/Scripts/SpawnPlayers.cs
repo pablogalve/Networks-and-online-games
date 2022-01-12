@@ -10,6 +10,8 @@ public class SpawnPlayers : MonoBehaviour
     public GameObject serverPrefab;
     public Player player;
 
+    public FollowArrow followArrow;
+
     void Start()
     {
         if (PhotonNetwork.IsMasterClient)
@@ -21,6 +23,9 @@ public class SpawnPlayers : MonoBehaviour
             Vector3 startPosition = new Vector3(0.0f, 0.0f, 0.0f);
             GameObject playerObject = PhotonNetwork.Instantiate(playerPrefab.name, startPosition, Quaternion.identity);
             player = playerObject.GetComponent<Player>();
+            
+            followArrow.gameObject.SetActive(true);
+            followArrow.player = player.gameObject;
         }
     }
 }

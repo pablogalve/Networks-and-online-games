@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class MenuManager : MonoBehaviour
 {
-
     public static MenuManager instance;
     public GameObject mainPlayerHUD;
     public GameObject liveHolder;
