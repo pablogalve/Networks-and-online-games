@@ -11,7 +11,7 @@ public class Projectile : MonoBehaviour
         DIAGONAL_UP,
         DIAGONAL_DOWN,
     }
-    public ProjectileDirection projectileDirection;
+    private ProjectileDirection projectileDirection;
     public float speed = 5.0f;
     public GameObject hitParticles;
     private PhotonView view;
@@ -74,19 +74,7 @@ public class Projectile : MonoBehaviour
     {
         if (view != null && view.IsMine)
         {
-            if (collision.gameObject.CompareTag("Player"))
-            {
-                PlayerHit();
-            }
-            else
-            {
-                StartCoroutine(DelayedDestroy(0.1f));
-            }
+            StartCoroutine(DelayedDestroy(0.1f));
         }
-    }
-
-    public void PlayerHit()
-    {
-        StartCoroutine(DelayedDestroy(0.1f));
     }
 }

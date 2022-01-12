@@ -55,8 +55,7 @@ public class Boss : MonoBehaviour
         {
             StopAllCoroutines();
             Die();
-        }
-        
+        }        
     }
 
     IEnumerator AttackCycle()
