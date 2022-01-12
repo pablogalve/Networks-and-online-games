@@ -23,16 +23,6 @@ public class Player : MonoBehaviour, IPunObservable
     {
         set
         {
-            if (value > maxHealth)
-            {
-                maxHealth = value;
-
-                if (view.IsMine && MenuManager.instance.healthDisplay)
-                {
-                    MenuManager.instance.healthDisplay.maxValue = value;
-                }
-            }
-
             _lives = value;
 
             if (view.IsMine && MenuManager.instance.healthDisplay)
@@ -57,9 +47,6 @@ public class Player : MonoBehaviour, IPunObservable
 
     Vector2 colliderScreenSize;
 
-    [Header("UI")]
-    int maxHealth = 0;
-
     private Vector3 networkPosition;
     private Quaternion networkRotation;
     private Vector3 movement;
@@ -79,9 +66,14 @@ public class Player : MonoBehaviour, IPunObservable
 
         if (view.IsMine)
         {
-           MenuManager.instance.TurnConnectUI_ON();
+            if (MenuManager.instance.healthDisplay)
+            {
+                MenuManager.instance.healthDisplay.maxValue = maxLives;
+            }
+
+            MenuManager.instance.TurnConnectUI_ON();
         }
-        lives = 3;
+        lives = maxLives;
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
