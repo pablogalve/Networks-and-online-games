@@ -52,7 +52,7 @@ public class WaveManager : MonoBehaviour
 
         if (view != null && view.IsMine)
         {
-            StartCoroutine(SpawnWave(currentWave, 0.0f));
+            StartCoroutine(SpawnWave(currentWave, 4.0f));
         }
     }
 

@@ -5811,7 +5811,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c94c2b3adaa95a74a8cde187d092f477, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lives: 10
+  lives: 80
   timerBetweenAttacks: 2
   timerBetweenShots: 0.8
   totalShotsPerAttack: 10
