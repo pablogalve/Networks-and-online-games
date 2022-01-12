@@ -43,7 +43,7 @@ public class Missile : MonoBehaviour
     // Update is called once per frame
     public void Update()
     {
-        if(players[0] != null)
+        if(players.Length>0 && players[0] != null)
         {
             GameObject closestPlayer = GetClosestPlayer();
             //Move towards closest player
@@ -74,7 +74,7 @@ public class Missile : MonoBehaviour
 
     public void OnTriggerEnter(Collider collision)
     {
-        StartCoroutine("FlashRed");
+        StartCoroutine("Blink");
         if (view != null && view.IsMine)
         {
             if (collision.gameObject.CompareTag("PlayerProjectile"))
@@ -93,26 +93,13 @@ public class Missile : MonoBehaviour
         }        
     }
 
-    public IEnumerator FlashRed()
+    public IEnumerator Blink()
     {
-        meshRenderer.material.color = Color.red;
-        yield return new WaitForSeconds(0.1f);
-        StartCoroutine("FlashWhite");
-    }
-    public IEnumerator FlashWhite()
-    {
-        meshRenderer.material.color = Color.white;
-        yield return new WaitForSeconds(0.1f);
-        StartCoroutine("ResetColor");
-    }
-    public IEnumerator ResetColor()
-    {
-        meshRenderer.material.color = originalColor;
-        yield return new WaitForSeconds(0.1f);
-    }
-
-    public void PlayerHit()
-    {
-        StartCoroutine(DelayedDestroy(0.1f));
+        Color[] colors = { Color.red, Color.white, originalColor };
+        for (int j = 0; j < 3; j++)
+        {
+            meshRenderer.material.color = colors[j];
+            yield return new WaitForSeconds(0.05f);
+        }
     }
 }
